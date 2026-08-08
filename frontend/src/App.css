@@ -1,0 +1,14 @@
+.App {
+  min-height: 100vh;
+  background: rgb(var(--color-void));
+  padding-bottom: 72px;
+}
+
+.page-shell {
+  min-height: 100vh;
+  padding-top: 5rem;
+}
+
+.media-mask {
+  clip-path: polygon(0 0, 100% 6%, 94% 100%, 5% 92%);
+}

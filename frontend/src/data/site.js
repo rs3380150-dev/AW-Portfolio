@@ -1,0 +1,88 @@
+// Global site / brand configuration - edit here to rebrand.
+export const site = {
+  name: "Achyut Wadhwa",
+  shortName: "Achyut",
+  siteUrl: "https://novapulse.in",
+  fullName: "Achyut Wadhwa",
+  tagline: "Feel the Beat. Live the Moment.",
+  role: "Music Producer / DJ / Performer / Multi-Instrumentalist",
+  intro:
+    "Achyut Wadhwa crafts high-fidelity electronic music, blending rhythm, atmosphere, live performance, and multi-instrumental texture into movement-led experiences.",
+  bioParagraphs: [
+    "Achyut Wadhwa is a music producer, DJ, live performer, and multi-instrumentalist working at the intersection of rhythm and atmosphere.",
+    "Drawing from the storied legacy of the electronic scene, his sound moves through genre-fluid body music, driving grooves, and psychedelic energy. The result is a sophisticated but physical sound built for rooms that want depth as much as impact.",
+    "Whether behind the decks, on stage, or in the studio, Achyut prioritizes the narrative of the set: tension, release, texture, and momentum. Every performance is shaped as a journey that elevates the spirit of the reveler while pushing modern electronic music through a high-fidelity, high-energy lens.",
+  ],
+  roles: ["Music Producer", "DJ", "Performer", "Multi-Instrumentalist"],
+  location: "India - Worldwide",
+  email: "wadhwaachyut@gmail.com",
+  managementEmail: "wadhwaachyut@gmail.com",
+  phone: "+91 70098 20546",
+  phoneNumbers: [
+    { label: "Primary", value: "+91 70098 20546", href: "tel:+917009820546" },
+    { label: "Alternate", value: "+91 98789 06586", href: "tel:+919878906586" },
+  ],
+  whatsapp: "+917009820546",
+  instagramHandle: "@achyutwadhwa",
+  availability: "Open for collaborations, live performances, DJ sets, and production projects.",
+  pressKitUrl: "/press-kit.pdf",
+  web3FormsEndpoint: "https://api.web3forms.com/submit",
+  social: {
+    instagram: "https://instagram.com/achyutwadhwa",
+    facebook: "",
+    tiktok: "",
+    x: "",
+    youtube: "",
+    soundcloud: "",
+    spotify: "",
+  },
+  streaming: {
+    spotify: "https://spotify.com",
+    appleMusic: "https://music.apple.com",
+    soundcloud: "https://soundcloud.com",
+    youtube: "https://youtube.com",
+  },
+  connectLinks: [
+    { label: "Spotify", href: "https://spotify.com" },
+    { label: "SoundCloud", href: "https://soundcloud.com" },
+    { label: "Apple Music", href: "https://music.apple.com" },
+    { label: "YouTube", href: "https://youtube.com" },
+    { label: "Instagram", href: "https://instagram.com/achyutwadhwa" },
+    { label: "Collabs", href: "mailto:wadhwaachyut@gmail.com" },
+  ],
+  stats: [
+    { label: "Core Disciplines", value: 4, suffix: "" },
+    { label: "Artist", displayValue: "Achyut" },
+    { label: "Collabs", displayValue: "Open" },
+    { label: "Live + Studio", value: 2, suffix: "" },
+  ],
+  heroImage:
+    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBtdXNpYyUyMGZlc3RpdmFsJTIwc3RhZ2UlMjBuZW9uJTIwbGlnaHRzfGVufDB8fHx8MTc4NDkxNzI4MXww&ixlib=rb-4.1.0&q=85",
+  heroPoster: "/images/achyut-wadhwa-hero-poster.jpg",
+  heroVideo: "/videos/achyut-wadhwa-hero-optimized.mp4",
+  heroVideoWebm: "/videos/achyut-wadhwa-hero.webm",
+  aboutImage: "/images/about-portrait.jpeg",
+  artistImages: [
+    "https://images.unsplash.com/photo-1541126274323-dbac58d14741?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHwyfHxkaiUyMHBlcmZvcm1pbmclMjBmZXN0aXZhbCUyMGRhcmslMjBuZW9ufGVufDB8fHx8MTc4NDkxNzI2OXww&ixlib=rb-4.1.0&q=85",
+    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHwxfHxkaiUyMHBlcmZvcm1pbmclMjBmZXN0aXZhbCUyMGRhcmslMjBuZW9ufGVufDB8fHx8MTc4NDkxNzI2OXww&ixlib=rb-4.1.0&q=85",
+  ],
+  genres: ["Melodic Techno", "Progressive House", "Afro House", "Organic Deep"],
+};
+
+export const manifesto = [
+  {
+    n: "01",
+    title: "The Rhythm",
+    body: "Every set begins with movement: grooves that lock the room in, then evolve with pressure, silence, and release.",
+  },
+  {
+    n: "02",
+    title: "The Atmosphere",
+    body: "Multi-instrumental textures, analog detail, and psychedelic energy give each production a world beyond the drop.",
+  },
+  {
+    n: "03",
+    title: "The Narrative",
+    body: "Behind the decks or in the studio, the journey matters as much as the destination: tension, story, spirit, impact.",
+  },
+];
