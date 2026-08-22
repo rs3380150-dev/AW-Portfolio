@@ -1,7 +1,7 @@
 import { site } from "@/data/site";
 
 export const siteUrl = (import.meta.env.VITE_SITE_URL || site.siteUrl || "https://novapulse.in").replace(/\/$/, "");
-export const defaultSeoImage = "/images/achyut-wadhwa-og.png";
+export const defaultSeoImage = "/assets/images/site/social-share-og.png";
 
 export const seoRoutes = {
   "/": {

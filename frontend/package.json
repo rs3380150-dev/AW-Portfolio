@@ -6,6 +6,10 @@
     "start": "vite --host 0.0.0.0",
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
+    "test": "node --test tests/formatEventDate.test.mjs tests/publicAssets.test.mjs",
+    "check": "npm run test && npm run build",
+    "media:sync": "powershell -ExecutionPolicy Bypass -File ../scripts/sync-remote-media.ps1",
+    "press-kit": "python ../scripts/generate_press_kit.py",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {

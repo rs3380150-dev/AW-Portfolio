@@ -1,4 +1,4 @@
-// Global site / brand configuration - edit here to rebrand.
+// Global site and brand configuration.
 export const site = {
   name: "Achyut Wadhwa",
   shortName: "Achyut",
@@ -56,15 +56,14 @@ export const site = {
     { label: "Collabs", displayValue: "Open" },
     { label: "Live + Studio", value: 2, suffix: "" },
   ],
-  heroImage:
-    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBtdXNpYyUyMGZlc3RpdmFsJTIwc3RhZ2UlMjBuZW9uJTIwbGlnaHRzfGVufDB8fHx8MTc4NDkxNzI4MXww&ixlib=rb-4.1.0&q=85",
-  heroPoster: "/images/achyut-wadhwa-hero-poster.jpg",
-  heroVideo: "/videos/achyut-wadhwa-hero-optimized.mp4",
-  heroVideoWebm: "/videos/achyut-wadhwa-hero.webm",
-  aboutImage: "/images/about-portrait.jpeg",
+  heroImage: "/assets/images/site/hero-poster.jpg",
+  heroPoster: "/assets/images/site/hero-poster.jpg",
+  heroVideo: "/assets/videos/hero/hero-background.mp4",
+  heroVideoWebm: "/assets/videos/hero/hero-background.webm",
+  aboutImage: "/assets/images/site/about-portrait.jpeg",
   artistImages: [
-    "https://images.unsplash.com/photo-1541126274323-dbac58d14741?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHwyfHxkaiUyMHBlcmZvcm1pbmclMjBmZXN0aXZhbCUyMGRhcmslMjBuZW9ufGVufDB8fHx8MTc4NDkxNzI2OXww&ixlib=rb-4.1.0&q=85",
-    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHwxfHxkaiUyMHBlcmZvcm1pbmclMjBmZXN0aXZhbCUyMGRhcmslMjBuZW9ufGVufDB8fHx8MTc4NDkxNzI2OXww&ixlib=rb-4.1.0&q=85",
+    "/assets/images/gallery/05-promo-portrait-neon.jpg",
+    "/assets/images/gallery/01-festival-mainstage-lights.jpg",
   ],
   genres: ["Melodic Techno", "Progressive House", "Afro House", "Organic Deep"],
 };

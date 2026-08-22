@@ -39,7 +39,7 @@ export const TrackCard = ({ track, index = 0 }) => {
           onClick={() => playTrack(track.id)}
           data-testid={`play-track-${track.id}`}
           aria-label={isActive ? `Pause ${track.title}` : `Play ${track.title}`}
-          className="action-accent absolute bottom-4 right-4 h-14 w-14 grid place-items-center rounded-full bg-magenta translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-105 transition-[transform,opacity] duration-300 shadow-[0_0_24px_rgba(31,95,128,0.38)]"
+          className="action-accent absolute bottom-4 right-4 grid h-14 w-14 place-items-center rounded-full bg-magenta opacity-100 shadow-[0_0_24px_rgba(31,95,128,0.38)] transition-[transform,opacity] duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-void"
         >
           {isActive ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
         </button>

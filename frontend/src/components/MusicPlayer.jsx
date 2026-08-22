@@ -12,15 +12,14 @@ const fmt = (s) => {
 };
 
 export const MusicPlayer = () => {
-  const { current, isPlaying, progress, duration, volume, togglePlay, next, prev, seek, setVolume } = usePlayer();
+  const { current, isPlaying, progress, duration, volume, active, togglePlay, next, prev, seek, setVolume } = usePlayer();
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     if (isPlaying) setDismissed(false);
   }, [isPlaying]);
 
-  if (!current) return null;
-  if (dismissed) return null;
+  if (!active || !current || dismissed) return null;
   const pct = duration ? Math.min(100, (progress / duration) * 100) : 0;
 
   const dismiss = () => {

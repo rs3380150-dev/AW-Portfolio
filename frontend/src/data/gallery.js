@@ -9,16 +9,16 @@ export const galleryCategories = [
 ];
 
 export const gallery = [
-  { id: "g1", category: "festival", src: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Festival mainstage lights" },
-  { id: "g2", category: "live", src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Live DJ performance" },
-  { id: "g3", category: "crowd", src: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Crowd with hands up" },
-  { id: "g4", category: "studio", src: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Studio session" },
-  { id: "g5", category: "promo", src: "https://images.unsplash.com/photo-1541126274323-dbac58d14741?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Promo portrait neon" },
-  { id: "g6", category: "live", src: "https://images.unsplash.com/photo-1516873240891-4bf014598ab4?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "DJ decks close up" },
-  { id: "g7", category: "festival", src: "https://images.unsplash.com/photo-1721133073235-e4b5facb27fa?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Festival stage neon" },
-  { id: "g8", category: "bts", src: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Backstage moment" },
-  { id: "g9", category: "crowd", src: "https://images.pexels.com/photos/9534912/pexels-photo-9534912.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=700", alt: "Dense festival crowd" },
-  { id: "g10", category: "studio", src: "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Mixing console" },
-  { id: "g11", category: "promo", src: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Rooftop set" },
-  { id: "g12", category: "live", src: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?crop=entropy&cs=srgb&fm=jpg&w=900&q=85", alt: "Stage silhouette" },
+  { id: "g1", category: "festival", src: "/assets/images/gallery/01-festival-mainstage-lights.jpg", alt: "Festival mainstage lights" },
+  { id: "g2", category: "live", src: "/assets/images/gallery/02-live-dj-performance.jpg", alt: "Live DJ performance" },
+  { id: "g3", category: "crowd", src: "/assets/images/gallery/03-crowd-hands-up.jpg", alt: "Crowd with hands up" },
+  { id: "g4", category: "studio", src: "/assets/images/gallery/04-studio-session.jpg", alt: "Studio session" },
+  { id: "g5", category: "promo", src: "/assets/images/gallery/05-promo-portrait-neon.jpg", alt: "Promo portrait neon" },
+  { id: "g6", category: "live", src: "/assets/images/gallery/06-dj-decks-close-up.jpg", alt: "DJ decks close up" },
+  { id: "g7", category: "festival", src: "/assets/images/gallery/07-festival-stage-neon.jpg", alt: "Festival stage neon" },
+  { id: "g8", category: "bts", src: "/assets/images/gallery/08-backstage-moment.jpg", alt: "Backstage moment" },
+  { id: "g9", category: "crowd", src: "/assets/images/gallery/09-dense-festival-crowd.jpg", alt: "Dense festival crowd" },
+  { id: "g10", category: "studio", src: "/assets/images/gallery/10-mixing-console.jpg", alt: "Mixing console" },
+  { id: "g11", category: "promo", src: "/assets/images/site/hero-poster.jpg", alt: "Rooftop set" },
+  { id: "g12", category: "live", src: "/assets/images/gallery/12-stage-silhouette.jpg", alt: "Stage silhouette" },
 ];

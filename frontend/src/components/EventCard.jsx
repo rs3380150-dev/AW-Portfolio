@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Ticket, ArrowUpRight } from "@/components/icons";
 import { useSpotlightProps } from "@/components/Spotlight";
+import { formatEventDate } from "@/utils/formatEventDate.mjs";
 
 const statusStyle = {
   upcoming: "text-cyan border-cyan/40 bg-cyan/10",
@@ -10,17 +11,8 @@ const statusStyle = {
 };
 const statusLabel = { upcoming: "Upcoming", "sold-out": "Sold Out", completed: "Completed" };
 
-const formatDate = (iso) => {
-  const d = new Date(iso);
-  return {
-    day: d.toLocaleDateString("en-US", { day: "2-digit" }),
-    mon: d.toLocaleDateString("en-US", { month: "short" }).toUpperCase(),
-    year: d.getFullYear(),
-  };
-};
-
 export const EventCard = ({ event, index = 0 }) => {
-  const d = formatDate(event.date);
+  const d = formatEventDate(event.date);
   const soldOrDone = event.status === "sold-out" || event.status === "completed";
   const spotlightProps = useSpotlightProps();
 

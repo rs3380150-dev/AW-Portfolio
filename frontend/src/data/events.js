@@ -1,5 +1,3 @@
-const poster = (url) => url;
-
 export const events = [
   {
     id: "e1",
@@ -12,7 +10,7 @@ export const events = [
     status: "upcoming",
     type: "festival",
     ticket: "https://example.com/tickets",
-    poster: poster("https://images.unsplash.com/photo-1721133073235-e4b5facb27fa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHw0fHxtb2Rlcm4lMjBtdXNpYyUyMGZlc3RpdmFsJTIwc3RhZ2UlMjBuZW9uJTIwbGlnaHRzfGVufDB8fHx8MTc4NDkxNzI4MXww&ixlib=rb-4.1.0&q=85"),
+    poster: "/assets/images/events/01-awakenings-festival.jpg",
   },
   {
     id: "e2",
@@ -25,7 +23,7 @@ export const events = [
     status: "sold-out",
     type: "club",
     ticket: "https://example.com/tickets",
-    poster: poster("https://images.pexels.com/photos/9534912/pexels-photo-9534912.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+    poster: "/assets/images/events/02-club-nebula.jpg",
   },
   {
     id: "e3",
@@ -38,7 +36,7 @@ export const events = [
     status: "upcoming",
     type: "club",
     ticket: "https://example.com/tickets",
-    poster: poster("https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?crop=entropy&cs=srgb&fm=jpg&w=940&q=85"),
+    poster: "/assets/images/site/hero-poster.jpg",
   },
   {
     id: "e4",
@@ -51,7 +49,7 @@ export const events = [
     status: "completed",
     type: "festival",
     ticket: "https://example.com/tickets",
-    poster: poster("https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?crop=entropy&cs=srgb&fm=jpg&w=940&q=85"),
+    poster: "/assets/images/events/04-tomorrowland-rose-garden.jpg",
   },
   {
     id: "e5",
@@ -64,7 +62,7 @@ export const events = [
     status: "completed",
     type: "festival",
     ticket: "https://example.com/tickets",
-    poster: poster("https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?crop=entropy&cs=srgb&fm=jpg&w=940&q=85"),
+    poster: "/assets/images/events/05-ultra-music-festival.jpg",
   },
   {
     id: "e6",
@@ -77,6 +75,6 @@ export const events = [
     status: "completed",
     type: "club",
     ticket: "https://example.com/tickets",
-    poster: poster("https://images.unsplash.com/photo-1516873240891-4bf014598ab4?crop=entropy&cs=srgb&fm=jpg&w=940&q=85"),
+    poster: "/assets/images/events/06-warehouse-sessions.jpg",
   },
 ];

@@ -7,6 +7,7 @@ import { BlobTextReveal } from "@/components/BlobTextReveal";
 import { site } from "@/data/site";
 import { influences, skills, timeline } from "@/data/about";
 
+
 export const About = () => (
   <div className="page-shell" data-testid="about-page">
     <section className="px-6 py-24 md:px-10 md:py-32">
@@ -18,13 +19,8 @@ export const About = () => (
             <span className="block text-stroke-cyan">Producer / DJ</span>
           </h1>
           <BlobTextReveal
-            className="about-role-blob mt-6"
+            className="mt-6"
             texts={["Producer", "Performer", "Multi-Instrumentalist"]}
-            revealColor="rgb(var(--color-accent-primary-soft))"
-            wipeColor="rgb(var(--color-content))"
-            blobSize={12}
-            blobPosition={-2}
-            blur={16}
           />
           <div className="mt-8 space-y-5 text-base leading-relaxed text-white/60 md:text-lg">
             {site.bioParagraphs.map((paragraph) => (
