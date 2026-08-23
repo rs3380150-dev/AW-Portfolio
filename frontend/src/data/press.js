@@ -16,8 +16,9 @@ export const brandLogos = [
 ];
 
 export const testimonials = [
-  { id: "tm1", name: "Lena Vogt", role: "Head of Talent, Awakenings", quote: "One of the most reliable, professional headliners we book. The room was electric from the first bar to the last.", avatar: "/assets/images/testimonials/01-lena-vogt.jpg" },
-  { id: "tm2", name: "Marco Bellini", role: "Founder, Club Nebula", quote: "A true artist and a consummate professional. Sold-out residency nights, every single time.", avatar: "/assets/images/testimonials/02-marco-bellini.jpg" },
-  { id: "tm3", name: "Aisha Rahman", role: "Brand Director, Flux", quote: "Delivered a bespoke sonic identity that elevated our entire campaign. Flawless from brief to master.", avatar: "/assets/images/testimonials/03-aisha-rahman.jpg" },
-  { id: "tm4", name: "David Osei", role: "Wedding Client", quote: "Read the crowd perfectly and kept the floor packed until sunrise. Our guests are still talking about it.", avatar: "/assets/images/testimonials/04-david-osei.jpg" },
+  { id: "tm1", name: "Lena Vogt", role: "Head of Talent, Awakenings", quote: "One of the most reliable, professional headliners we book. The room was electric from the first bar to the last.", avatar: cloudinaryMedia("/assets/images/testimonials/01-lena-vogt.jpg") },
+  { id: "tm2", name: "Marco Bellini", role: "Founder, Club Nebula", quote: "A true artist and a consummate professional. Sold-out residency nights, every single time.", avatar: cloudinaryMedia("/assets/images/testimonials/02-marco-bellini.jpg") },
+  { id: "tm3", name: "Aisha Rahman", role: "Brand Director, Flux", quote: "Delivered a bespoke sonic identity that elevated our entire campaign. Flawless from brief to master.", avatar: cloudinaryMedia("/assets/images/testimonials/03-aisha-rahman.jpg") },
+  { id: "tm4", name: "David Osei", role: "Wedding Client", quote: "Read the crowd perfectly and kept the floor packed until sunrise. Our guests are still talking about it.", avatar: cloudinaryMedia("/assets/images/testimonials/04-david-osei.jpg") },
 ];
+import { cloudinaryMedia } from "@/utils/cloudinaryMedia";

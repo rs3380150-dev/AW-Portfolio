@@ -80,6 +80,7 @@ export const Home = () => {
         text="ACHYUT WADHWA - DJ SETS - LIVE PERFORMANCE - MULTI-INSTRUMENTAL SOUND -"
         stroke
         className="py-8"
+        duration="marquee-medium"
         videoSrc={site.heroVideo}
         videoWebm={site.heroVideoWebm}
         poster={site.heroPoster}

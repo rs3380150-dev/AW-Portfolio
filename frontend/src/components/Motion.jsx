@@ -69,7 +69,12 @@ export const Marquee = ({
   poster = "",
 }) => {
   const items = Array.from({ length: 4 });
-  const animationClass = duration === "marquee" ? "animate-marquee" : "animate-marquee-slow";
+  const animationClasses = {
+    marquee: "animate-marquee",
+    "marquee-medium": "animate-marquee-medium",
+    "marquee-slow": "animate-marquee-slow",
+  };
+  const animationClass = animationClasses[duration] || animationClasses["marquee-slow"];
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const hasVideo = Boolean(videoSrc || videoWebm);

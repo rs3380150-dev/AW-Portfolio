@@ -1,3 +1,5 @@
+import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
+
 export const events = [
   {
     id: "e1",
@@ -10,7 +12,7 @@ export const events = [
     status: "upcoming",
     type: "festival",
     ticket: "https://example.com/tickets",
-    poster: "/assets/images/events/01-awakenings-festival.jpg",
+    poster: cloudinaryMedia("/assets/images/events/01-awakenings-festival.jpg"),
   },
   {
     id: "e2",
@@ -23,7 +25,7 @@ export const events = [
     status: "sold-out",
     type: "club",
     ticket: "https://example.com/tickets",
-    poster: "/assets/images/events/02-club-nebula.jpg",
+    poster: cloudinaryMedia("/assets/images/events/02-club-nebula.jpg"),
   },
   {
     id: "e3",
@@ -36,7 +38,7 @@ export const events = [
     status: "upcoming",
     type: "club",
     ticket: "https://example.com/tickets",
-    poster: "/assets/images/site/hero-poster.jpg",
+    poster: cloudinaryMedia("/assets/images/site/hero-poster.jpg"),
   },
   {
     id: "e4",
@@ -49,7 +51,7 @@ export const events = [
     status: "completed",
     type: "festival",
     ticket: "https://example.com/tickets",
-    poster: "/assets/images/events/04-tomorrowland-rose-garden.jpg",
+    poster: cloudinaryMedia("/assets/images/events/04-tomorrowland-rose-garden.jpg"),
   },
   {
     id: "e5",
@@ -62,7 +64,7 @@ export const events = [
     status: "completed",
     type: "festival",
     ticket: "https://example.com/tickets",
-    poster: "/assets/images/events/05-ultra-music-festival.jpg",
+    poster: cloudinaryMedia("/assets/images/events/05-ultra-music-festival.jpg"),
   },
   {
     id: "e6",
@@ -75,6 +77,6 @@ export const events = [
     status: "completed",
     type: "club",
     ticket: "https://example.com/tickets",
-    poster: "/assets/images/events/06-warehouse-sessions.jpg",
+    poster: cloudinaryMedia("/assets/images/events/06-warehouse-sessions.jpg"),
   },
 ];

@@ -1,7 +1,8 @@
 import { site } from "@/data/site";
+import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
 
 export const siteUrl = (import.meta.env.VITE_SITE_URL || site.siteUrl || "https://novapulse.in").replace(/\/$/, "");
-export const defaultSeoImage = "/assets/images/site/social-share-og.png";
+export const defaultSeoImage = cloudinaryMedia("/assets/images/site/social-share-og.png");
 
 export const seoRoutes = {
   "/": {

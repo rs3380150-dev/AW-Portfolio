@@ -1,3 +1,5 @@
+import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
+
 // Global site and brand configuration.
 export const site = {
   name: "Achyut Wadhwa",
@@ -56,14 +58,14 @@ export const site = {
     { label: "Collabs", displayValue: "Open" },
     { label: "Live + Studio", value: 2, suffix: "" },
   ],
-  heroImage: "/assets/images/site/hero-poster.jpg",
-  heroPoster: "/assets/images/site/hero-poster.jpg",
-  heroVideo: "/assets/videos/hero/hero-background.mp4",
-  heroVideoWebm: "/assets/videos/hero/hero-background.webm",
-  aboutImage: "/assets/images/site/about-portrait.jpeg",
+  heroImage: cloudinaryMedia("/assets/images/site/hero-poster.jpg"),
+  heroPoster: cloudinaryMedia("/assets/images/site/hero-poster.jpg"),
+  heroVideo: cloudinaryMedia("/assets/videos/hero/hero-background.mp4"),
+  heroVideoWebm: cloudinaryMedia("/assets/videos/hero/hero-background.webm"),
+  aboutImage: cloudinaryMedia("/assets/images/site/about-portrait.jpeg"),
   artistImages: [
-    "/assets/images/gallery/05-promo-portrait-neon.jpg",
-    "/assets/images/gallery/01-festival-mainstage-lights.jpg",
+    cloudinaryMedia("/assets/images/gallery/05-promo-portrait-neon.jpg"),
+    cloudinaryMedia("/assets/images/gallery/01-festival-mainstage-lights.jpg"),
   ],
   genres: ["Melodic Techno", "Progressive House", "Afro House", "Organic Deep"],
 };

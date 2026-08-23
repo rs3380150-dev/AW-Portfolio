@@ -323,6 +323,7 @@ html.theme-light .video-text-marquee-symbol {
 
 .is-tab-hidden .testimonial-carousel-track,
 .is-tab-hidden .animate-marquee,
+.is-tab-hidden .animate-marquee-medium,
 .is-tab-hidden .animate-marquee-slow,
 .is-tab-hidden [style*="eq-random"],
 .is-tab-hidden [style*="eq 0.9s"] {
@@ -564,6 +565,7 @@ html.theme-light .spotlight-card::before {
     [style*="eq-random"],
     [style*="eq 0.9s"],
     .animate-marquee,
+    .animate-marquee-medium,
     .animate-marquee-slow,
     .testimonial-carousel-track {
         animation: none !important;

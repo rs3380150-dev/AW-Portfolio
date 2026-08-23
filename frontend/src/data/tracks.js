@@ -1,4 +1,6 @@
 // Static music catalogue. Audio previews use locally hosted royalty-free SoundHelix demos.
+import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
+
 export const tracks = [
   {
     id: "t1",
@@ -7,7 +9,7 @@ export const tracks = [
     genre: "Melodic Techno",
     category: "original",
     description: "A cavernous melodic techno anthem built for the mainstage afterglow.",
-    cover: "/assets/images/music-covers/01-neon-cathedral.jpg",
+    cover: cloudinaryMedia("/assets/images/music-covers/01-neon-cathedral.jpg"),
     audio: "/assets/audio/track-previews/01-neon-cathedral-demo.mp3",
     links: { spotify: "https://spotify.com", soundcloud: "https://soundcloud.com", apple: "https://music.apple.com", youtube: "https://youtube.com" },
   },
@@ -18,7 +20,7 @@ export const tracks = [
     genre: "Progressive House",
     category: "original",
     description: "Rolling basslines and shimmering arps for the peak-time hours.",
-    cover: "/assets/images/music-covers/02-midnight-voltage.jpg",
+    cover: cloudinaryMedia("/assets/images/music-covers/02-midnight-voltage.jpg"),
     audio: "/assets/audio/track-previews/02-midnight-voltage-demo.mp3",
     links: { spotify: "https://spotify.com", soundcloud: "https://soundcloud.com", apple: "https://music.apple.com", youtube: "https://youtube.com" },
   },
@@ -29,7 +31,7 @@ export const tracks = [
     genre: "Afro House",
     category: "remix",
     description: "An organic, percussive reinterpretation drenched in warm analog textures.",
-    cover: "/assets/images/music-covers/03-solar-winds-remix.jpg",
+    cover: cloudinaryMedia("/assets/images/music-covers/03-solar-winds-remix.jpg"),
     audio: "/assets/audio/track-previews/03-solar-winds-remix-demo.mp3",
     links: { spotify: "https://spotify.com", soundcloud: "https://soundcloud.com", apple: "https://music.apple.com", youtube: "https://youtube.com" },
   },
@@ -40,7 +42,7 @@ export const tracks = [
     genre: "Organic Deep",
     category: "collaboration",
     description: "A hypnotic collaboration blending live strings with modular synthesis.",
-    cover: "/assets/images/music-covers/04-afterlife-sequence.jpg",
+    cover: cloudinaryMedia("/assets/images/music-covers/04-afterlife-sequence.jpg"),
     audio: "/assets/audio/track-previews/04-afterlife-sequence-demo.mp3",
     links: { spotify: "https://spotify.com", soundcloud: "https://soundcloud.com", apple: "https://music.apple.com", youtube: "https://youtube.com" },
   },
@@ -51,7 +53,7 @@ export const tracks = [
     genre: "Melodic Techno",
     category: "live",
     description: "Recorded live at sunrise on the Yucatan coast. 74 minutes of pure momentum.",
-    cover: "/assets/images/music-covers/05-tulum-sunrise-live-set.jpg",
+    cover: cloudinaryMedia("/assets/images/music-covers/05-tulum-sunrise-live-set.jpg"),
     audio: "/assets/audio/track-previews/05-tulum-sunrise-live-set-demo.mp3",
     links: { spotify: "https://spotify.com", soundcloud: "https://soundcloud.com", apple: "https://music.apple.com", youtube: "https://youtube.com" },
   },
@@ -62,7 +64,7 @@ export const tracks = [
     genre: "Progressive House",
     category: "original",
     description: "A euphoric, festival-ready record with a hook that refuses to leave.",
-    cover: "/assets/images/music-covers/06-electric-bloom.jpg",
+    cover: cloudinaryMedia("/assets/images/music-covers/06-electric-bloom.jpg"),
     audio: "/assets/audio/track-previews/06-electric-bloom-demo.mp3",
     links: { spotify: "https://spotify.com", soundcloud: "https://soundcloud.com", apple: "https://music.apple.com", youtube: "https://youtube.com" },
   },

@@ -1,0 +1,266 @@
+{
+  "cloudName": "fqji5ezh",
+  "generatedAt": "2026-08-22T18:51:52.323Z",
+  "assetCount": 37,
+  "assets": {
+    "/assets/images/events/01-awakenings-festival.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/events/01-awakenings-festival",
+      "format": "jpg",
+      "version": 1787424676,
+      "bytes": 165017
+    },
+    "/assets/images/events/02-club-nebula.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/events/02-club-nebula",
+      "format": "jpg",
+      "version": 1787424677,
+      "bytes": 596759
+    },
+    "/assets/images/events/04-tomorrowland-rose-garden.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/events/04-tomorrowland-rose-garden",
+      "format": "jpg",
+      "version": 1787424678,
+      "bytes": 227996
+    },
+    "/assets/images/events/05-ultra-music-festival.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/events/05-ultra-music-festival",
+      "format": "jpg",
+      "version": 1787424679,
+      "bytes": 110713
+    },
+    "/assets/images/events/06-warehouse-sessions.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/events/06-warehouse-sessions",
+      "format": "jpg",
+      "version": 1787424679,
+      "bytes": 95116
+    },
+    "/assets/images/gallery/01-festival-mainstage-lights.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/01-festival-mainstage-lights",
+      "format": "jpg",
+      "version": 1787424680,
+      "bytes": 98132
+    },
+    "/assets/images/gallery/02-live-dj-performance.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/02-live-dj-performance",
+      "format": "jpg",
+      "version": 1787424681,
+      "bytes": 227996
+    },
+    "/assets/images/gallery/03-crowd-hands-up.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/03-crowd-hands-up",
+      "format": "jpg",
+      "version": 1787424681,
+      "bytes": 110713
+    },
+    "/assets/images/gallery/04-studio-session.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/04-studio-session",
+      "format": "jpg",
+      "version": 1787424682,
+      "bytes": 189783
+    },
+    "/assets/images/gallery/05-promo-portrait-neon.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/05-promo-portrait-neon",
+      "format": "jpg",
+      "version": 1787424684,
+      "bytes": 354427
+    },
+    "/assets/images/gallery/06-dj-decks-close-up.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/06-dj-decks-close-up",
+      "format": "jpg",
+      "version": 1787424685,
+      "bytes": 95116
+    },
+    "/assets/images/gallery/07-festival-stage-neon.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/07-festival-stage-neon",
+      "format": "jpg",
+      "version": 1787424686,
+      "bytes": 165017
+    },
+    "/assets/images/gallery/08-backstage-moment.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/08-backstage-moment",
+      "format": "jpg",
+      "version": 1787424686,
+      "bytes": 107722
+    },
+    "/assets/images/gallery/09-dense-festival-crowd.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/09-dense-festival-crowd",
+      "format": "jpg",
+      "version": 1787424687,
+      "bytes": 318279
+    },
+    "/assets/images/gallery/10-mixing-console.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/10-mixing-console",
+      "format": "jpg",
+      "version": 1787424688,
+      "bytes": 105161
+    },
+    "/assets/images/gallery/12-stage-silhouette.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/gallery/12-stage-silhouette",
+      "format": "jpg",
+      "version": 1787424689,
+      "bytes": 135357
+    },
+    "/assets/images/music-covers/01-neon-cathedral.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/music-covers/01-neon-cathedral",
+      "format": "jpg",
+      "version": 1787424689,
+      "bytes": 189796
+    },
+    "/assets/images/music-covers/02-midnight-voltage.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/music-covers/02-midnight-voltage",
+      "format": "jpg",
+      "version": 1787424690,
+      "bytes": 168654
+    },
+    "/assets/images/music-covers/03-solar-winds-remix.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/music-covers/03-solar-winds-remix",
+      "format": "jpg",
+      "version": 1787424691,
+      "bytes": 41433
+    },
+    "/assets/images/music-covers/04-afterlife-sequence.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/music-covers/04-afterlife-sequence",
+      "format": "jpg",
+      "version": 1787424692,
+      "bytes": 191161
+    },
+    "/assets/images/music-covers/05-tulum-sunrise-live-set.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/music-covers/05-tulum-sunrise-live-set",
+      "format": "jpg",
+      "version": 1787424692,
+      "bytes": 107722
+    },
+    "/assets/images/music-covers/06-electric-bloom.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/music-covers/06-electric-bloom",
+      "format": "jpg",
+      "version": 1787424693,
+      "bytes": 135357
+    },
+    "/assets/images/site/about-portrait.jpeg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/site/about-portrait",
+      "format": "jpg",
+      "version": 1787424694,
+      "bytes": 41337
+    },
+    "/assets/images/site/favicon.svg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/site/favicon",
+      "format": "svg",
+      "version": 1787424695,
+      "bytes": 1426
+    },
+    "/assets/images/site/hero-poster.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/site/hero-poster",
+      "format": "jpg",
+      "version": 1787424702,
+      "bytes": 83578
+    },
+    "/assets/images/site/social-share-og.png": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/site/social-share-og",
+      "format": "png",
+      "version": 1787424702,
+      "bytes": 26570
+    },
+    "/assets/images/testimonials/01-lena-vogt.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/testimonials/01-lena-vogt",
+      "format": "jpg",
+      "version": 1787424703,
+      "bytes": 10287
+    },
+    "/assets/images/testimonials/02-marco-bellini.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/testimonials/02-marco-bellini",
+      "format": "jpg",
+      "version": 1787424704,
+      "bytes": 9778
+    },
+    "/assets/images/testimonials/03-aisha-rahman.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/testimonials/03-aisha-rahman",
+      "format": "jpg",
+      "version": 1787424704,
+      "bytes": 8937
+    },
+    "/assets/images/testimonials/04-david-osei.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/testimonials/04-david-osei",
+      "format": "jpg",
+      "version": 1787424705,
+      "bytes": 9624
+    },
+    "/assets/images/video-thumbnails/01-neon-cathedral.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/video-thumbnails/01-neon-cathedral",
+      "format": "jpg",
+      "version": 1787424706,
+      "bytes": 21011
+    },
+    "/assets/images/video-thumbnails/02-live-at-awakenings-2025.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/video-thumbnails/02-live-at-awakenings-2025",
+      "format": "jpg",
+      "version": 1787424706,
+      "bytes": 30817
+    },
+    "/assets/images/video-thumbnails/04-building-electric-bloom.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/video-thumbnails/04-building-electric-bloom",
+      "format": "jpg",
+      "version": 1787424707,
+      "bytes": 12919
+    },
+    "/assets/images/video-thumbnails/05-europe-tour-diary.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/video-thumbnails/05-europe-tour-diary",
+      "format": "jpg",
+      "version": 1787424708,
+      "bytes": 29645
+    },
+    "/assets/images/video-thumbnails/06-midnight-voltage-visualizer.jpg": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/video-thumbnails/06-midnight-voltage-visualizer",
+      "format": "jpg",
+      "version": 1787424708,
+      "bytes": 53433
+    },
+    "/assets/videos/hero/hero-background.mp4": {
+      "resourceType": "video",
+      "publicId": "nova-pulse/videos/hero/hero-background-mp4",
+      "format": "mp4",
+      "version": 1787424709,
+      "bytes": 852725
+    },
+    "/assets/videos/hero/hero-background.webm": {
+      "resourceType": "video",
+      "publicId": "nova-pulse/videos/hero/hero-background-webm",
+      "format": "webm",
+      "version": 1787424711,
+      "bytes": 1122547
+    }
+  }
+}
