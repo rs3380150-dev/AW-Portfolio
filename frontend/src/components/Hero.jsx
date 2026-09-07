@@ -89,16 +89,20 @@ export const Hero = () => {
           transition={{ delay: PRELOADER_OFFSET + 0.9, duration: 0.8 }}
           className="flex justify-between font-mono text-[9px] uppercase tracking-[0.4em] text-white/55"
         >
-          <span>Artist — {new Date().getFullYear()}</span>
-          <span className="hidden sm:block">Music / Performance / Sound</span>
-          <span>India / Worldwide</span>
+          <span>{site.role}</span>
+          <span className="hidden sm:block">{site.tagline}</span>
+          <span>{site.location}</span>
         </motion.div>
 
         <div>
           <h1 className="font-display text-[11vw] font-bold uppercase leading-[0.88] tracking-tighter text-white md:text-[6.5vw]">
-            <MaskLine index={0}>Feel the beat.</MaskLine>
-            <MaskLine index={1}>Live the moment.</MaskLine>
+            <MaskLine index={0}>Achyut</MaskLine>
+            <MaskLine index={1}>Wadhwa</MaskLine>
           </h1>
+
+          <p className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-white/65 md:text-base">
+            {site.tagline} — {site.intro}
+          </p>
 
           <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
             <motion.button
@@ -115,8 +119,8 @@ export const Hero = () => {
                 <Play className="ml-0.5 h-4 w-4 text-white" />
               </span>
               <span>
-                <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.35em] text-white">Play</span>
-                <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.3em] text-white/55">Achyut Wadhwa — Selected Audio</span>
+                <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.35em] text-white">Listen Now</span>
+                <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.3em] text-white/55">{site.role}</span>
               </span>
             </motion.button>
 
@@ -132,10 +136,10 @@ export const Hero = () => {
                 data-cursor="ENQUIRE"
                 className="duration-premium hidden items-center border border-white/25 px-5 py-3 font-mono text-[9px] font-semibold uppercase tracking-[0.28em] text-white transition-[background-color,border-color] hover:border-cyan hover:bg-cyan sm:inline-flex"
               >
-                Book / Enquire <ArrowRight className="ml-3 h-4 w-4" />
+                Book for an Event <ArrowRight className="ml-3 h-4 w-4" />
               </Link>
               <div className="flex items-center gap-3" aria-hidden="true">
-                <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/55">Scroll to explore</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/55">Scroll</span>
                 <span className="relative h-10 w-px overflow-hidden bg-white/15">
                   <motion.span
                     className="absolute left-0 top-0 h-4 w-px bg-cyan"
