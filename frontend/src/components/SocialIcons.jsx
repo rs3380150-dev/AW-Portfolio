@@ -28,7 +28,7 @@ export const SocialIcons = ({ className = "", size = "h-10 w-10" }) => (
         rel="noreferrer"
         aria-label={label}
         data-testid={`social-${key}`}
-        className={`${size} grid place-items-center rounded-full border border-white/10 text-white/70 hover:text-cyan hover:border-cyan/50 hover:shadow-[0_0_18px_rgba(7,92,138,0.35)] transition-[color,border-color,box-shadow] duration-300`}
+        className={`${size} grid place-items-center rounded-full border border-white/10 text-white/70 hover:text-cyan hover:border-cyan/50 transition-[color,border-color] duration-300`}
       >
         <Icon className="h-[18px] w-[18px]" />
       </a>

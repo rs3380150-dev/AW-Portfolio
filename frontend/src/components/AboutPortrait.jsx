@@ -11,8 +11,8 @@ const PortraitDecorations = () => (
         Collabs & Live
       </p>
     </div>
-    <div className="about-record-card absolute -bottom-8 -right-3 hidden h-32 w-32 overflow-hidden rounded-md border border-cyan/20 bg-void/80 shadow-[0_0_40px_rgba(7,92,138,0.16)] backdrop-blur-xl md:block">
-      <div className="absolute inset-5 rounded-full border border-white/15 bg-[radial-gradient(circle,rgba(198,112,74,0.18)_0%,rgba(182,95,58,0.14)_23%,rgba(7,92,138,0.14)_38%,rgba(255,255,255,0.04)_39%,rgba(255,255,255,0.02)_100%)]" />
+    <div className="about-record-card absolute -bottom-8 -right-3 hidden h-32 w-32 overflow-hidden rounded-md border border-cyan/20 bg-void/80 backdrop-blur-xl md:block">
+      <div className="absolute inset-5 rounded-full border border-white/15 bg-[radial-gradient(circle,rgba(179,38,38,0.18)_0%,rgba(179,38,38,0.14)_23%,rgba(179,38,38,0.14)_38%,rgba(255,255,255,0.04)_39%,rgba(255,255,255,0.02)_100%)]" />
       <div className="absolute inset-[3.25rem] rounded-full bg-cyan" />
     </div>
   </>

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import "@/App.css";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "sonner";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navbar } from "@/components/Navbar";
@@ -10,6 +11,7 @@ import { MusicPlayer } from "@/components/MusicPlayer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Seo } from "@/components/Seo";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { CustomCursor } from "@/components/CustomCursor";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { pageLoaders, prefetchPriorityRoutes } from "@/routes/pageLoaders";
@@ -46,6 +48,37 @@ const RouteReset = () => {
   return null;
 };
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Suspense fallback={<PageFallback />}>
+          <Routes location={location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/music" element={<Music />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/videos" element={<Videos />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/press" element={<Press />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
 const AppChrome = () => {
   const { theme } = useTheme();
 
@@ -59,23 +92,11 @@ const AppChrome = () => {
       <RouteReset />
       <Seo />
       <GsapEnhancer />
+      <CustomCursor />
       <LoadingScreen />
       <Navbar />
       <main className="gsap-page-root">
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/music" element={<Music />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/videos" element={<Videos />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/press" element={<Press />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <AnimatedRoutes />
       </main>
       <Footer />
       <MusicPlayer />

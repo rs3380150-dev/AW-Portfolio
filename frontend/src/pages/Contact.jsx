@@ -233,7 +233,7 @@ export const Contact = () => {
               type="submit"
               data-testid="booking-submit"
               disabled={isSubmitting}
-              className="action-accent mt-6 inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 font-semibold transition-[transform,box-shadow,opacity] duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(31,95,128,0.42)] disabled:pointer-events-none disabled:opacity-60"
+              className="action-accent mt-6 inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 font-semibold transition-[transform,opacity] duration-300 hover:scale-[1.03] disabled:pointer-events-none disabled:opacity-60"
             >
               {isSubmitting ? "Sending..." : "Send Request"}
               <Send className="h-5 w-5" />

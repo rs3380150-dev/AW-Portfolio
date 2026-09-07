@@ -37,10 +37,10 @@ export const ServiceCard = ({ service, index = 0 }) => {
     <motion.article
       {...spotlightProps}
       data-testid={`service-card-${service.id}`}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (index % 3) * 0.07 }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.07 }}
       className="spotlight-card group relative flex flex-col bg-tinted rounded-md p-8 border border-white/5 hover:border-cyan/30 transition-colors duration-300 overflow-hidden"
     >
       <div className="spotlight-decor absolute -right-8 -top-8 h-24 w-24 rounded-full bg-cyan/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -64,10 +64,10 @@ export const TestimonialCard = ({ t, index = 0, className = "", reveal = true, t
   const spotlightProps = useSpotlightProps();
   const revealProps = reveal
     ? {
-        initial: { opacity: 0, y: 30 },
+        initial: { opacity: 0, y: 32 },
         whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: "-60px" },
-        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (index % 2) * 0.1 },
+        viewport: { once: true, margin: "-10%" },
+        transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: (index % 2) * 0.1 },
       }
     : {
         initial: false,

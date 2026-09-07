@@ -44,14 +44,22 @@ export const Lightbox = ({ items, index, onClose, onPrev, onNext }) => {
 export const GalleryItem = ({ item, onOpen, index = 0 }) => (
   <motion.button
     data-testid={`gallery-item-${item.id}`}
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-40px" }}
-    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (index % 4) * 0.06 }}
+    data-cursor="VIEW"
+    initial={{ clipPath: "inset(100% 0 0 0)" }}
+    whileInView={{ clipPath: "inset(0% 0 0 0)" }}
+    viewport={{ once: true, margin: "-12%" }}
+    transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: (index % 4) * 0.06 }}
     onClick={onOpen}
-    className="group relative mb-6 block w-full overflow-hidden rounded-md break-inside-avoid"
+    className="group relative mb-6 block w-full overflow-hidden break-inside-avoid"
   >
-    <img src={item.src} alt={item.alt} loading="lazy" className="w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+    <motion.div
+      initial={{ scale: 1.18 }}
+      whileInView={{ scale: 1 }}
+      viewport={{ once: true, margin: "-12%" }}
+      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: (index % 4) * 0.06 }}
+    >
+      <img src={item.src} alt={item.alt} loading="lazy" className="duration-gallery-hover w-full object-cover transition-transform ease-out group-hover:scale-105" />
+    </motion.div>
     <div className="gallery-image-overlay absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     <span className="gallery-image-caption absolute bottom-4 left-4 text-sm font-medium text-white opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-[opacity,transform] duration-500">
       {item.alt}

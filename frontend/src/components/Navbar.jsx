@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, Moon, Sun, X } from "@/components/icons";
-import { useTheme } from "@/context/ThemeContext";
+import { Menu, X } from "@/components/icons";
 import { prefetchRoute } from "@/routes/pageLoaders";
+
+const EASE = [0.22, 1, 0.36, 1];
 
 const links = [
   { to: "/", label: "Home" },
@@ -20,7 +21,6 @@ const links = [
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { isLight, toggleTheme } = useTheme();
   const location = useLocation();
 
   useEffect(() => {
@@ -30,52 +30,52 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => setOpen(false), [location.pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    if (window.__novaLenis) open ? window.__novaLenis.stop() : window.__novaLenis.start();
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <>
-      <header
+      <motion.header
         data-testid="navbar"
-        className={`fixed top-0 inset-x-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500 ${
-          scrolled || open
-            ? "bg-void/70 backdrop-blur-xl border-b border-white/10"
-            : "bg-transparent border-b border-transparent"
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1.5, ease: EASE }}
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,backdrop-filter,border-color] duration-500 ${
+          scrolled || open ? "border-white/10 bg-void/80 backdrop-blur-md" : "border-transparent bg-transparent"
         }`}
       >
-        <nav className="mx-auto max-w-[1500px] px-6 md:px-10 h-20 flex items-center justify-between">
-          <Link to="/" data-testid="logo" className="group flex items-center gap-2">
-            <span className="font-display text-xl font-bold tracking-tight uppercase sm:text-2xl">
-              Achyut
-            </span>
-            <span className="font-display text-xl font-bold tracking-tight uppercase text-cyan transition-colors duration-300 sm:text-2xl">
-              Wadhwa
-            </span>
+        <nav className="mx-auto flex h-[78px] max-w-[1500px] items-center justify-between px-6 md:px-10">
+          <Link to="/" data-testid="logo" data-cursor="OPEN" className="flex flex-col uppercase leading-none text-white">
+            <span className="font-display text-base font-bold tracking-[0.28em] sm:text-lg">Achyut</span>
+            <span className="mt-1 font-mono text-[8px] font-semibold tracking-[0.52em] text-white/55">Wadhwa</span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-1">
-            {links.map((l) => (
+          <div className="hidden items-center gap-7 xl:flex">
+            {links.map((link) => (
               <NavLink
-                key={l.to}
-                to={l.to}
-                data-testid={`nav-${l.label.toLowerCase()}`}
-                onMouseEnter={() => prefetchRoute(l.to)}
-                onFocus={() => prefetchRoute(l.to)}
-                onTouchStart={() => prefetchRoute(l.to)}
+                key={link.to}
+                to={link.to}
+                data-testid={`nav-${link.label.toLowerCase()}`}
+                data-cursor="OPEN"
+                onMouseEnter={() => prefetchRoute(link.to)}
+                onFocus={() => prefetchRoute(link.to)}
                 className={({ isActive }) =>
-                  `relative px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                  `relative py-3 font-mono text-[9px] font-semibold uppercase tracking-[0.32em] transition-colors duration-300 ${
                     isActive ? "text-white" : "text-white/55 hover:text-white"
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    {l.label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-underline"
-                        className="absolute left-4 right-4 -bottom-0.5 h-px bg-cyan shadow-[0_0_10px_rgba(7,92,138,0.8)]"
-                      />
-                    )}
+                    {link.label}
+                    {isActive ? <motion.span layoutId="nav-underline" className="absolute inset-x-0 bottom-1 h-px bg-cyan" /> : null}
                   </>
                 )}
               </NavLink>
@@ -83,77 +83,63 @@ export const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              data-testid="theme-toggle"
-              aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
-              aria-pressed={isLight}
-              onClick={toggleTheme}
-              className="h-11 w-11 grid place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:text-cyan hover:border-cyan/45 hover:shadow-[0_0_18px_rgba(7,92,138,0.25)] transition-[color,border-color,box-shadow,background-color] duration-300"
-            >
-              {isLight ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-            </button>
             <Link
               to="/contact"
               data-testid="nav-book-now"
-              className="action-accent hidden sm:inline-flex items-center rounded-full bg-magenta px-5 py-2.5 text-sm font-semibold hover:shadow-[0_0_24px_rgba(31,95,128,0.42)] hover:scale-[1.03] transition-[transform,box-shadow] duration-300"
+              data-cursor="ENQUIRE"
+              className="duration-premium hidden min-h-[38px] items-center border border-white/25 px-5 font-mono text-[9px] font-semibold uppercase tracking-[0.28em] text-white transition-[background-color,border-color,color] hover:border-cyan hover:bg-cyan sm:inline-flex"
             >
-              Book Now
+              Book / Enquire <span aria-hidden="true" className="ml-3">↗</span>
             </Link>
             <button
+              type="button"
               data-testid="mobile-menu-toggle"
-              aria-label="Toggle menu"
-              onClick={() => setOpen((o) => !o)}
-              className="lg:hidden h-11 w-11 grid place-items-center rounded-full border border-white/10 text-white"
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((value) => !value)}
+              className="grid h-11 w-11 place-items-center border border-white/20 text-white xl:hidden"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </nav>
-      </header>
+      </motion.header>
 
       <AnimatePresence>
-        {open && (
+        {open ? (
           <motion.div
             data-testid="mobile-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-void/95 backdrop-blur-2xl lg:hidden pt-24 px-8"
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 bg-void px-8 pt-28 xl:hidden"
           >
             <div className="flex flex-col">
-              {links.map((l, i) => (
-                <motion.div
-                  key={l.to}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i }}
-                >
-                  <NavLink
-                    to={l.to}
-                    data-testid={`mobile-nav-${l.label.toLowerCase()}`}
-                    onTouchStart={() => prefetchRoute(l.to)}
-                    onFocus={() => prefetchRoute(l.to)}
-                    className={({ isActive }) =>
-                      `block py-4 border-b border-white/10 font-display text-3xl uppercase tracking-tight ${
-                        isActive ? "text-cyan" : "text-white/80"
-                      }`
-                    }
+              {links.map((link, index) => (
+                <div key={link.to} className="overflow-hidden border-b border-white/10">
+                  <motion.div
+                    initial={{ y: "110%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "110%" }}
+                    transition={{ duration: 0.6, delay: index * 0.045, ease: EASE }}
                   >
-                    {l.label}
-                  </NavLink>
-                </motion.div>
+                    <NavLink
+                      to={link.to}
+                      data-testid={`mobile-nav-${link.label.toLowerCase()}`}
+                      className={({ isActive }) =>
+                        `block py-3 font-display text-[9vw] font-bold uppercase leading-none tracking-tighter ${
+                          isActive ? "text-cyan" : "text-white"
+                        }`
+                      }
+                    >
+                      {link.label}
+                    </NavLink>
+                  </motion.div>
+                </div>
               ))}
-              <Link
-                to="/contact"
-                data-testid="mobile-book-now"
-                className="action-accent mt-8 inline-flex justify-center rounded-full bg-magenta px-6 py-4 font-semibold"
-              >
-                Book Now
-              </Link>
             </div>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );

@@ -14,7 +14,7 @@ const quickLinks = [
   { to: "/contact", label: "Contact" },
 ];
 
-const footerIconClass = "mt-0.5 h-4 w-4 shrink-0 text-cyan drop-shadow-[0_0_10px_rgba(7,92,138,0.58)]";
+const footerIconClass = "mt-0.5 h-4 w-4 shrink-0 text-cyan";
 const primaryPhone = site.phoneNumbers[0];
 const footerWhatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
   "Hi Achyut Wadhwa, I want to discuss a booking or collaboration.",
@@ -101,7 +101,7 @@ export const Footer = () => {
               type="submit"
               data-testid="newsletter-submit"
               aria-label="Subscribe"
-              className="action-accent grid h-10 w-10 shrink-0 place-items-center rounded-full bg-magenta shadow-[0_0_18px_rgba(31,95,128,0.2)] transition-[box-shadow,transform] duration-300 hover:scale-[1.04] hover:shadow-[0_0_22px_rgba(31,95,128,0.42)]"
+              className="action-accent grid h-10 w-10 shrink-0 place-items-center rounded-full bg-magenta transition-[background-color,transform] duration-300 hover:scale-[1.04] hover:bg-cyan"
             >
               <Send className="h-4 w-4" />
             </button>

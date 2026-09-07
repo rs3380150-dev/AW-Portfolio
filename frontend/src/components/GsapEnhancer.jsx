@@ -18,12 +18,6 @@ export const GsapEnhancer = () => {
     let refreshFrame = 0;
     const canUseParallax = window.matchMedia(desktopMotionQuery).matches;
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".gsap-page-root",
-        { autoAlpha: 0, y: 12 },
-        { autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out", clearProps: "opacity,visibility,transform" },
-      );
-
       gsap.utils.toArray(".section-heading-line").forEach((line) => {
         gsap.fromTo(
           line,

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Equalizer } from "@/components/Motion";
+
+const REVEAL_EASE = [0.22, 1, 0.36, 1];
+const CURTAIN_EASE = [0.76, 0, 0.24, 1];
 
 export const LoadingScreen = () => {
   const [done, setDone] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setDone(true), 1600);
+    const t = setTimeout(() => setDone(true), 1700);
     return () => clearTimeout(t);
   }, []);
 
@@ -14,28 +16,36 @@ export const LoadingScreen = () => {
       {!done && (
         <motion.div
           data-testid="loading-screen"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6 } }}
-          className="fixed inset-0 z-[100] grid place-items-center bg-void"
+          exit={{ y: "-100%" }}
+          transition={{ duration: 0.7, ease: CURTAIN_EASE }}
+          className="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-void"
         >
-          <div className="flex flex-col items-center gap-8">
+          <div className="overflow-hidden">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="font-display text-4xl md:text-6xl font-bold uppercase tracking-tight"
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.7, ease: REVEAL_EASE }}
+              className="font-display text-2xl font-bold uppercase tracking-[0.3em] text-white md:text-4xl"
             >
-              ACHYUT<span className="text-cyan"> WADHWA</span>
+              ACHYUT WADHWA
             </motion.div>
-            <Equalizer bars={9} variant="random" className="h-8" />
-            <div className="h-px w-40 bg-white/10 overflow-hidden">
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "0%" }}
-                transition={{ duration: 1.4, ease: "easeInOut" }}
-                className="h-full w-full bg-cyan"
-              />
-            </div>
+          </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.5 }}
+            className="mt-4 font-mono text-[9px] uppercase tracking-[0.5em] text-white/55"
+          >
+            Music / Performance / Sound
+          </motion.p>
+          <div className="mt-10 h-px w-48 overflow-hidden bg-white/15 md:w-64">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.1, ease: "easeInOut" }}
+              className="h-full bg-cyan"
+              style={{ transformOrigin: "left" }}
+            />
           </div>
         </motion.div>
       )}

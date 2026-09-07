@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
+export const REVEAL_EASE = [0.22, 1, 0.36, 1];
+
 const randomBarPatterns = [
   { a: 0.42, b: 0.88, c: 0.54, d: 0.96, e: 0.48, duration: "1.42s", delay: "-0.18s" },
   { a: 0.74, b: 0.36, c: 0.92, d: 0.5, e: 0.82, duration: "1.08s", delay: "-0.54s" },
@@ -10,7 +12,7 @@ const randomBarPatterns = [
   { a: 0.82, b: 0.52, c: 0.36, d: 0.88, e: 0.64, duration: "1.24s", delay: "-0.46s" },
 ];
 
-export const Equalizer = ({ bars = 5, active = true, className = "", color = "#0B78AC", variant = "beat" }) => {
+export const Equalizer = ({ bars = 5, active = true, className = "", color = "#B32626", variant = "beat" }) => {
   return (
     <div className={`flex items-end gap-[3px] h-5 ${className}`} aria-hidden="true">
       {Array.from({ length: bars }).map((_, i) => {
@@ -28,7 +30,7 @@ export const Equalizer = ({ bars = 5, active = true, className = "", color = "#0
         return (
           <span
             key={i}
-            className="w-[3px] rounded-full origin-bottom"
+            className="w-[3px] origin-bottom"
             style={{
               height: "100%",
               background: color,
@@ -46,13 +48,13 @@ export const Equalizer = ({ bars = 5, active = true, className = "", color = "#0
   );
 };
 
-export const ScrollReveal = ({ children, delay = 0, y = 50, className = "", ...props }) => (
+export const ScrollReveal = ({ children, delay = 0, y = 32, className = "", ...props }) => (
   <motion.div
     {...props}
     initial={{ opacity: 0, y }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-80px" }}
-    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+    viewport={{ once: true, margin: "-10%" }}
+    transition={{ duration: 0.9, ease: REVEAL_EASE, delay }}
     className={className}
   >
     {children}

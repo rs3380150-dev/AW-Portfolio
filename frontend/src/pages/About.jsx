@@ -37,7 +37,7 @@ export const About = () => (
           </div>
           <a
             href={site.pressKitUrl}
-            className="mt-8 inline-flex items-center gap-3 rounded-md border border-cyan/35 bg-gradient-to-r from-laser/35 to-cyan/15 px-5 py-3 text-sm font-bold text-white transition hover:border-cyan hover:shadow-[0_0_28px_rgba(7,92,138,0.22)]"
+            className="mt-8 inline-flex items-center gap-3 rounded-md border border-cyan/35 bg-gradient-to-r from-laser/35 to-cyan/15 px-5 py-3 text-sm font-bold text-white transition hover:border-cyan"
             data-testid="about-press-kit"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
@@ -80,7 +80,7 @@ export const About = () => (
                   <span className="font-mono text-cyan">{skill.level}%</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full rounded-full bg-cyan shadow-[0_0_18px_rgba(7,92,138,0.55)]" style={{ width: `${skill.level}%` }} />
+                  <div className="h-full rounded-full bg-cyan" style={{ width: `${skill.level}%` }} />
                 </div>
               </ScrollReveal>
             ))}

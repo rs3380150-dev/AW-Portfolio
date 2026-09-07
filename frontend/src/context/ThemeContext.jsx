@@ -4,8 +4,7 @@ import { flushSync } from "react-dom";
 const ThemeContext = createContext(null);
 
 const getInitialTheme = () => {
-  if (typeof window === "undefined") return "dark";
-  return window.localStorage.getItem("achyut-wadhwa-theme") === "light" ? "light" : "dark";
+  return "dark";
 };
 
 const applyThemeToRoot = (nextTheme) => {

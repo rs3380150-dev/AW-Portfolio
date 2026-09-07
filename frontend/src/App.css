@@ -1,7 +1,7 @@
 .App {
   min-height: 100vh;
   background: rgb(var(--color-void));
-  padding-bottom: 72px;
+  padding-bottom: 0;
 }
 
 .page-shell {

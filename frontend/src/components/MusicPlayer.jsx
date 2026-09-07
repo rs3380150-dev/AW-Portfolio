@@ -30,9 +30,9 @@ export const MusicPlayer = () => {
   return (
     <motion.div
       data-testid="music-player"
-      initial={{ y: 100 }}
+      initial={{ y: 80 }}
       animate={{ y: 0 }}
-      transition={{ delay: 1.6, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="group fixed bottom-0 inset-x-0 z-40 border-t border-white/10 bg-tinted/90 backdrop-blur-[28px]"
     >
       <div
@@ -56,7 +56,7 @@ export const MusicPlayer = () => {
             data-testid="player-toggle"
             aria-label={isPlaying ? "Pause" : "Play"}
             onClick={togglePlay}
-            className="action-accent grid h-12 w-12 place-items-center rounded-full bg-magenta shadow-[0_0_0_1px_rgba(255,255,255,0.16),0_0_28px_rgba(31,95,128,0.24)] transition-[transform,box-shadow] duration-300 hover:scale-[1.04] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22),0_0_34px_rgba(31,95,128,0.4)]"
+            className="action-accent grid h-12 w-12 place-items-center rounded-full bg-magenta transition-transform duration-300 hover:scale-[1.04]"
           >
             {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
           </button>

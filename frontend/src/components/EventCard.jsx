@@ -20,14 +20,14 @@ export const EventCard = ({ event, index = 0 }) => {
     <motion.article
       {...spotlightProps}
       data-testid={`event-card-${event.id}`}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: (index % 3) * 0.08 }}
-      className="spotlight-card group relative grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-6 items-center glass rounded-md p-5 sm:p-6 hover:border-cyan/35 hover:shadow-[0_0_30px_rgba(7,92,138,0.12)] transition-[border-color,box-shadow] duration-500"
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.08 }}
+      className="spotlight-card group relative grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-6 items-center glass rounded-md p-5 sm:p-6 hover:border-cyan/35 transition-colors duration-500"
     >
       <div data-spotlight-block className="relative overflow-hidden rounded sm:w-[120px] h-40 sm:h-28">
-        <img src={event.poster} alt={event.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+        <img src={event.poster} alt={event.name} loading="lazy" className="duration-gallery-hover h-full w-full object-cover transition-transform ease-out group-hover:scale-105" />
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-5 justify-between">
@@ -58,7 +58,7 @@ export const EventCard = ({ event, index = 0 }) => {
           className={`shrink-0 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-[transform,box-shadow,background-color] duration-300 ${
             soldOrDone
               ? "border border-white/10 text-white/40 cursor-not-allowed"
-              : "action-accent bg-magenta hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(31,95,128,0.38)]"
+              : "action-accent bg-magenta hover:scale-[1.03]"
           }`}
         >
           {soldOrDone ? (statusLabel[event.status]) : (<><Ticket className="h-4 w-4" /> Tickets <ArrowUpRight className="h-4 w-4" /></>)}

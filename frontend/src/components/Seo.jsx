@@ -41,7 +41,7 @@ export const Seo = () => {
     setMeta("name", "description", meta.description);
     setMeta("name", "robots", "index,follow,max-image-preview:large");
     setMeta("name", "author", "Achyut Wadhwa");
-    setMeta("name", "theme-color", "#02080C");
+    setMeta("name", "theme-color", "#050505");
 
     setMeta("property", "og:site_name", "Achyut Wadhwa");
     setMeta("property", "og:type", "website");

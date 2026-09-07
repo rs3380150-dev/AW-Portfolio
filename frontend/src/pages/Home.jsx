@@ -9,6 +9,8 @@ import { EventCard } from "@/components/EventCard";
 import { ServiceCard } from "@/components/ServiceCard";
 import { StatCounter } from "@/components/StatCounter";
 import { Marquee, ScrollReveal } from "@/components/Motion";
+import { HorizontalGallery } from "@/components/HorizontalGallery";
+import { SoundWaveform } from "@/components/SoundWaveform";
 import { useSpotlightProps } from "@/components/Spotlight";
 import { site, manifesto } from "@/data/site";
 import { tracks } from "@/data/tracks";
@@ -20,7 +22,8 @@ const SectionLink = ({ to, children, testId }) => (
   <Link
     to={to}
     data-testid={testId}
-    className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-white/75 hover:border-cyan hover:text-cyan transition-colors duration-300"
+    data-cursor="OPEN"
+    className="duration-premium inline-flex items-center gap-2 border border-white/25 px-5 py-3 font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-white/75 transition-[background-color,border-color,color] hover:border-cyan hover:bg-cyan hover:text-white"
   >
     {children}
     <ArrowRight className="h-4 w-4" />
@@ -34,7 +37,7 @@ const ManifestoCard = ({ item, index }) => {
     <ScrollReveal
       {...spotlightProps}
       delay={index * 0.04}
-      className="spotlight-card grid gap-4 overflow-hidden rounded-md border border-white/10 bg-white/[0.03] p-6 md:grid-cols-[80px_1fr]"
+      className="spotlight-card grid gap-4 overflow-hidden border border-white/10 bg-white/[0.03] p-6 md:grid-cols-[80px_1fr]"
     >
       <span className="font-mono text-sm text-cyan">{item.n}</span>
       <div>
@@ -52,7 +55,7 @@ export const Home = () => {
     <>
       <Hero />
 
-      <section className="border-y border-white/10 bg-navy/70">
+      <section className="border-y border-white/10 bg-navy">
         <div className="mx-auto grid max-w-[1500px] grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4 md:px-10">
           {site.stats.map((stat, index) => (
             <StatCounter key={stat.label} {...stat} index={index} />
@@ -60,7 +63,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section className="px-6 py-24 md:px-10 md:py-32">
+      <section id="manifesto" className="paper-section px-6 py-28 text-void md:px-10 md:py-44">
         <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <SectionHeading
             index="01"
@@ -86,7 +89,7 @@ export const Home = () => {
         poster={site.heroPoster}
       />
 
-      <section className="px-6 py-24 md:px-10 md:py-32">
+      <section className="px-6 py-28 md:px-10 md:py-40">
         <div className="mx-auto max-w-[1500px]">
           <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
@@ -105,7 +108,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section className="bg-tinted px-6 py-24 md:px-10 md:py-32">
+      <section className="bg-navy px-6 py-28 md:px-10 md:py-40">
         <div className="mx-auto max-w-[1500px]">
           <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
@@ -124,35 +127,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section className="px-6 py-24 md:px-10 md:py-32">
-        <div className="mx-auto max-w-[1500px]">
-          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <SectionHeading
-              index="04"
-              eyebrow="Gallery"
-              title="Light, sweat, signal."
-              subtitle="A visual archive from booths, rooftops, studios, and packed floors."
-            />
-            <SectionLink to="/gallery" testId="home-view-gallery">Open Gallery</SectionLink>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-            {gallery.slice(0, 6).map((item, index) => (
-              <Link
-                key={item.id}
-                to="/gallery"
-                data-testid={`home-gallery-${item.id}`}
-                className={`group relative min-h-[260px] overflow-hidden rounded-md ${
-                  index === 0 || index === 5 ? "lg:col-span-2" : "lg:col-span-1"
-                }`}
-              >
-                <img src={item.src} alt={item.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="home-gallery-overlay absolute inset-0 bg-gradient-to-t from-void/85 via-transparent to-transparent" />
-                <span className="home-gallery-caption absolute bottom-4 left-4 text-sm font-medium text-white/80">{item.alt}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HorizontalGallery items={gallery} />
 
       <section className="border-y border-white/10 bg-navy px-6 py-24 md:px-10 md:py-32">
         <div className="mx-auto max-w-[1500px]">
@@ -173,6 +148,8 @@ export const Home = () => {
         </div>
       </section>
 
+      <SoundWaveform />
+
       <section className="home-final-cta relative overflow-hidden px-6 py-24 md:px-10 md:py-32">
         <div className="home-final-cta-media absolute inset-0 -z-10">
           <img src={site.artistImages[1]} alt="Achyut Wadhwa on stage" className="home-final-cta-image gsap-parallax-media h-full w-full object-cover opacity-35" />
@@ -190,7 +167,7 @@ export const Home = () => {
             <Link
               to="/contact"
               data-testid="home-final-booking"
-              className="action-accent mt-8 inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 font-semibold hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(31,95,128,0.42)] transition-[transform,box-shadow] duration-300"
+              className="action-accent mt-8 inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 font-semibold hover:scale-[1.03] transition-transform duration-300"
             >
               Start a Booking
               <ArrowRight className="h-5 w-5" />

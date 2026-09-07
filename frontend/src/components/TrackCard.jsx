@@ -21,10 +21,10 @@ export const TrackCard = ({ track, index = 0 }) => {
     <motion.article
       {...spotlightProps}
       data-testid={`track-card-${track.id}`}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: (index % 3) * 0.08 }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.08 }}
       className="spotlight-card group glass rounded-md overflow-hidden hover:border-white/20 transition-colors duration-300"
     >
       <div data-spotlight-block className="relative aspect-square overflow-hidden">
@@ -32,14 +32,14 @@ export const TrackCard = ({ track, index = 0 }) => {
           src={track.cover}
           alt={track.title}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="duration-gallery-hover h-full w-full object-cover transition-transform ease-out group-hover:scale-105"
         />
         <div className="track-image-overlay absolute inset-0 bg-gradient-to-t from-void via-void/20 to-transparent" />
         <button
           onClick={() => playTrack(track.id)}
           data-testid={`play-track-${track.id}`}
           aria-label={isActive ? `Pause ${track.title}` : `Play ${track.title}`}
-          className="action-accent absolute bottom-4 right-4 grid h-14 w-14 place-items-center rounded-full bg-magenta opacity-100 shadow-[0_0_24px_rgba(31,95,128,0.38)] transition-[transform,opacity] duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-void"
+          className="action-accent absolute bottom-4 right-4 grid h-14 w-14 place-items-center rounded-full bg-magenta opacity-100 transition-[transform,opacity] duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-void"
         >
           {isActive ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
         </button>

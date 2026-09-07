@@ -57,17 +57,17 @@ export const VideoCard = ({ video, index = 0 }) => {
       <motion.article
         {...spotlightProps}
         data-testid={`video-card-${video.id}`}
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: (index % 3) * 0.08 }}
+        viewport={{ once: true, margin: "-10%" }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.08 }}
         className="spotlight-card group glass rounded-md overflow-hidden hover:border-white/20 transition-colors duration-300"
       >
         <button ref={triggerRef} onClick={() => setOpen(true)} data-spotlight-block data-testid={`play-video-${video.id}`} aria-label={`Play ${video.title}`} className="relative block w-full aspect-video overflow-hidden">
-          <img src={thumb} alt={video.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+          <img src={thumb} alt={video.title} loading="lazy" className="duration-gallery-hover h-full w-full object-cover transition-transform ease-out group-hover:scale-105" />
           <div className="video-image-overlay absolute inset-0 bg-void/30 group-hover:bg-void/10 transition-colors duration-300" />
           <span className="absolute inset-0 grid place-items-center">
-            <span className="action-accent h-16 w-16 grid place-items-center rounded-full bg-magenta group-hover:scale-110 transition-transform duration-300 shadow-[0_0_30px_rgba(31,95,128,0.38)]">
+            <span className="action-accent h-16 w-16 grid place-items-center rounded-full bg-magenta group-hover:scale-110 transition-transform duration-300">
               <Play className="h-7 w-7 ml-1" />
             </span>
           </span>

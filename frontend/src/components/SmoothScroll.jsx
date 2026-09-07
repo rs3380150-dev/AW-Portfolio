@@ -26,12 +26,9 @@ export const SmoothScroll = () => {
     }
 
     const lenis = new Lenis({
-      lerp: 0.11,
-      duration: 0.82,
-      wheelMultiplier: 0.9,
+      lerp: 0.09,
       touchMultiplier: 1,
       smoothWheel: true,
-      anchors: { duration: 0.75 },
       autoRaf: false,
     });
 
