@@ -1,0 +1,5 @@
+Intended asset: Sunrise DJ Set - Tulum YouTube thumbnail
+YouTube video ID: jfKfPfyJRdk
+Thumbnail source: https://img.youtube.com/vi/jfKfPfyJRdk/hqdefault.jpg
+Download status: 404 Not Found on 2026-08-22
+Code reference: frontend/src/data/videos.js (v3)

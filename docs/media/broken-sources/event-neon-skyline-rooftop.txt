@@ -1,0 +1,4 @@
+Intended asset: Neon Skyline Rooftop event poster
+Website source: https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?crop=entropy&cs=srgb&fm=jpg&w=940&q=85
+Download status: 404 Not Found on 2026-08-22
+Code reference: frontend/src/data/events.js (e3)

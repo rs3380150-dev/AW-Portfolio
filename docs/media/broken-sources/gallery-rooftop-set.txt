@@ -1,0 +1,4 @@
+Intended asset: Rooftop set gallery image
+Website source: https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?crop=entropy&cs=srgb&fm=jpg&w=900&q=85
+Download status: 404 Not Found on 2026-08-22
+Code reference: frontend/src/data/gallery.js (g11)

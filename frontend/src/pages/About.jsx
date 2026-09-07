@@ -1,5 +1,6 @@
 import React from "react";
-import { Disc3, Download } from "@/components/icons";
+import { Download } from "@/components/icons";
+import { AboutPortrait } from "@/components/AboutPortrait";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ScrollReveal } from "@/components/Motion";
 import { StatCounter } from "@/components/StatCounter";
@@ -45,21 +46,11 @@ export const About = () => (
         </ScrollReveal>
 
         <ScrollReveal delay={0.08} className="relative min-h-[520px] overflow-visible md:min-h-[640px]">
-          <div className="relative h-full min-h-[520px] overflow-hidden rounded-md border border-white/10 bg-white/[0.03] md:min-h-[640px]">
-            <img src={site.aboutImage} alt="" aria-hidden="true" className="gsap-parallax-media absolute inset-0 h-[108%] w-full scale-110 object-cover opacity-35 blur-md" />
-            <div className="about-image-overlay absolute inset-0 bg-gradient-to-t from-void via-void/35 to-transparent" />
-            <img src={site.aboutImage} alt="Achyut Wadhwa portrait" className="about-portrait-image absolute inset-0 z-10 h-full w-full object-contain object-center" />
-            <div className="absolute inset-0 z-20 bg-gradient-to-r from-void/25 via-transparent to-transparent" />
-          </div>
-          <div className="about-hero-badge absolute -top-4 left-5 z-20 rounded-md border border-white/10 bg-void/75 px-4 py-3 text-white shadow-[0_18px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl md:-left-4">
-            <Disc3 className="h-5 w-5 text-cyan" aria-hidden="true" />
-            <p className="mt-2 font-display text-2xl font-bold leading-none">Open</p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">Collabs & Live</p>
-          </div>
-          <div className="about-record-card absolute -bottom-8 -right-3 hidden h-32 w-32 overflow-hidden rounded-md border border-cyan/20 bg-void/80 shadow-[0_0_40px_rgba(7,92,138,0.16)] backdrop-blur-xl md:block">
-            <div className="absolute inset-5 rounded-full border border-white/15 bg-[radial-gradient(circle,rgba(198,112,74,0.18)_0%,rgba(182,95,58,0.14)_23%,rgba(7,92,138,0.14)_38%,rgba(255,255,255,0.04)_39%,rgba(255,255,255,0.02)_100%)]" />
-            <div className="absolute inset-[3.25rem] rounded-full bg-cyan" />
-          </div>
+          <AboutPortrait
+            mode={site.aboutPortraitEffect}
+            src={site.aboutImage}
+            alt="Achyut Wadhwa portrait"
+          />
         </ScrollReveal>
       </div>
     </section>

@@ -63,6 +63,8 @@ export const site = {
   heroVideo: cloudinaryMedia("/assets/videos/hero/hero-background.mp4"),
   heroVideoWebm: cloudinaryMedia("/assets/videos/hero/hero-background.webm"),
   aboutImage: cloudinaryMedia("/assets/images/site/about-portrait.jpeg"),
+  // Options: "fluid" (cursor trail), "distortion" (image warp), or "classic".
+  aboutPortraitEffect: "fluid",
   artistImages: [
     cloudinaryMedia("/assets/images/gallery/05-promo-portrait-neon.jpg"),
     cloudinaryMedia("/assets/images/gallery/01-festival-mainstage-lights.jpg"),
