@@ -30,8 +30,7 @@ test("Cloudinary-backed media references exist in the upload manifest", () => {
   });
 
   const remoteMedia = references.filter(({ publicPath }) =>
-    /^\/assets\/(images|videos)\//.test(publicPath) &&
-    publicPath !== "/assets/images/ui/grain-texture.svg",
+    /^\/assets\/(images|videos)\//.test(publicPath),
   );
 
   assert.equal(cloudinaryManifest.assetCount, 37);
@@ -45,15 +44,15 @@ test("Cloudinary-backed media references exist in the upload manifest", () => {
   }
 });
 
-test("media intentionally kept local still exists", () => {
+test("audio previews intentionally kept local still exist", () => {
   const references = referenceFiles.flatMap((file) => {
     const source = readFileSync(resolve(projectRoot, file), "utf8");
-    return [...source.matchAll(/["'](\/assets\/(?:audio|images\/ui)\/[^"']+)["']/g)].map(
+    return [...source.matchAll(/["'](\/assets\/audio\/[^"']+)["']/g)].map(
       (match) => ({ file, publicPath: match[1] }),
     );
   });
 
-  assert.ok(references.length >= 7, "Expected local demo audio and UI texture references");
+  assert.ok(references.length >= 6, "Expected local demo audio references");
 
   for (const reference of references) {
     const diskPath = resolve(projectRoot, "public", reference.publicPath.slice(1));

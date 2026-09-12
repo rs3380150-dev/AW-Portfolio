@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Play, ArrowRight } from "@/components/icons";
-import { site } from "@/data/site";
+import { Play } from "@/components/icons";
 import { usePlayer } from "@/context/PlayerContext";
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -23,146 +21,62 @@ const MaskLine = ({ children, index }) => (
 
 export const Hero = () => {
   const ref = useRef(null);
-  const videoRef = useRef(null);
-  const [shouldRenderVideo, setShouldRenderVideo] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
   const { togglePlay } = usePlayer();
-  const heroPoster = site.heroPoster || site.heroImage;
-
-  useEffect(() => {
-    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const saveData = navigator.connection?.saveData;
-    setShouldRenderVideo(!reduceMotion && !saveData);
-  }, []);
-
-  useEffect(() => {
-    if (!shouldRenderVideo) return undefined;
-    const syncVideo = () => {
-      const video = videoRef.current;
-      if (!video) return;
-      if (document.hidden) video.pause();
-      else video.play().catch(() => {});
-    };
-    syncVideo();
-    document.addEventListener("visibilitychange", syncVideo);
-    return () => document.removeEventListener("visibilitychange", syncVideo);
-  }, [shouldRenderVideo]);
 
   return (
-    <section ref={ref} data-testid="hero" className="relative h-[100svh] overflow-hidden bg-void">
-      <motion.div style={{ y: imageY }} className="pointer-events-none absolute inset-0">
-        <motion.div
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.6, delay: PRELOADER_OFFSET - 0.5, ease: EASE }}
-          className="h-full w-full"
-        >
-          {shouldRenderVideo ? (
-            <video
-              ref={videoRef}
-              className="industrial-hero-media h-full w-full object-cover object-[68%_center]"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={heroPoster}
-              aria-hidden="true"
-              onError={() => setShouldRenderVideo(false)}
-            >
-              {site.heroVideoWebm ? <source src={site.heroVideoWebm} type="video/webm" /> : null}
-              <source src={site.heroVideo} type="video/mp4" />
-            </video>
-          ) : (
-            <img src={heroPoster} alt="" aria-hidden="true" fetchPriority="high" className="industrial-hero-media h-full w-full object-cover object-[68%_center]" />
-          )}
-        </motion.div>
-        <div className="absolute inset-0 bg-void/55" />
-      </motion.div>
+    <section ref={ref} data-testid="hero" className="relative h-[100svh] overflow-hidden bg-black">
+      <motion.div style={{ y: textY }} className="relative z-10 flex h-full items-center justify-center px-6 text-center md:px-12">
+        <div className="w-full">
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: PRELOADER_OFFSET + 0.75, duration: 0.65, ease: EASE }}
+            className="mb-5 font-mono text-[9px] uppercase tracking-[0.42em] text-white/65 md:mb-7 md:text-[10px]"
+          >
+            Music Producer · DJ · Live Performer
+          </motion.p>
 
-      <motion.div style={{ y: textY }} className="relative z-10 flex h-full flex-col justify-between px-6 pb-8 pt-24 md:px-10 md:pb-10">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: PRELOADER_OFFSET + 0.9, duration: 0.8 }}
-          className="flex justify-between font-mono text-[9px] uppercase tracking-[0.4em] text-white/55"
-        >
-          <span>{site.role}</span>
-          <span className="hidden sm:block">{site.tagline}</span>
-          <span>{site.location}</span>
-        </motion.div>
-
-        <div>
-          <h1 className="font-display text-[11vw] font-bold uppercase leading-[0.88] tracking-tighter text-white md:text-[6.5vw]">
+          <h1 className="mx-auto font-display text-[16vw] font-bold uppercase leading-[0.76] tracking-[-0.07em] text-white md:text-[10vw]">
             <MaskLine index={0}>Achyut</MaskLine>
             <MaskLine index={1}>Wadhwa</MaskLine>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-white/65 md:text-base">
-            {site.tagline} — {site.intro}
-          </p>
-
-          <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
-            <motion.button
-              type="button"
-              onClick={togglePlay}
-              data-testid="hero-listen"
-              data-cursor="LISTEN"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: PRELOADER_OFFSET + 1.1, duration: 0.7 }}
-              className="group flex w-fit items-center gap-5 text-left"
-            >
-              <span className="duration-premium flex h-12 w-12 items-center justify-center border border-white/30 transition-[background-color,border-color] group-hover:border-cyan group-hover:bg-cyan">
-                <Play className="ml-0.5 h-4 w-4 text-white" />
-              </span>
-              <span>
-                <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.35em] text-white">Listen Now</span>
-                <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.3em] text-white/55">{site.role}</span>
-              </span>
-            </motion.button>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: PRELOADER_OFFSET + 1.25, duration: 0.7 }}
-              className="flex items-center gap-8"
-            >
-              <Link
-                to="/contact"
-                data-testid="hero-book"
-                data-cursor="ENQUIRE"
-                className="duration-premium hidden items-center border border-white/25 px-5 py-3 font-mono text-[9px] font-semibold uppercase tracking-[0.28em] text-white transition-[background-color,border-color] hover:border-cyan hover:bg-cyan sm:inline-flex"
-              >
-                Book for an Event <ArrowRight className="ml-3 h-4 w-4" />
-              </Link>
-              <div className="flex items-center gap-3" aria-hidden="true">
-                <span className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/55">Scroll</span>
-                <span className="relative h-10 w-px overflow-hidden bg-white/15">
-                  <motion.span
-                    className="absolute left-0 top-0 h-4 w-px bg-cyan"
-                    animate={{ y: [-16, 40] }}
-                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                </span>
-              </div>
-            </motion.div>
-          </div>
+          <motion.button
+            type="button"
+            onClick={togglePlay}
+            data-testid="hero-listen"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: PRELOADER_OFFSET + 1.15, duration: 0.7, ease: EASE }}
+            className="group mx-auto mt-9 inline-flex items-center gap-3 bg-white px-7 py-4 font-display text-sm font-bold uppercase tracking-[0.08em] text-void transition-[background-color,color,transform] duration-300 hover:scale-[1.03] hover:bg-cyan md:mt-11"
+          >
+            <Play className="h-4 w-4" />
+            Listen Now
+          </motion.button>
         </div>
       </motion.div>
 
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-[2vw] left-0 z-[5] overflow-hidden whitespace-nowrap">
-        <motion.span
-          initial={{ y: "40%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: PRELOADER_OFFSET + 0.6, duration: 1.1, ease: EASE }}
-          className="text-outline block font-display text-[20vw] font-bold uppercase leading-[0.78] tracking-tighter md:text-[17vw]"
-        >
-          Achyut&nbsp;Wadhwa
-        </motion.span>
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: PRELOADER_OFFSET + 1.35, duration: 0.6 }}
+        className="pointer-events-none absolute inset-x-0 bottom-7 z-10 flex justify-center"
+        aria-hidden="true"
+      >
+        <div className="flex flex-col items-center gap-2">
+          <span className="font-mono text-[8px] uppercase tracking-[0.45em] text-white/55">Scroll down</span>
+          <span className="relative h-8 w-px overflow-hidden bg-white/20">
+            <motion.span
+              className="absolute left-0 top-0 h-3 w-px bg-white"
+              animate={{ y: [-12, 32] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </span>
+        </div>
+      </motion.div>
+
     </section>
   );
 };

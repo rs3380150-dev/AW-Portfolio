@@ -4,7 +4,6 @@ import { SectionHeading } from "@/components/SectionHeading";
 
 const GalleryFrame = ({ item, index, wide = false }) => (
   <figure
-    data-cursor="VIEW"
     className={`group relative shrink-0 overflow-hidden ${
       wide ? "h-[46vh] w-[78vw] md:h-[62vh] md:w-[42vw]" : "h-[46vh] w-[64vw] md:h-[62vh] md:w-[30vw]"
     }`}
@@ -41,7 +40,7 @@ export const HorizontalGallery = ({ items }) => {
           <SectionHeading index="04" eyebrow="Gallery" title="Light, sweat, signal." />
         </div>
         <motion.div style={{ x }} className="flex h-full items-center gap-6 pl-[6vw] pt-28">
-          <div className="flex h-[62vh] w-[30vw] shrink-0 flex-col justify-end border-l border-white/20 pb-5 pl-6">
+          <div className="flex h-[62vh] w-[30vw] shrink-0 flex-col justify-end pb-5 pl-6">
             <p className="font-display text-[7vw] font-black uppercase leading-[0.78] tracking-tighter text-white">LIVE</p>
             <p className="mt-5 max-w-xs font-sans text-sm leading-relaxed text-white/55">
               Studio, stage and everything in between. Scroll to move through the room.

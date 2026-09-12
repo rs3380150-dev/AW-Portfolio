@@ -44,7 +44,6 @@ export const Lightbox = ({ items, index, onClose, onPrev, onNext }) => {
 export const GalleryItem = ({ item, onOpen, index = 0 }) => (
   <motion.button
     data-testid={`gallery-item-${item.id}`}
-    data-cursor="VIEW"
     initial={{ clipPath: "inset(100% 0 0 0)" }}
     whileInView={{ clipPath: "inset(0% 0 0 0)" }}
     viewport={{ once: true, margin: "-12%" }}

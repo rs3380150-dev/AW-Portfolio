@@ -4,16 +4,15 @@ import { ArrowRight } from "@/components/icons";
 import { Hero } from "@/components/Hero";
 import { ConnectSection } from "@/components/ConnectSection";
 import { SectionHeading } from "@/components/SectionHeading";
-import { TrackCard } from "@/components/TrackCard";
 import { EventCard } from "@/components/EventCard";
 import { ServiceCard } from "@/components/ServiceCard";
 import { StatCounter } from "@/components/StatCounter";
 import { Marquee, ScrollReveal } from "@/components/Motion";
 import { HorizontalGallery } from "@/components/HorizontalGallery";
 import { SoundWaveform } from "@/components/SoundWaveform";
+import { ScrollEditorialExperience } from "@/components/ScrollEditorialExperience";
 import { useSpotlightProps } from "@/components/Spotlight";
 import { site, manifesto } from "@/data/site";
-import { tracks } from "@/data/tracks";
 import { events } from "@/data/events";
 import { gallery } from "@/data/gallery";
 import { services } from "@/data/services";
@@ -22,7 +21,6 @@ const SectionLink = ({ to, children, testId }) => (
   <Link
     to={to}
     data-testid={testId}
-    data-cursor="OPEN"
     className="duration-premium inline-flex items-center gap-2 border border-white/25 px-5 py-3 font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-white/75 transition-[background-color,border-color,color] hover:border-cyan hover:bg-cyan hover:text-white"
   >
     {children}
@@ -63,7 +61,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section id="manifesto" className="paper-section px-6 py-28 text-void md:px-10 md:py-44">
+      <section id="manifesto" className="manifesto-dark-section border-y border-white/10 px-6 py-28 md:px-10 md:py-44">
         <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <SectionHeading
             index="01"
@@ -84,29 +82,10 @@ export const Home = () => {
         stroke
         className="py-8"
         duration="marquee-medium"
-        videoSrc={site.heroVideo}
-        videoWebm={site.heroVideoWebm}
-        poster={site.heroPoster}
+        solidColor="#b32626"
       />
 
-      <section className="px-6 py-28 md:px-10 md:py-40">
-        <div className="mx-auto max-w-[1500px]">
-          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <SectionHeading
-              index="02"
-              eyebrow="Music"
-              title="Recent heat for late rooms."
-              subtitle="Originals, remixes, and live recordings from the mainstage edge."
-            />
-            <SectionLink to="/music" testId="home-view-music">All Music</SectionLink>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {tracks.slice(0, 3).map((track, index) => (
-              <TrackCard key={track.id} track={track} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <ScrollEditorialExperience />
 
       <section className="bg-navy px-6 py-28 md:px-10 md:py-40">
         <div className="mx-auto max-w-[1500px]">

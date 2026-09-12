@@ -30,7 +30,7 @@ export const CustomCursor = () => {
       }
 
       setActive(true);
-      setLabel(target.getAttribute("data-cursor") || (target.closest("a") ? "OPEN" : ""));
+      setLabel(target.getAttribute("data-cursor") || "");
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
@@ -45,32 +45,28 @@ export const CustomCursor = () => {
 
   if (!enabled) return null;
 
-  const diameter = active ? (label ? 72 : 40) : 10;
+  const diameter = active ? (label ? 82 : 36) : 18;
 
   return (
     <motion.div
       aria-hidden="true"
       data-testid="custom-cursor"
-      className="pointer-events-none fixed left-0 top-0 z-[120] hidden md:block"
-      style={{ x: springX, y: springY }}
+      className="custom-cursor-surface pointer-events-none fixed left-0 top-0 z-[120] flex items-center justify-center overflow-hidden"
+      animate={{ width: diameter, height: diameter }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      style={{
+        x: springX,
+        y: springY,
+        translate: "-50% -50%",
+        borderRadius: "50%",
+        willChange: "transform, width, height",
+      }}
     >
-      <motion.div
-        className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center border"
-        animate={{
-          width: diameter,
-          height: diameter,
-          backgroundColor: active ? "rgba(179,38,38,0.9)" : "rgba(242,240,234,0.9)",
-          borderColor: active ? "rgba(179,38,38,0)" : "rgba(242,240,234,0.4)",
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        style={{ borderRadius: "50%" }}
-      >
-        {label && active ? (
-          <span className="font-sans text-[9px] font-semibold uppercase tracking-[0.25em] text-white">
-            {label}
-          </span>
-        ) : null}
-      </motion.div>
+      {label && active ? (
+        <span className="font-sans text-[9px] font-semibold uppercase tracking-[0.25em] text-black">
+          {label}
+        </span>
+      ) : null}
     </motion.div>
   );
 };

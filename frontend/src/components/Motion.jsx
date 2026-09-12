@@ -69,6 +69,7 @@ export const Marquee = ({
   videoSrc = "",
   videoWebm = "",
   poster = "",
+  solidColor = "",
 }) => {
   const items = Array.from({ length: 4 });
   const animationClasses = {
@@ -80,6 +81,8 @@ export const Marquee = ({
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const hasVideo = Boolean(videoSrc || videoWebm);
+  const hasSolidFill = Boolean(solidColor);
+  const hasMaskedFill = hasVideo || hasSolidFill;
   const [shouldRenderVideo, setShouldRenderVideo] = useState(false);
 
   useEffect(() => {
@@ -130,7 +133,7 @@ export const Marquee = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full overflow-hidden select-none ${hasVideo ? "video-text-marquee" : ""} ${className}`}
+      className={`relative w-full overflow-hidden select-none ${hasMaskedFill ? "video-text-marquee" : ""} ${className}`}
     >
       {hasVideo ? (
         shouldRenderVideo ? (
@@ -151,18 +154,24 @@ export const Marquee = ({
         ) : poster ? (
           <img className="video-text-marquee-media" src={poster} alt="" aria-hidden="true" loading="lazy" />
         ) : null
+      ) : hasSolidFill ? (
+        <div
+          className="video-text-marquee-media video-text-marquee-solid"
+          style={{ backgroundColor: solidColor }}
+          aria-hidden="true"
+        />
       ) : null}
 
-      <div className={hasVideo ? "video-text-marquee-mask" : ""}>
+      <div className={hasMaskedFill ? "video-text-marquee-mask" : ""}>
         <div className={`flex whitespace-nowrap ${animationClass}`}>
         {items.map((_, i) => (
           <span
             key={i}
             className={`px-8 font-display font-semibold uppercase text-6xl md:text-8xl lg:text-9xl leading-none ${
-              hasVideo ? "video-text-marquee-copy" : stroke ? "text-stroke" : "text-white/90"
+              hasMaskedFill ? "video-text-marquee-copy" : stroke ? "text-stroke" : "text-white/90"
             }`}
           >
-            {text} <span className={hasVideo ? "video-text-marquee-symbol px-4" : "text-cyan px-4"}>*</span>
+            {text} <span className={hasMaskedFill ? "video-text-marquee-symbol px-4" : "text-cyan px-4"}>*</span>
           </span>
         ))}
         </div>

@@ -59,7 +59,7 @@ export const Music = () => {
             ))}
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-10 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((track, index) => (
               <TrackCard key={track.id} track={track} index={index} />
             ))}

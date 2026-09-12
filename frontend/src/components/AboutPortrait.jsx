@@ -346,7 +346,7 @@ export const FluidTrailAboutPortrait = ({ src, alt }) => {
           className="about-portrait-image absolute inset-0 z-10 h-full w-full object-contain object-center"
         />
         <FluidTrailCanvas
-          color="#16aeea"
+          color="#b32626"
           radius={1.2}
           intensity={0.25}
           trailDuration={1.65}
