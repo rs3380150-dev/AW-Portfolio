@@ -1,0 +1,36 @@
+// Saved on request before removing the ACHYUT WADHWA → A merge and A zoom sequence.
+// Restore this file over ../LoadingScreen.jsx to return to that loader version.
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
+const REVEAL_EASE = [0.22, 1, 0.36, 1];
+const CURTAIN_EASE = [0.76, 0, 0.24, 1];
+const NAME = "ACHYUT WADHWA";
+const MERGE_DURATION = 0.86;
+const MERGE_TIMES = [0, 0.18, 0.68, 1];
+
+const MorphingLetter = ({ letter, index, reduceMotion }) => {
+  const delay = reduceMotion ? 0 : 0.1 + index * 0.055;
+  const filterId = `loading-letter-morph-${index}`;
+  return <motion.svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" initial={{ opacity: 0, scaleX: 0.12, scaleY: 1.3, marginRight: "0.02em" }} animate={{ opacity: 1, scaleX: reduceMotion ? 1 : [0.12, 0.76, 0.76, 1], scaleY: reduceMotion ? 1 : [1.3, 1.3, 1.3, 1], marginRight: reduceMotion ? 0 : ["0.02em", "0.02em", "0.02em", 0] }} transition={{ opacity: { duration: reduceMotion ? 0.01 : 0.16, delay }, scaleX: { duration: reduceMotion ? 0.01 : 1.15, times: [0, 0.14, 0.6, 1], delay, ease: REVEAL_EASE }, scaleY: { duration: reduceMotion ? 0.01 : 1.15, times: [0, 0.14, 0.6, 1], delay, ease: REVEAL_EASE }, marginRight: { duration: reduceMotion ? 0.01 : 1.15, times: [0, 0.14, 0.6, 1], delay, ease: REVEAL_EASE } }} className="h-[0.92em] w-[0.72em] origin-center overflow-visible">
+    <filter id={filterId} x="0" y="0" width="100" height="100" filterUnits="userSpaceOnUse"><feMorphology in="SourceGraphic" operator="dilate" radius={reduceMotion ? 0 : 74}>{!reduceMotion && <animate attributeName="radius" values="74;74;0" keyTimes="0;0.32;1" dur="1.15s" begin={`${delay}s`} fill="freeze" />}</feMorphology></filter>
+    <motion.rect x="0" y="5" width="100" height="90" fill="#f2f0ea" initial={{ opacity: 0 }} animate={{ opacity: reduceMotion ? 0 : [0, 1, 1, 0] }} transition={{ duration: reduceMotion ? 0.01 : 1.15, times: [0, 0.13, 0.54, 1], delay, ease: REVEAL_EASE }} />
+    <text x="50" y="82" textAnchor="middle" textLength="84" lengthAdjust="spacingAndGlyphs" filter={`url(#${filterId})`} fill="#f2f0ea" className="font-display font-black" style={{ fontSize: 88 }}>{letter}</text>
+  </motion.svg>;
+};
+
+export const LoadingScreen = () => {
+  const [done, setDone] = useState(false); const [phase, setPhase] = useState("reveal"); const [letterOffsets, setLetterOffsets] = useState({}); const reduceMotion = useReducedMotion(); const stageRef = useRef(null); const letterRefs = useRef({});
+  useEffect(() => {
+    if (reduceMotion) { const timer = setTimeout(() => setDone(true), 650); return () => clearTimeout(timer); }
+    const mergeTimer = setTimeout(() => { const stage = stageRef.current?.getBoundingClientRect(); if (stage) { const center = stage.left + stage.width / 2; setLetterOffsets(Object.fromEntries(Object.entries(letterRefs.current).map(([index, element]) => { const letter = element?.getBoundingClientRect(); return [index, letter ? center - (letter.left + letter.width / 2) : 0]; }))); } setPhase("merge"); }, 2380);
+    const zoomTimer = setTimeout(() => setPhase("zoom"), 3260); const doneTimer = setTimeout(() => setDone(true), 4160);
+    return () => { clearTimeout(mergeTimer); clearTimeout(zoomTimer); clearTimeout(doneTimer); };
+  }, [reduceMotion]);
+  return <AnimatePresence>{!done && <motion.div data-testid="loading-screen" aria-label="Loading Achyut Wadhwa" exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0.15 : 0.18, ease: CURTAIN_EASE }} className="fixed inset-0 z-[110] grid place-items-center overflow-hidden bg-void">
+    <div ref={stageRef} className="absolute inset-0 grid place-items-center"><h1 aria-label={NAME} className="relative z-10 flex items-center justify-center gap-[0.045em] text-[clamp(2.9rem,9vw,10rem)] leading-none">{NAME.split(" ").map((word, wordIndex) => <span key={word} className={`flex items-center gap-[0.045em] ${wordIndex ? "ml-[0.16em]" : ""}`}>{Array.from(word).map((letter, letterIndex) => { const index = NAME.indexOf(word) + letterIndex; const isMerging = phase !== "reveal"; return <motion.span key={`${letter}-${index}`} ref={(element) => { letterRefs.current[index] = element; }} initial={false} animate={isMerging ? { x: letterOffsets[index] ?? 0, scaleX: phase === "merge" ? [1, 0.65, 0.18, 0.025] : 0.025, scaleY: phase === "merge" ? [1, 0.96, 0.56, 0.2] : 0.2, opacity: phase === "merge" ? [1, 0.92, 0.48, 0] : 0, filter: phase === "merge" ? ["blur(0px)", "blur(0px)", "blur(1px)", "blur(4px)"] : "blur(4px)" } : { x: 0, scaleX: 1, scaleY: 1, opacity: 1, filter: "blur(0px)" }} transition={phase === "merge" ? { x: { duration: MERGE_DURATION, ease: REVEAL_EASE }, scaleX: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE }, scaleY: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE }, opacity: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE }, filter: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE } } : { duration: 0.01 }} style={{ transformOrigin: "center center" }} className="inline-flex shrink-0"><MorphingLetter letter={letter} index={index} reduceMotion={reduceMotion} /></motion.span>; })}</span>)}</h1>
+      <motion.div aria-hidden="true" data-testid="loader-final-a-zoom" initial={{ x: "-50%", y: "-50%", scale: 1, opacity: 1 }} animate={phase === "zoom" ? { x: "-50%", y: "-50%", scale: 16, opacity: [1, 1, 0] } : { x: "-50%", y: "-50%", scale: 1, opacity: 1 }} transition={phase === "zoom" ? { opacity: { duration: 0.72, times: [0, 0.18, 1], ease: CURTAIN_EASE }, scale: { duration: 0.72, ease: CURTAIN_EASE } } : { duration: 0.01 }} style={{ left: "50%", top: "50%", transformOrigin: "50% 50%" }} className="pointer-events-none absolute z-20"><motion.span data-testid="loader-final-a" initial={{ opacity: 0, clipPath: "inset(44% 48% 44% 48%)", filter: "blur(10px)" }} animate={phase === "merge" ? { opacity: [0, 0.08, 0.58, 1], clipPath: ["inset(44% 48% 44% 48%)", "inset(30% 38% 30% 38%)", "inset(10% 15% 10% 15%)", "inset(0 0% 0 0%)"], filter: ["blur(10px)", "blur(7px)", "blur(2px)", "blur(0px)"] } : phase === "reveal" ? { opacity: 0, clipPath: "inset(44% 48% 44% 48%)", filter: "blur(10px)" } : { opacity: 1, clipPath: "inset(0 0% 0 0%)", filter: "blur(0px)" }} transition={phase === "merge" ? { opacity: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE }, clipPath: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE }, filter: { duration: MERGE_DURATION, times: MERGE_TIMES, ease: REVEAL_EASE } } : { duration: 0.01 }} style={{ color: "#f2f0ea", transformOrigin: "50% 50%" }} className="block font-display text-center text-[clamp(7rem,18vw,20rem)] font-black leading-none">A</motion.span></motion.div>
+    </div>
+    <motion.div aria-hidden="true" initial={{ scaleX: 0 }} animate={phase === "reveal" ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }} transition={phase === "reveal" ? { duration: reduceMotion ? 0.01 : 0.75, delay: reduceMotion ? 0 : 1.95, ease: REVEAL_EASE } : { duration: 0.28, ease: REVEAL_EASE }} className="absolute bottom-9 left-[7vw] right-[7vw] h-px origin-left bg-[#f2f0ea] md:bottom-12" />
+  </motion.div>}</AnimatePresence>;
+};

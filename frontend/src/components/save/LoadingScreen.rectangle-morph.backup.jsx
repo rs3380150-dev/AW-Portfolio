@@ -81,24 +81,11 @@ const MorphingLetter = ({ letter, index, reduceMotion }) => {
 
 export const LoadingScreen = () => {
   const [done, setDone] = useState(false);
-  const [phase, setPhase] = useState("letters");
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reduceMotion) {
-      const timer = setTimeout(() => setDone(true), 650);
-      return () => clearTimeout(timer);
-    }
-
-    const lineTimer = setTimeout(() => setPhase("line"), 2140);
-    const liftTimer = setTimeout(() => setPhase("lift"), 2820);
-    const doneTimer = setTimeout(() => setDone(true), 3660);
-
-    return () => {
-      clearTimeout(lineTimer);
-      clearTimeout(liftTimer);
-      clearTimeout(doneTimer);
-    };
+    const timer = setTimeout(() => setDone(true), reduceMotion ? 550 : 2900);
+    return () => clearTimeout(timer);
   }, [reduceMotion]);
 
   return (
@@ -107,57 +94,31 @@ export const LoadingScreen = () => {
         <motion.div
           data-testid="loading-screen"
           aria-label="Loading Achyut Wadhwa"
-          initial={{ y: "0%", opacity: 1 }}
-          animate={phase === "lift" ? { y: "-100%", opacity: [1, 1, 0] } : { y: "0%", opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={phase === "lift"
-            ? {
-                y: { duration: 0.78, ease: CURTAIN_EASE },
-                opacity: { duration: 0.78, times: [0, 0.82, 1], ease: CURTAIN_EASE },
-              }
-            : { duration: reduceMotion ? 0.15 : 0.18, ease: CURTAIN_EASE }}
+          exit={{ clipPath: "inset(0 0 100% 0)" }}
+          transition={{ duration: reduceMotion ? 0.25 : 0.85, ease: CURTAIN_EASE }}
           className="fixed inset-0 z-[110] grid place-items-center overflow-hidden bg-void"
         >
-          <div className="absolute inset-0 grid place-items-center">
-            <h1
-              aria-label={NAME}
-              className="relative z-10 flex w-fit items-center justify-center gap-[0.045em] text-[clamp(2.9rem,9vw,10rem)] leading-none"
-            >
-              {NAME.split(" ").map((word, wordIndex) => (
-                <span key={word} className={`flex items-center gap-[0.045em] ${wordIndex ? "ml-[0.16em]" : ""}`}>
-                  {Array.from(word).map((letter, letterIndex) => {
-                    const index = NAME.indexOf(word) + letterIndex;
+          <h1
+            aria-label={NAME}
+            className="flex items-center justify-center gap-[0.045em] text-[clamp(2.9rem,9vw,10rem)] leading-none"
+          >
+            {NAME.split(" ").map((word, wordIndex) => (
+              <span key={word} className={`flex items-center gap-[0.045em] ${wordIndex ? "ml-[0.16em]" : ""}`}>
+                {Array.from(word).map((letter, letterIndex) => {
+                  const index = NAME.indexOf(word) + letterIndex;
+                  return <MorphingLetter key={`${letter}-${index}`} letter={letter} index={index} reduceMotion={reduceMotion} />;
+                })}
+              </span>
+            ))}
+          </h1>
 
-                    return (
-                      <motion.span
-                        key={`${letter}-${index}`}
-                        initial={false}
-                        animate={{ opacity: 1, scaleX: 1, scaleY: 1, filter: "blur(0px)" }}
-                        transition={{ duration: 0.01 }}
-                        style={{ transformOrigin: "center center" }}
-                        className="inline-flex shrink-0"
-                      >
-                        <MorphingLetter letter={letter} index={index} reduceMotion={reduceMotion} />
-                      </motion.span>
-                    );
-                  })}
-                </span>
-              ))}
-              <motion.span
-              aria-hidden="true"
-              initial={{ x: "-50%", scaleX: 0, opacity: 0 }}
-              animate={phase === "letters"
-                ? { x: "-50%", scaleX: 0, opacity: 0 }
-                : { x: "-50%", scaleX: 1, opacity: 1 }}
-                transition={{
-                  scaleX: { duration: reduceMotion ? 0.01 : 0.58, ease: REVEAL_EASE },
-                  opacity: { duration: reduceMotion ? 0.01 : 0.12 },
-                }}
-              className="absolute bottom-[-clamp(2rem,2.8vw,3rem)] left-1/2 h-px w-3/4 origin-left bg-[#f2f0ea]"
-              />
-            </h1>
-
-          </div>
+          <motion.div
+            aria-hidden="true"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.75, delay: reduceMotion ? 0 : 1.95, ease: REVEAL_EASE }}
+            className="absolute bottom-9 left-[7vw] right-[7vw] h-px origin-left bg-[#f2f0ea] md:bottom-12"
+          />
         </motion.div>
       )}
     </AnimatePresence>

@@ -82,7 +82,7 @@ export const Home = () => {
         stroke
         className="py-8"
         duration="marquee-medium"
-        solidColor="#b32626"
+        solidColor="#f2f0ea"
       />
 
       <ScrollEditorialExperience />

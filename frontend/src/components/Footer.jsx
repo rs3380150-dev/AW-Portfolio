@@ -33,15 +33,22 @@ export const Footer = () => {
   };
 
   return (
-    <footer data-testid="footer" className="relative overflow-hidden border-t border-white/10 bg-navy">
+    <footer data-testid="footer" className="relative overflow-hidden border-t border-white/10 bg-black">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan/70 to-transparent" />
       <div className="mx-auto grid max-w-[1500px] gap-12 px-6 py-20 md:grid-cols-2 md:px-10 lg:grid-cols-[1.15fr_0.7fr_1fr_1.15fr]">
-        <div>
-          <div className="font-display text-3xl font-bold uppercase leading-none tracking-tight">
-            ACHYUT<span className="text-cyan"> WADHWA</span>
-          </div>
+        <div className="flex flex-col items-center text-center">
+          <Link to="/" className="group mb-5 inline-flex w-full justify-center transition-transform duration-300 hover:scale-105" aria-label="Achyut Wadhwa Home">
+            <img
+              src="/assets/images/footer-aw-logo.png"
+              alt="Achyut Wadhwa logo"
+              className="h-auto w-[min(100%,18rem)] object-contain"
+              loading="lazy"
+            />
+          </Link>
           <p className="mt-5 max-w-sm text-sm leading-[1.75] text-white/55">{site.intro}</p>
-          <SocialIcons className="mt-6" size="h-9 w-9" />
+          <div className="mt-6">
+            <SocialIcons size="h-9 w-9" />
+          </div>
         </div>
 
         <div>

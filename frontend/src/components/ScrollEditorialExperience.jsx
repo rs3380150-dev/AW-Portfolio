@@ -10,7 +10,11 @@ const demoReleases = [
   { title: "SONG 3", artist: "Achyut Wadhwa" },
   { title: "SONG 4", artist: "Achyut Wadhwa" },
   { title: "SONG 5", artist: "Achyut Wadhwa" },
-].map((release, index) => ({ ...release, cover: tracks[index % tracks.length].cover }));
+].map((release, index) => ({
+  ...release,
+  cover: tracks[index % tracks.length].cover,
+  slug: tracks[index % tracks.length].slug,
+}));
 
 const GlyphMark = ({ glyph }) => (
   <svg viewBox="0 0 100 100" role="presentation" focusable="false">
@@ -55,6 +59,7 @@ const ReleaseCard = ({ release, index }) => (
   <article className="editorial-release-card">
     <div className="editorial-release-art">
       <img src={release.cover} alt="" />
+      <Link to={`/music/${release.slug}`} className="editorial-more-info">MORE INFO <ArrowRight className="h-3.5 w-3.5" /></Link>
       <button type="button" aria-label={`Play ${release.title}`} className="editorial-play"><span aria-hidden="true">▶</span></button>
       <span className="editorial-release-number">{String(index + 1).padStart(2, "0")}</span>
     </div>

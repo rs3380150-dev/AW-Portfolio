@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause } from "@/components/icons";
+import { ArrowUpRight, Play, Pause } from "@/components/icons";
 import { usePlayer } from "@/context/PlayerContext";
 
 const platforms = [
@@ -86,6 +87,15 @@ export const TrackCard = ({ track, index = 0 }) => {
         >
           {track.genre}
         </span>
+
+        <Link
+          to={`/music/${track.slug}`}
+          data-testid={`track-more-info-${track.id}`}
+          aria-label={`More info about ${track.title}`}
+          className="track-more-info absolute right-4 top-4 z-20 inline-flex items-center gap-2 bg-[#f2f0ea] px-3.5 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#050505]"
+        >
+          More info <ArrowUpRight className="h-3.5 w-3.5" />
+        </Link>
 
         {/* Play button — bottom right */}
         <div className="absolute bottom-4 right-4 z-10">

@@ -84,10 +84,13 @@ export const Navbar = () => {
               to="/"
               data-testid="logo"
               tabIndex={open ? -1 : 0}
-              className={`flex flex-col uppercase leading-none text-white ${open ? "pointer-events-none" : ""}`}
+              className={`group inline-flex items-center transition-transform duration-300 hover:scale-105 ${open ? "pointer-events-none" : ""}`}
             >
-              <span className="font-display text-base font-bold tracking-[0.28em] sm:text-lg">Achyut</span>
-              <span className="mt-1 font-mono text-[8px] font-semibold tracking-[0.52em] text-white/55">Wadhwa</span>
+              <img
+                src="/assets/images/footer-aw-logo.png"
+                alt="Achyut Wadhwa"
+                className="h-auto w-28 object-contain sm:w-32"
+              />
             </Link>
           </motion.div>
 

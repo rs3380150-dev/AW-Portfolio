@@ -19,6 +19,7 @@ import { pageLoaders, prefetchPriorityRoutes } from "@/routes/pageLoaders";
 const Home = lazy(() => pageLoaders["/"]().then((module) => ({ default: module.Home })));
 const About = lazy(() => pageLoaders["/about"]().then((module) => ({ default: module.About })));
 const Music = lazy(() => pageLoaders["/music"]().then((module) => ({ default: module.Music })));
+const MusicDetail = lazy(() => import("@/pages/MusicDetail").then((module) => ({ default: module.MusicDetail })));
 const Events = lazy(() => pageLoaders["/events"]().then((module) => ({ default: module.Events })));
 const GalleryPage = lazy(() => pageLoaders["/gallery"]().then((module) => ({ default: module.GalleryPage })));
 const Videos = lazy(() => pageLoaders["/videos"]().then((module) => ({ default: module.Videos })));
@@ -37,12 +38,22 @@ const RouteReset = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    // Immediate scroll to top
+    window.scrollTo({ top: 0, left: 0 });
+
     if (window.__novaLenis) {
       window.__novaLenis.scrollTo(0, { immediate: true });
-      return;
     }
 
-    window.scrollTo({ top: 0, left: 0 });
+    // Force scroll to top again after Framer Motion transition settles
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0 });
+      if (window.__novaLenis) {
+        window.__novaLenis.scrollTo(0, { immediate: true });
+      }
+    });
+
+    return () => cancelAnimationFrame(raf);
   }, [pathname]);
 
   return null;
@@ -65,6 +76,7 @@ const AnimatedRoutes = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/music" element={<Music />} />
+            <Route path="/music/:slug" element={<MusicDetail />} />
             <Route path="/events" element={<Events />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/videos" element={<Videos />} />

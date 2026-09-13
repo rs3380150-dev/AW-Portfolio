@@ -33,7 +33,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: PRELOADER_OFFSET + 0.75, duration: 0.65, ease: EASE }}
-            className="mb-5 font-mono text-[9px] uppercase tracking-[0.42em] text-white/65 md:mb-7 md:text-[10px]"
+            className="mb-5 font-mono text-xs uppercase tracking-[0.38em] text-white/75 md:mb-7 md:text-sm"
           >
             Music Producer · DJ · Live Performer
           </motion.p>
