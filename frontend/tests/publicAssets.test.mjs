@@ -14,6 +14,7 @@ const referenceFiles = [
   "src/data/site.js",
   "src/data/tracks.js",
   "src/data/videos.js",
+  "src/components/Hero.jsx",
 ];
 
 const cloudinaryManifest = JSON.parse(
@@ -33,7 +34,7 @@ test("Cloudinary-backed media references exist in the upload manifest", () => {
     /^\/assets\/(images|videos)\//.test(publicPath),
   );
 
-  assert.equal(cloudinaryManifest.assetCount, 37);
+  assert.equal(cloudinaryManifest.assetCount, 41);
   assert.ok(remoteMedia.length >= 35, "Expected image and hero-video Cloudinary references");
 
   for (const reference of remoteMedia) {

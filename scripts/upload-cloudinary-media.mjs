@@ -9,6 +9,11 @@ const frontendRoot = path.join(projectRoot, "frontend");
 const assetsRoot = path.join(frontendRoot, "public", "assets");
 const envPath = path.join(frontendRoot, ".env");
 const outputPath = path.join(frontendRoot, "src", "data", "cloudinary-media.json");
+const onlyDirectories = process.argv
+  .filter((arg) => arg.startsWith("--only="))
+  .flatMap((arg) => arg.slice("--only=".length).split(","))
+  .map((entry) => entry.trim().replace(/^\/+|\/+$/g, ""))
+  .filter(Boolean);
 
 const requireFromFrontend = createRequire(path.join(frontendRoot, "package.json"));
 const { v2: cloudinary } = requireFromFrontend("cloudinary");
@@ -16,12 +21,23 @@ const { v2: cloudinary } = requireFromFrontend("cloudinary");
 const uploadDirectories = [
   "images/events",
   "images/gallery",
+  "images/hero",
   "images/music-covers",
   "images/site",
   "images/testimonials",
   "images/video-thumbnails",
   "videos/hero",
 ];
+
+const selectedUploadDirectories = onlyDirectories.length
+  ? uploadDirectories.filter((directory) => onlyDirectories.includes(directory))
+  : uploadDirectories;
+
+const unknownDirectories = onlyDirectories.filter((directory) => !uploadDirectories.includes(directory));
+
+if (unknownDirectories.length) {
+  throw new Error(`Unknown upload directories: ${unknownDirectories.join(", ")}`);
+}
 
 const parseEnv = (source) => {
   const values = {};
@@ -98,14 +114,18 @@ cloudinary.config({
 
 const files = (
   await Promise.all(
-    uploadDirectories.map((directory) => listFiles(path.join(assetsRoot, directory))),
+    selectedUploadDirectories.map((directory) => listFiles(path.join(assetsRoot, directory))),
   )
 )
   .flat()
   .map(getUploadDetails)
   .sort((a, b) => a.localPath.localeCompare(b.localPath));
 
-const assets = {};
+const previousManifest = onlyDirectories.length
+  ? JSON.parse(await readFile(outputPath, "utf8"))
+  : { assets: {} };
+
+const assets = { ...previousManifest.assets };
 
 for (const [index, file] of files.entries()) {
   process.stdout.write(`[${index + 1}/${files.length}] ${file.localPath} ... `);
@@ -140,4 +160,3 @@ const manifest = {
 
 await writeFile(outputPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 console.log(`Cloudinary manifest written with ${manifest.assetCount} assets.`);
-

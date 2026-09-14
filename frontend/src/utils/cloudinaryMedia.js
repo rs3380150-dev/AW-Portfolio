@@ -3,6 +3,7 @@ import manifest from "@/data/cloudinary-media.json";
 const transformations = [
   [/^\/assets\/images\/events\//, "f_auto,q_auto,c_fill,w_1200,h_800"],
   [/^\/assets\/images\/gallery\//, "f_auto,q_auto,c_limit,w_1400"],
+  [/^\/assets\/images\/hero\//, "f_auto,q_auto,c_fill,w_1920,h_1080"],
   [/^\/assets\/images\/music-covers\//, "f_auto,q_auto,c_fill,w_800,h_800"],
   [/\/images\/site\/hero-poster\./, "f_auto,q_auto,c_fill,w_1920,h_1080"],
   [/\/images\/site\/social-share-og\./, "f_jpg,q_auto,c_fill,w_1200,h_630"],
@@ -27,4 +28,3 @@ export const cloudinaryMedia = (localPath) => {
 
   return `https://res.cloudinary.com/${encodeURIComponent(manifest.cloudName)}/${asset.resourceType}/upload/${transformation}/v${asset.version}/${publicId}.${asset.format}`;
 };
-

@@ -3,13 +3,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Play } from "@/components/icons";
 import { usePlayer } from "@/context/PlayerContext";
 import { HeroHoldGallery } from "@/components/HeroHoldGallery";
-import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
 
 const EASE = [0.22, 1, 0.36, 1];
 const PRELOADER_OFFSET = 1.55;
 const HERO_IMAGES = [
-  cloudinaryMedia("/assets/images/hero/achyut-guitar-day.png"),
-  cloudinaryMedia("/assets/images/hero/achyut-guitar-sunset.png"),
+  "/assets/images/hero/achyut-guitar-day.png",
+  "/assets/images/hero/achyut-guitar-sunset.png",
 ];
 
 const MaskLine = ({ children, index }) => (

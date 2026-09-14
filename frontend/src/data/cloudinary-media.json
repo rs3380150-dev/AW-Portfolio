@@ -1,7 +1,7 @@
 {
   "cloudName": "fqji5ezh",
-  "generatedAt": "2026-08-22T18:51:52.323Z",
-  "assetCount": 37,
+  "generatedAt": "2026-09-14T20:48:46.114Z",
+  "assetCount": 41,
   "assets": {
     "/assets/images/events/01-awakenings-festival.jpg": {
       "resourceType": "image",
@@ -261,6 +261,34 @@
       "format": "webm",
       "version": 1787424711,
       "bytes": 1122547
+    },
+    "/assets/images/hero/achyut-guitar-day.png": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/hero/achyut-guitar-day",
+      "format": "png",
+      "version": 1789418918,
+      "bytes": 2231846
+    },
+    "/assets/images/hero/achyut-guitar-day2.png": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/hero/achyut-guitar-day2",
+      "format": "png",
+      "version": 1789418921,
+      "bytes": 2109231
+    },
+    "/assets/images/hero/achyut-guitar-sunset.png": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/hero/achyut-guitar-sunset",
+      "format": "png",
+      "version": 1789418923,
+      "bytes": 1732732
+    },
+    "/assets/images/hero/achyut-guitar-sunset2.png": {
+      "resourceType": "image",
+      "publicId": "nova-pulse/images/hero/achyut-guitar-sunset2",
+      "format": "png",
+      "version": 1789418925,
+      "bytes": 1559599
     }
   }
 }

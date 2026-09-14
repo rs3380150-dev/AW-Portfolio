@@ -11,7 +11,7 @@
     "media:sync": "powershell -ExecutionPolicy Bypass -File ../scripts/sync-remote-media.ps1",
     "media:upload": "node ../scripts/upload-cloudinary-media.mjs",
     "media:verify": "node ../scripts/verify-cloudinary-media.mjs",
-    "media:cleanup": "node ../scripts/cleanup-uploaded-media.mjs --confirm-uploaded=37",
+    "media:cleanup": "node ../scripts/cleanup-uploaded-media.mjs --confirm-uploaded=41",
     "press-kit": "python ../scripts/generate_press_kit.py",
     "preview": "vite preview --host 0.0.0.0"
   },
