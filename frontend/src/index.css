@@ -1586,3 +1586,153 @@ textarea:focus {
     .scroll-glyph-stage { height: 100vh; }
     .scroll-glyph, .scroll-glyph-fill { transition: none !important; }
 }
+
+/* Compact fallback for unusually short desktop viewports. */
+@media (min-width: 768px) and (max-height: 699px) {
+    .menu-panel { padding-top: 4.5rem; padding-bottom: 1.25rem; }
+    .menu-side-title { display: none; }
+    .menu-layout { grid-template-columns: .75fr 1.25fr !important; gap: 2.5rem !important; align-items: center !important; }
+    .menu-visual { display: block !important; height: min(46vh, 400px) !important; }
+    .menu-primary-link { padding-top: .5rem !important; padding-bottom: .5rem !important; }
+    .menu-primary-label { font-size: clamp(2rem, 5vw, 3.5rem) !important; }
+    .menu-secondary { margin-top: 1.5rem !important; padding-top: 1.5rem !important; }
+}
+
+@media (min-width: 768px) and (max-height: 600px) {
+    .menu-panel { padding-top: 3.75rem; }
+    .menu-layout { grid-template-columns: 1fr !important; gap: 1rem !important; align-items: start !important; }
+    .menu-visual { display: none !important; }
+    .menu-primary-link { padding-top: .3rem !important; padding-bottom: .3rem !important; }
+    .menu-primary-label { font-size: clamp(1.55rem, 4vw, 2.6rem) !important; }
+    .menu-secondary { margin-top: .85rem !important; gap: 1rem !important; padding-top: .9rem !important; }
+    .menu-secondary-link { font-size: .72rem !important; letter-spacing: .28em !important; }
+}
+
+/* Reference-style menu composition: preserve both columns through normal browser zoom. */
+@media (min-width: 1200px) and (min-height: 700px) {
+    .menu-panel {
+        position: relative;
+        display: block;
+        max-width: none !important;
+        height: 100%;
+        min-height: 0 !important;
+        padding-top: 0 !important;
+        padding-right: 4vw;
+        padding-bottom: 0 !important;
+        padding-left: 4vw;
+    }
+
+    .menu-top-spacer {
+        display: none;
+    }
+
+    .menu-layout {
+        --menu-stage-size: min(584px, calc(100vh - 215px), calc((100vw - 11rem) / 2));
+        position: absolute;
+        top: clamp(4rem, 11.4vh, 5.75rem);
+        left: 50%;
+        grid-template-columns: repeat(2, var(--menu-stage-size)) !important;
+        width: calc((var(--menu-stage-size) * 2) + 40px);
+        height: var(--menu-stage-size);
+        margin: 0;
+        gap: 40px !important;
+        align-items: stretch !important;
+        transform: translateX(-50%);
+    }
+
+    .menu-visual {
+        display: block !important;
+        width: 100%;
+        max-width: none !important;
+        height: 100% !important;
+    }
+
+    .menu-layout > div:last-child {
+        height: 100%;
+    }
+
+    .menu-layout ol {
+        display: block;
+        height: 100%;
+    }
+
+    .menu-layout ol > li {
+        min-height: 0;
+    }
+
+    .menu-layout ol > li:first-child,
+    .menu-layout ol > li:first-child > div,
+    .menu-layout ol > li:first-child .menu-primary-link {
+        height: calc(var(--menu-stage-size) * 72 / 520);
+    }
+
+    .menu-layout ol > li:not(:first-child),
+    .menu-layout ol > li:not(:first-child) > div,
+    .menu-layout ol > li:not(:first-child) .menu-primary-link {
+        height: calc(var(--menu-stage-size) * 112 / 520);
+    }
+
+    .menu-primary-link {
+        grid-template-columns: calc(var(--menu-stage-size) * 37 / 520) max-content 1fr !important;
+        align-items: baseline !important;
+        gap: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: calc(var(--menu-stage-size) * 8 / 520) !important;
+    }
+
+    .menu-layout ol > li:not(:first-child) .menu-primary-link {
+        padding-top: calc(var(--menu-stage-size) * 40 / 520) !important;
+    }
+
+    .menu-primary-link > span:first-child,
+    .menu-primary-link > span:last-child {
+        font-size: calc(var(--menu-stage-size) * 16 / 520) !important;
+        line-height: calc(var(--menu-stage-size) * 24 / 520) !important;
+    }
+
+    .menu-primary-label {
+        font-size: calc(var(--menu-stage-size) * 48 / 520) !important;
+        line-height: calc(var(--menu-stage-size) * 64 / 520) !important;
+        letter-spacing: normal !important;
+    }
+
+    .menu-primary-link > span:last-child {
+        justify-self: stretch !important;
+        margin-left: calc(var(--menu-stage-size) * 24 / 520);
+    }
+
+    .menu-secondary {
+        position: absolute;
+        right: 1vw;
+        bottom: 0;
+        left: 1vw;
+        box-sizing: border-box;
+        height: 87px;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, .15) !important;
+        padding: 52px 2vw 0 !important;
+        align-items: flex-start !important;
+    }
+
+    .menu-secondary-link {
+        display: inline-flex;
+        height: auto;
+        padding-right: 0;
+        font-size: 19px !important;
+        letter-spacing: .42em !important;
+        text-decoration: none;
+    }
+
+    .menu-secondary > div {
+        gap: 0 2.5rem !important;
+    }
+
+    .menu-secondary > span:last-child a {
+        display: inline-flex;
+        height: auto;
+        font-size: 9px !important;
+        letter-spacing: .3em !important;
+        text-decoration: none;
+    }
+}

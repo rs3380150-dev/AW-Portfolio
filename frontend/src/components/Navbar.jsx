@@ -121,9 +121,10 @@ export const Navbar = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.6, delay: 0.2 } }}
             exit={{ opacity: 0, transition: { duration: 0.6, delay: 1 } }}
-            className="fixed inset-0 z-[60] overflow-y-auto bg-black text-white"
+            className="menu-overlay fixed inset-0 z-[60] overflow-y-auto bg-black text-white"
           >
-            <div className="mx-auto flex min-h-full max-w-[1600px] flex-col px-6 pb-7 pt-24 md:px-12 md:pb-8 md:pt-24">
+            <div className="menu-panel mx-auto flex min-h-full max-w-[1600px] flex-col px-6 pb-7 pt-24 md:px-12 md:pb-8 md:pt-24">
+              <div className="menu-top-spacer" aria-hidden="true" />
               <div className="menu-side-title hidden md:inline-flex">
                 <motion.span
                   aria-hidden="true"
@@ -135,12 +136,12 @@ export const Navbar = () => {
                 <span>Menu</span>
               </div>
 
-              <div className="grid flex-1 items-center gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-14 lg:gap-20">
+              <div className="menu-layout grid flex-1 items-center gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-14 lg:gap-20">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1, transition: { duration: 0.4, delay: 0.2, ease: EASE_OUT } }}
                   exit={{ opacity: 0, transition: { duration: 0.4, delay: 0.7, ease: EASE_IN } }}
-                  className="relative hidden h-[min(54vh,520px)] w-full max-w-[520px] justify-self-center overflow-hidden bg-white/5 md:block"
+                  className="menu-visual relative hidden h-[min(54vh,520px)] w-full max-w-[520px] justify-self-center overflow-hidden bg-white/5 md:block"
                 >
                   <AnimatePresence mode="sync" initial={false}>
                     <motion.img
@@ -192,12 +193,12 @@ export const Navbar = () => {
                                 setHoveredIndex(index);
                                 prefetchRoute(link.to);
                               }}
-                              className={`grid grid-cols-[34px_1fr] items-baseline gap-3 py-4 transition-colors duration-200 sm:grid-cols-[42px_auto_1fr] sm:gap-5 lg:py-5 ${
+                              className={`menu-primary-link grid grid-cols-[34px_1fr] items-baseline gap-3 py-4 transition-colors duration-200 sm:grid-cols-[42px_auto_1fr] sm:gap-5 lg:py-5 ${
                                 dimmed ? "text-white/25" : "text-white"
                               }`}
                             >
                               <span className="font-mono text-xs text-white/55">{roman[index]}</span>
-                              <span className="font-display text-[clamp(2rem,7.8vw,4.5rem)] font-bold uppercase leading-[0.84] tracking-[-0.045em]">
+                              <span className="menu-primary-label font-display text-[clamp(2rem,7.8vw,4.5rem)] font-bold uppercase leading-[0.84] tracking-[-0.045em]">
                                 {link.label}
                               </span>
                               <span className="hidden justify-self-end font-sans text-sm text-current/70 sm:block">{link.description}</span>
@@ -227,7 +228,7 @@ export const Navbar = () => {
                 </div>
               </div>
 
-              <div className="mt-10 flex flex-col gap-6 border-t border-white/15 pt-10 sm:flex-row sm:items-center sm:justify-between md:mb-8">
+              <div className="menu-secondary mt-10 flex flex-col gap-6 border-t border-white/15 pt-10 sm:flex-row sm:items-center sm:justify-between md:mb-8">
                 <div className="flex flex-wrap gap-x-10 gap-y-3">
                   {secondaryLinks.map((link, index) => (
                     <motion.span
@@ -241,7 +242,7 @@ export const Navbar = () => {
                         onClick={closeMenu}
                         onMouseEnter={() => prefetchRoute(link.to)}
                         onFocus={() => prefetchRoute(link.to)}
-                        className="font-mono text-[19px] font-bold uppercase tracking-[0.42em] text-white/80 transition-colors duration-200 hover:text-white"
+                        className="menu-secondary-link font-mono text-[19px] font-bold uppercase tracking-[0.42em] text-white/80 transition-colors duration-200 hover:text-white"
                       >
                         {link.label}
                       </Link>
