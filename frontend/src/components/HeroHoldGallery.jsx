@@ -242,6 +242,7 @@ export const HeroHoldGallery = ({ hostRef, images }) => {
 
     Promise.all(images.map((src) => new Promise((resolve, reject) => {
       const image = new Image();
+      image.crossOrigin = "anonymous";
       image.onload = () => resolve(image);
       image.onerror = reject;
       image.src = src;
@@ -251,7 +252,9 @@ export const HeroHoldGallery = ({ hostRef, images }) => {
       textures.push(...loaded.map(createTexture));
       drawingRef.current?.(0, activeIndexRef.current);
       canvas.classList.add("is-ready");
-    }).catch(() => {});
+    }).catch((error) => {
+      console.warn("Hero hold gallery images could not be prepared for the WebGL transition.", error);
+    });
 
     const resizeObserver = new ResizeObserver(() => drawingRef.current?.(progressValueRef.current, activeIndexRef.current));
     resizeObserver.observe(canvas);
