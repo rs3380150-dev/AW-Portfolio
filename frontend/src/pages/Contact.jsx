@@ -8,6 +8,7 @@ import { SocialIcons } from "@/components/SocialIcons";
 import { ScrollReveal } from "@/components/Motion";
 import { services } from "@/data/services";
 import { site } from "@/data/site";
+import { supabase } from "@/lib/supabase";
 
 const initialForm = {
   name: "",
@@ -81,8 +82,22 @@ export const Contact = () => {
     setFallbackLinks(null);
 
     try {
+      let savedToInbox = false;
+      if (supabase) {
+        const { error: inboxError } = await supabase.from("contact_submissions").insert({
+          name: form.name,
+          email: form.email,
+          service: form.eventType,
+          message: buildMessage(form),
+        });
+        savedToInbox = !inboxError;
+      }
+
       if (!web3FormsAccessKey) {
-        throw new Error("Missing Web3Forms access key");
+        if (!savedToInbox) throw new Error("Missing Web3Forms access key");
+        toast.success("Booking request sent. Management will follow up.");
+        setForm(defaults);
+        return;
       }
 
       const response = await fetch(site.web3FormsEndpoint, {

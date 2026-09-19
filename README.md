@@ -26,6 +26,10 @@ npm run dev
 
 Add a valid `VITE_WEB3FORMS_ACCESS_KEY` to `frontend/.env` if the booking form should submit through Web3Forms.
 
+The protected CMS is available at `/admin`. Add `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_ANON_KEY` to the deployment environment. Database setup and
+operating notes are documented in [`docs/admin-panel.md`](docs/admin-panel.md).
+
 ## Commands
 
 - `npm run dev` - start the local development server.

@@ -13,6 +13,7 @@ import { Seo } from "@/components/Seo";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
 import { PlayerProvider } from "@/context/PlayerContext";
+import { ContentProvider } from "@/context/ContentContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { pageLoaders, prefetchPriorityRoutes } from "@/routes/pageLoaders";
 
@@ -27,6 +28,7 @@ const Services = lazy(() => pageLoaders["/services"]().then((module) => ({ defau
 const Press = lazy(() => pageLoaders["/press"]().then((module) => ({ default: module.Press })));
 const Contact = lazy(() => pageLoaders["/contact"]().then((module) => ({ default: module.Contact })));
 const NotFound = lazy(() => import("@/pages/NotFound").then((module) => ({ default: module.NotFound })));
+const AdminApp = lazy(() => import("@/admin/AdminApp").then((module) => ({ default: module.AdminApp })));
 
 const PageFallback = () => (
   <div className="grid min-h-screen place-items-center bg-void px-6 text-center">
@@ -93,13 +95,35 @@ const AnimatedRoutes = () => {
 
 const AppChrome = () => {
   const { theme } = useTheme();
+  const location = useLocation();
 
   useEffect(() => {
     prefetchPriorityRoutes();
   }, []);
 
+  if (location.pathname.startsWith("/admin")) {
+    let route = "overview";
+    if (location.pathname.startsWith("/admin/content")) route = "content";
+    if (location.pathname.startsWith("/admin/media")) route = "media";
+    if (location.pathname.startsWith("/admin/messages")) route = "messages";
+    if (location.pathname.startsWith("/admin/history")) route = "history";
+
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route path="/admin" element={<AdminApp route="overview" />} />
+          <Route path="/admin/content/:sectionKey?" element={<AdminApp route="content" />} />
+          <Route path="/admin/media" element={<AdminApp route="media" />} />
+          <Route path="/admin/messages" element={<AdminApp route="messages" />} />
+          <Route path="/admin/history" element={<AdminApp route="history" />} />
+        </Routes>
+        <Toaster position="top-right" theme="dark" richColors closeButton />
+      </Suspense>
+    );
+  }
+
   return (
-    <BrowserRouter>
+    <>
       <SmoothScroll />
       <RouteReset />
       <Seo />
@@ -114,18 +138,22 @@ const AppChrome = () => {
       <MusicPlayer />
       <ScrollToTop />
       <Toaster position="top-right" theme={theme} richColors closeButton />
-    </BrowserRouter>
+    </>
   );
 };
 
 function App() {
   return (
     <div className="App">
-      <ThemeProvider>
-        <PlayerProvider>
-          <AppChrome />
-        </PlayerProvider>
-      </ThemeProvider>
+      <BrowserRouter>
+        <ContentProvider>
+          <ThemeProvider>
+            <PlayerProvider>
+              <AppChrome />
+            </PlayerProvider>
+          </ThemeProvider>
+        </ContentProvider>
+      </BrowserRouter>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export const VideoCard = ({ video, index = 0 }) => {
       if (event.key !== "Tab") return;
 
       const focusable = modalRef.current?.querySelectorAll(
-        'button:not([disabled]), iframe, [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        'button:not([disabled]), iframe, video[controls], [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
       );
       if (!focusable?.length) return;
 
@@ -97,13 +97,25 @@ export const VideoCard = ({ video, index = 0 }) => {
               <X className="h-6 w-6" />
             </button>
             <div className="w-full max-w-4xl aspect-video" onClick={(e) => e.stopPropagation()}>
-              <iframe
-                className="w-full h-full rounded-md"
-                src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1`}
-                title={video.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {video.videoUrl ? (
+                <video
+                  className="w-full h-full rounded-md bg-black object-contain"
+                  src={video.videoUrl}
+                  poster={video.thumbnail}
+                  title={video.title}
+                  controls
+                  autoPlay
+                  playsInline
+                />
+              ) : (
+                <iframe
+                  className="w-full h-full rounded-md"
+                  src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1`}
+                  title={video.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
             </div>
           </motion.div>
         )}
