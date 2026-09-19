@@ -11,7 +11,7 @@ const EASE_IN = [0.42, 0, 1, 1];
 
 const primaryLinks = [
   { to: "/", label: "Home", description: "Latest signal", image: site.aboutImage },
-  { to: "/music", label: "Music", description: "Tracks & live sets", image: gallery[5].src },
+  { to: "/music", label: "Music", description: "Tracks & live sets", image: "/assets/images/menu-music-achyut.png" },
   { to: "/events", label: "Events", description: "Upcoming shows", image: gallery[0].src },
   { to: "/about", label: "About", description: "The artist", image: gallery[4].src },
   { to: "/contact", label: "Contact", description: "Bookings & collabs", image: gallery[11].src },
