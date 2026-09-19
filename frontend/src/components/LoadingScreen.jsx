@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 const REVEAL_EASE = [0.22, 1, 0.36, 1];
 const CURTAIN_EASE = [0.76, 0, 0.24, 1];
 const NAME = "ACHYUT WADHWA";
+const LOADER_SESSION_KEY = "achyut-wadhwa-loader-seen";
 
 const MorphingLetter = ({ letter, index, reduceMotion }) => {
   const delay = reduceMotion ? 0 : 0.1 + index * 0.055;
@@ -80,11 +81,23 @@ const MorphingLetter = ({ letter, index, reduceMotion }) => {
 };
 
 export const LoadingScreen = () => {
+  const [shouldShow] = useState(() => {
+    try {
+      if (window.sessionStorage.getItem(LOADER_SESSION_KEY)) return false;
+      window.sessionStorage.setItem(LOADER_SESSION_KEY, "true");
+    } catch {
+      // If storage is unavailable, retain the first-visit animation behaviour.
+    }
+
+    return true;
+  });
   const [done, setDone] = useState(false);
   const [phase, setPhase] = useState("letters");
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (!shouldShow) return undefined;
+
     if (reduceMotion) {
       const timer = setTimeout(() => setDone(true), 650);
       return () => clearTimeout(timer);
@@ -99,7 +112,9 @@ export const LoadingScreen = () => {
       clearTimeout(liftTimer);
       clearTimeout(doneTimer);
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, shouldShow]);
+
+  if (!shouldShow) return null;
 
   return (
     <AnimatePresence>
