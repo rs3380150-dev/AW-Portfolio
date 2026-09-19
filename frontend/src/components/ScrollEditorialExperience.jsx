@@ -3,18 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "@/components/icons";
 import { tracks } from "@/data/tracks";
-
-const demoReleases = [
-  { title: "SONG 1", artist: "Achyut Wadhwa" },
-  { title: "SONG 2", artist: "Achyut Wadhwa" },
-  { title: "SONG 3", artist: "Achyut Wadhwa" },
-  { title: "SONG 4", artist: "Achyut Wadhwa" },
-  { title: "SONG 5", artist: "Achyut Wadhwa" },
-].map((release, index) => ({
-  ...release,
-  cover: tracks[index % tracks.length].cover,
-  slug: tracks[index % tracks.length].slug,
-}));
+import { usePlayer } from "@/context/PlayerContext";
 
 const GlyphMark = ({ glyph }) => (
   <svg viewBox="0 0 100 100" role="presentation" focusable="false">
@@ -55,12 +44,12 @@ const ScrollGlyph = ({ glyph, from, to, label }) => {
   );
 };
 
-const ReleaseCard = ({ release, index }) => (
+const ReleaseCard = ({ release, index, onPlay, playing }) => (
   <article className="editorial-release-card">
     <div className="editorial-release-art">
       <img src={release.cover} alt="" />
       <Link to={`/music/${release.slug}`} className="editorial-more-info">MORE INFO <ArrowRight className="h-3.5 w-3.5" /></Link>
-      <button type="button" aria-label={`Play ${release.title}`} className="editorial-play"><span aria-hidden="true">▶</span></button>
+      <button type="button" onClick={onPlay} aria-label={playing ? `Pause ${release.title}` : `Play ${release.title}`} className="editorial-play"><span aria-hidden="true">{playing ? "Ⅱ" : "▶"}</span></button>
       <span className="editorial-release-number">{String(index + 1).padStart(2, "0")}</span>
     </div>
     <h3>{release.title}</h3>
@@ -68,7 +57,21 @@ const ReleaseCard = ({ release, index }) => (
   </article>
 );
 
-export const ScrollEditorialExperience = () => (
+export const ScrollEditorialExperience = () => {
+  const { current, isPlaying, playTrack } = usePlayer();
+  const featuredTrack = tracks.find((track) => track.featuredOnHome) || tracks[0];
+  const latestReleases = featuredTrack ? [{
+    title: featuredTrack.title,
+    artist: featuredTrack.artistName || "Achyut Wadhwa",
+    cover: featuredTrack.cover,
+    slug: featuredTrack.slug,
+    id: featuredTrack.id,
+  }] : [];
+  const featureArtwork = featuredTrack?.heroImage || featuredTrack?.cover;
+  const featuredIsPlaying = Boolean(featuredTrack && current?.id === featuredTrack.id && isPlaying);
+  const toggleFeaturedTrack = () => featuredTrack && playTrack(featuredTrack.id);
+
+  return (
   <div className="scroll-editorial-experience" data-testid="scroll-editorial-experience">
     <ScrollGlyph glyph="A" from="#050505" to="#f1f0ec" label="Reveal latest releases" />
 
@@ -81,7 +84,7 @@ export const ScrollEditorialExperience = () => (
       </header>
 
       <div className="editorial-release-rail">
-        {demoReleases.map((release, index) => <ReleaseCard key={release.title} release={release} index={index} />)}
+        {latestReleases.map((release, index) => <ReleaseCard key={release.slug} release={release} index={index} onPlay={toggleFeaturedTrack} playing={featuredIsPlaying} />)}
       </div>
 
       <div className="editorial-mobile-link">
@@ -94,14 +97,19 @@ export const ScrollEditorialExperience = () => (
         <span className="editorial-feature-index">ACHYUT WADHWA MUSIC</span>
         <h2>FIND YOUR<br />SOUND<br />HERE</h2>
         <p>Explore my latest creations and musical experiments.</p>
-        <button type="button" className="editorial-solid-link">PLAY VIDEO</button>
+        <button type="button" onClick={toggleFeaturedTrack} disabled={!featuredTrack?.audio} className="editorial-solid-link">
+          {featuredIsPlaying ? "PAUSE MUSIC" : "PLAY MUSIC"}
+        </button>
       </div>
       <div className="editorial-feature-media">
-        <img src={tracks[4].cover} alt="Demo video feature artwork" />
-        <span className="editorial-feature-play" aria-hidden="true">▶</span>
+        {featureArtwork ? <img src={featureArtwork} alt="Latest Achyut Wadhwa release artwork" /> : null}
+        <button type="button" onClick={toggleFeaturedTrack} disabled={!featuredTrack?.audio} className="editorial-feature-play" aria-label={featuredIsPlaying ? `Pause ${featuredTrack?.title || "music"}` : `Play ${featuredTrack?.title || "music"}`}>
+          <span aria-hidden="true">{featuredIsPlaying ? "Ⅱ" : "▶"}</span>
+        </button>
       </div>
     </section>
 
     <ScrollGlyph glyph="W" from="#f1f0ec" to="#050505" label="Reveal the next chapter" />
   </div>
-);
+  );
+};

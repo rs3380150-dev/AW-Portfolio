@@ -4,6 +4,7 @@ import { ConnectSection } from "@/components/ConnectSection";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TrackCard } from "@/components/TrackCard";
 import { Marquee } from "@/components/Motion";
+import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { musicFilters, tracks } from "@/data/tracks";
 import { site } from "@/data/site";
 
@@ -60,9 +61,16 @@ export const Music = () => {
           </div>
 
           <div className="mt-10 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((track, index) => (
+            {filtered.length ? filtered.map((track, index) => (
               <TrackCard key={track.id} track={track} index={index} />
-            ))}
+            )) : (
+              <EmptyArchiveState
+                eyebrow="The archive is growing"
+                title="This frequency is still quiet."
+                description="Nothing has been released in this space yet. New sounds will land here when they are ready."
+                testId="music-empty-state"
+              />
+            )}
           </div>
         </div>
       </section>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Clock } from "@/components/icons";
 import { useSpotlightProps } from "@/components/Spotlight";
@@ -15,7 +16,9 @@ export const VideoCard = ({ video, index = 0 }) => {
     if (!open) return undefined;
 
     const previousOverflow = document.body.style.overflow;
+    const lenis = window.__novaLenis;
     document.body.style.overflow = "hidden";
+    lenis?.stop?.();
     closeButtonRef.current?.focus();
 
     const onKeyDown = (event) => {
@@ -48,6 +51,7 @@ export const VideoCard = ({ video, index = 0 }) => {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
+      lenis?.start?.();
       triggerRef.current?.focus();
     };
   }, [open]);
@@ -81,8 +85,9 @@ export const VideoCard = ({ video, index = 0 }) => {
         </div>
       </motion.article>
 
-      <AnimatePresence>
-        {open && (
+      {typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {open && (
           <motion.div
             ref={modalRef}
             data-testid={`video-modal-${video.id}`}
@@ -93,7 +98,7 @@ export const VideoCard = ({ video, index = 0 }) => {
             className="fixed inset-0 z-[90] bg-void/95 backdrop-blur-xl grid place-items-center p-4"
             onClick={(event) => event.target === event.currentTarget && setOpen(false)}
           >
-            <button ref={closeButtonRef} aria-label={`Close ${video.title} video`} onClick={() => setOpen(false)} className="absolute top-6 right-6 h-12 w-12 grid place-items-center rounded-full glass text-white hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan">
+            <button ref={closeButtonRef} aria-label={`Close ${video.title} video`} onClick={(event) => { event.stopPropagation(); setOpen(false); }} className="absolute top-6 right-6 z-10 h-12 w-12 grid place-items-center rounded-full glass text-white hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan">
               <X className="h-6 w-6" />
             </button>
             <div className="w-full max-w-4xl aspect-video" onClick={(e) => e.stopPropagation()}>
@@ -118,8 +123,10 @@ export const VideoCard = ({ video, index = 0 }) => {
               )}
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </>
   );
 };

@@ -67,6 +67,7 @@ export const About = () => (
       <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-2">
         <div>
           <SectionHeading
+            className="about-split-heading"
             index="02"
             eyebrow="Craft"
             title="Performance instinct, production discipline."
@@ -89,6 +90,7 @@ export const About = () => (
 
         <div>
           <SectionHeading
+            className="about-split-heading"
             index="03"
             eyebrow="Timeline"
             title="Instrument roots to electronic worlds."

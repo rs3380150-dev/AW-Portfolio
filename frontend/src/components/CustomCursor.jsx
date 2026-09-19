@@ -33,13 +33,23 @@ export const CustomCursor = () => {
       setLabel(target.getAttribute("data-cursor") || "");
     };
 
+    const onFullscreenChange = () => {
+      const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+      document.documentElement.classList.toggle("is-native-fullscreen", Boolean(fullscreenElement));
+    };
+
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseover", onOver, { passive: true });
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 
     return () => {
       document.documentElement.classList.remove("has-custom-cursor");
+      document.documentElement.classList.remove("is-native-fullscreen");
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", onFullscreenChange);
     };
   }, [x, y]);
 

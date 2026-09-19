@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { GalleryItem, Lightbox } from "@/components/Gallery";
 import { SectionHeading } from "@/components/SectionHeading";
+import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { gallery, galleryCategories } from "@/data/gallery";
 
 export const GalleryPage = () => {
@@ -47,11 +48,22 @@ export const GalleryPage = () => {
             ))}
           </div>
 
-          <div className="mt-10 columns-1 gap-6 sm:columns-2 lg:columns-3">
-            {filtered.map((item, index) => (
-              <GalleryItem key={item.id} item={item} index={index} onOpen={() => setOpenIndex(index)} />
-            ))}
-          </div>
+          {filtered.length ? (
+            <div className="mt-10 columns-1 gap-6 sm:columns-2 lg:columns-3">
+              {filtered.map((item, index) => (
+                <GalleryItem key={item.id} item={item} index={index} onOpen={() => setOpenIndex(index)} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10">
+              <EmptyArchiveState
+                eyebrow="The visual archive"
+                title="This room awaits its first frame."
+                description="No photographs live in this collection yet. The next captured moment will take its place here."
+                testId="gallery-empty-state"
+              />
+            </div>
+          )}
         </div>
       </section>
 

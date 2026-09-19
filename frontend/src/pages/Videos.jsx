@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { VideoCard } from "@/components/VideoCard";
 import { SectionHeading } from "@/components/SectionHeading";
+import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { videoCategories, videos } from "@/data/videos";
 
 export const Videos = () => {
@@ -40,9 +41,16 @@ export const Videos = () => {
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((video, index) => (
+            {filtered.length ? filtered.map((video, index) => (
               <VideoCard key={video.id} video={video} index={index} />
-            ))}
+            )) : (
+              <EmptyArchiveState
+                eyebrow="More motion soon"
+                title="The next frame is loading."
+                description="There is nothing in this cut just yet. Fresh performances and behind-the-scenes moments will appear here."
+                testId="videos-empty-state"
+              />
+            )}
           </div>
         </div>
       </section>

@@ -178,12 +178,45 @@ const ContentEditor = ({ published, drafts, onSaveDraft, onPublish }) => {
   const removeItem = (index) => { if (!window.confirm("Delete this item from the draft? It will not affect the live site until you publish.")) return; setWorking(working.filter((_, itemIndex) => itemIndex !== index)); setSelected(Math.max(0, index - 1)); };
   const moveItem = (index, delta) => { const nextIndex = index + delta; if (nextIndex < 0 || nextIndex >= working.length) return; const next = [...working]; [next[index], next[nextIndex]] = [next[nextIndex], next[index]]; setWorking(next); setSelected(nextIndex); };
   const updateItem = (index, nextValue) => setWorking(working.map((item, itemIndex) => itemIndex === index ? nextValue : item));
+  const updateField = (index, key, nextValue) => {
+    if (definition.key === "tracks" && key === "featuredOnHome" && nextValue) {
+      setWorking(working.map((item, itemIndex) => ({ ...item, featuredOnHome: itemIndex === index })));
+      return;
+    }
+    updateItem(index, { ...working[index], [key]: nextValue });
+  };
   const visibleItems = Array.isArray(working) ? working.map((item, index) => ({ item, index })).filter(({ item }) => JSON.stringify(item).toLowerCase().includes(query.toLowerCase())) : [];
+
+  const editableFields = (item) => {
+    if (definition.key === "tracks" && item && typeof item === "object") return {
+      ...item,
+      featuredOnHome: item.featuredOnHome ?? false,
+      heroImage: item.heroImage ?? "",
+      artistName: item.artistName ?? "Achyut Wadhwa",
+      releaseLabel: item.releaseLabel ?? "New release",
+      showReleaseLabel: item.showReleaseLabel ?? true,
+      showArtist: item.showArtist ?? true,
+      showReleaseNote: item.showReleaseNote ?? true,
+      showReleaseLead: item.showReleaseLead ?? true,
+      showReleaseStory: item.showReleaseStory ?? true,
+      releaseNoteOutro: item.releaseNoteOutro ?? "Made for the spaces between the club, the studio, and the road, the record carries the same intent in every format: movement first, detail second, and a lasting atmosphere after the sound fades.",
+      showReleaseNoteOutro: item.showReleaseNoteOutro ?? true,
+      showCredits: item.showCredits ?? true,
+      writtenBy: item.writtenBy ?? "Achyut Wadhwa",
+      showListenPanel: item.showListenPanel ?? true,
+      showImmersiveSection: item.showImmersiveSection ?? true,
+      immersiveEyebrow: item.immersiveEyebrow ?? "02 / IMMERSIVE SOUND",
+      immersiveTitle: item.immersiveTitle ?? "Listen to the world behind the record.",
+      immersiveDescription: item.immersiveDescription ?? `A visual fragment for ${item.title || "this release"}, shaped around its pace, colour, and afterimage.`,
+      showStreamSection: item.showStreamSection ?? true,
+    };
+    return item;
+  };
 
   return <div className="admin-page admin-content-page">
     <PageHeader eyebrow="Content studio" title={definition.label} description={definition.description} actions={<><span className={`admin-status ${draftDiffers || dirty ? "is-draft" : "is-live"}`}>{draftDiffers || dirty ? "Unpublished changes" : "Live"}</span><button className="admin-button" onClick={save} disabled={!dirty || saving}>{saving ? <Loader2 className="admin-spin" size={17} /> : <Save size={17} />} Save draft</button><button className="admin-button admin-button--primary" onClick={publish} disabled={saving || (!draftDiffers && !dirty)}><Check size={17} /> Publish</button></>} />
     <div className="admin-section-tabs">{sectionDefinitions.map((section) => <button key={section.key} className={section.key === definition.key ? "is-active" : ""} onClick={() => navigate(`/admin/content/${section.key}`)}>{section.label}</button>)}</div>
-    {definition.kind === "object" ? <section className="admin-panel admin-object-editor"><div className="admin-form-grid">{Object.entries(working).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => setWorking({ ...working, [key]: next })} />)}</div></section> : <div className="admin-editor-layout"><section className="admin-panel admin-entry-list"><div className="admin-entry-list__tools"><label><Search size={16} /><input placeholder="Search entries" value={query} onChange={(e) => setQuery(e.target.value)} /></label><button className="admin-icon-button" onClick={addItem} title="Add item"><Plus size={18} /></button></div><div>{visibleItems.map(({ item, index }) => <button key={item?.id || `${definition.key}-${index}`} className={selected === index ? "is-active" : ""} onClick={() => setSelected(index)}><span><strong>{definition.primitive ? String(item) : item?.[definition.titleField] || item?.title || `Item ${index + 1}`}</strong><small>{definition.primitive ? `Item ${index + 1}` : item?.category || item?.year || item?.city || `Entry ${index + 1}`}</small></span><ChevronRight size={16} /></button>)}</div><button className="admin-add-row" onClick={addItem}><Plus size={17} /> Add {definition.label.replace(/s$/, "")}</button></section><section className="admin-panel admin-entry-editor">{working[selected] !== undefined ? <><div className="admin-entry-editor__head"><div><span>Entry {selected + 1} of {working.length}</span><h2>{definition.primitive ? String(working[selected]) : working[selected]?.[definition.titleField] || working[selected]?.title || "Untitled"}</h2></div><div><button className="admin-icon-button" onClick={() => moveItem(selected, -1)} disabled={selected === 0}><ArrowUp size={17} /></button><button className="admin-icon-button" onClick={() => moveItem(selected, 1)} disabled={selected === working.length - 1}><ArrowDown size={17} /></button><button className="admin-icon-button is-danger" onClick={() => removeItem(selected)}><Trash2 size={17} /></button></div></div>{definition.primitive ? <ValueField name="Value" value={working[selected]} onChange={(value) => updateItem(selected, value)} /> : <div className="admin-form-grid">{Object.entries(working[selected]).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => updateItem(selected, { ...working[selected], [key]: next })} />)}</div>}</> : <div className="admin-empty"><Settings2 size={32} /><h3>No entries yet</h3><p>Add the first item to this section.</p><button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add item</button></div>}</section></div>}
+    {definition.kind === "object" ? <section className="admin-panel admin-object-editor"><div className="admin-form-grid">{Object.entries(working).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => setWorking({ ...working, [key]: next })} />)}</div></section> : <div className="admin-editor-layout"><section className="admin-panel admin-entry-list"><div className="admin-entry-list__tools"><label><Search size={16} /><input placeholder="Search entries" value={query} onChange={(e) => setQuery(e.target.value)} /></label><button className="admin-icon-button" onClick={addItem} title="Add item"><Plus size={18} /></button></div><div>{visibleItems.map(({ item, index }) => <button key={item?.id || `${definition.key}-${index}`} className={selected === index ? "is-active" : ""} onClick={() => setSelected(index)}><span><strong>{definition.primitive ? String(item) : item?.[definition.titleField] || item?.title || `Item ${index + 1}`}</strong><small>{definition.primitive ? `Item ${index + 1}` : item?.category || item?.year || item?.city || `Entry ${index + 1}`}</small></span><ChevronRight size={16} /></button>)}</div><button className="admin-add-row" onClick={addItem}><Plus size={17} /> Add {definition.label.replace(/s$/, "")}</button></section><section className="admin-panel admin-entry-editor">{working[selected] !== undefined ? <><div className="admin-entry-editor__head"><div><span>Entry {selected + 1} of {working.length}</span><h2>{definition.primitive ? String(working[selected]) : working[selected]?.[definition.titleField] || working[selected]?.title || "Untitled"}</h2></div><div><button className="admin-icon-button" onClick={() => moveItem(selected, -1)} disabled={selected === 0}><ArrowUp size={17} /></button><button className="admin-icon-button" onClick={() => moveItem(selected, 1)} disabled={selected === working.length - 1}><ArrowDown size={17} /></button><button className="admin-icon-button is-danger" onClick={() => removeItem(selected)}><Trash2 size={17} /></button></div></div>{definition.primitive ? <ValueField name="Value" value={working[selected]} onChange={(value) => updateItem(selected, value)} /> : <div className="admin-form-grid">{Object.entries(editableFields(working[selected])).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => updateField(selected, key, next)} />)}</div>}</> : <div className="admin-empty"><Settings2 size={32} /><h3>No entries yet</h3><p>Add the first item to this section.</p><button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add item</button></div>}</section></div>}
   </div>;
 };
 
