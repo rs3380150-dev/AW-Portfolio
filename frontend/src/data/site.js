@@ -62,6 +62,7 @@ export const site = {
   heroPoster: cloudinaryMedia("/assets/images/site/hero-poster.jpg"),
   heroVideo: cloudinaryMedia("/assets/videos/hero/hero-background.mp4"),
   heroVideoWebm: cloudinaryMedia("/assets/videos/hero/hero-background.webm"),
+  useBlackAndWhiteHero: true,
   aboutImage: cloudinaryMedia("/assets/images/site/about-portrait.jpeg"),
   // Options: "fluid" (cursor trail), "distortion" (image warp), or "classic".
   aboutPortraitEffect: "fluid",

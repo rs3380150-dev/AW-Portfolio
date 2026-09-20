@@ -2,15 +2,22 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Play } from "@/components/icons";
 import { usePlayer } from "@/context/PlayerContext";
+import { useContent } from "@/context/ContentContext";
 import { HeroHoldGallery } from "@/components/HeroHoldGallery";
 import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
 
 const EASE = [0.22, 1, 0.36, 1];
 const PRELOADER_OFFSET = 1.55;
-const HERO_IMAGES = [
-  cloudinaryMedia("/assets/images/hero/achyut-guitar-day.png"),
-  cloudinaryMedia("/assets/images/hero/achyut-guitar-sunset.png"),
-];
+const HERO_IMAGE_SETS = {
+  blackAndWhite: [
+    cloudinaryMedia("/assets/images/hero/black-and-white/achyut-guitar-day.png"),
+    cloudinaryMedia("/assets/images/hero/black-and-white/achyut-guitar-sunset.png"),
+  ],
+  color: [
+    cloudinaryMedia("/assets/images/hero/color/achyut-guitar-day.png"),
+    cloudinaryMedia("/assets/images/hero/color/achyut-guitar-sunset.png"),
+  ],
+};
 
 const MaskLine = ({ children, index }) => (
   <span className="block overflow-hidden pb-[0.08em]">
@@ -27,13 +34,18 @@ const MaskLine = ({ children, index }) => (
 
 export const Hero = () => {
   const ref = useRef(null);
+  const { content } = useContent();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
   const { togglePlay } = usePlayer();
+  const useBlackAndWhiteHero = content.site?.useBlackAndWhiteHero ?? true;
+  const heroImages = useBlackAndWhiteHero
+    ? HERO_IMAGE_SETS.blackAndWhite
+    : HERO_IMAGE_SETS.color;
 
   return (
     <section ref={ref} data-testid="hero" className="relative h-[100svh] overflow-hidden bg-black">
-      <HeroHoldGallery hostRef={ref} images={HERO_IMAGES} />
+      <HeroHoldGallery hostRef={ref} images={heroImages} />
 
       <motion.div style={{ y: textY }} className="relative z-10 flex h-full items-center justify-center px-6 text-center md:px-12">
         <div className="w-full">
