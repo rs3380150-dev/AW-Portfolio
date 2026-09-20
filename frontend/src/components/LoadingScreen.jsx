@@ -6,6 +6,18 @@ const CURTAIN_EASE = [0.76, 0, 0.24, 1];
 const NAME = "ACHYUT WADHWA";
 const LOADER_SESSION_KEY = "achyut-wadhwa-loader-seen";
 
+const SHOULD_SHOW_ON_INITIAL_DOCUMENT = (() => {
+  try {
+    const isHomePage = window.location.pathname === "/";
+    const hasSeenLoader = window.sessionStorage.getItem(LOADER_SESSION_KEY) === "true";
+
+    window.sessionStorage.setItem(LOADER_SESSION_KEY, "true");
+    return isHomePage && !hasSeenLoader;
+  } catch {
+    return window.location.pathname === "/";
+  }
+})();
+
 const MorphingLetter = ({ letter, index, reduceMotion }) => {
   const delay = reduceMotion ? 0 : 0.1 + index * 0.055;
   const filterId = `loading-letter-morph-${index}`;
@@ -81,25 +93,10 @@ const MorphingLetter = ({ letter, index, reduceMotion }) => {
 };
 
 export const LoadingScreen = () => {
-  const [shouldShow] = useState(() => {
-    try {
-      const hasSeenLoader = window.sessionStorage.getItem(LOADER_SESSION_KEY);
-      return window.location.pathname === "/" && !hasSeenLoader;
-    } catch {
-      return window.location.pathname === "/";
-    }
-  });
+  const [shouldShow] = useState(SHOULD_SHOW_ON_INITIAL_DOCUMENT);
   const [done, setDone] = useState(false);
   const [phase, setPhase] = useState("letters");
   const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    try {
-      window.sessionStorage.setItem(LOADER_SESSION_KEY, "true");
-    } catch {
-      // Storage can be unavailable in restricted browser contexts.
-    }
-  }, []);
 
   useEffect(() => {
     if (!shouldShow) return undefined;

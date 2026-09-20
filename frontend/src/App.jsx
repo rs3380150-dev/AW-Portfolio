@@ -129,7 +129,6 @@ const AppChrome = () => {
       <Seo />
       <GsapEnhancer />
       <CustomCursor />
-      <LoadingScreen />
       <Navbar />
       <main className="gsap-page-root">
         <AnimatedRoutes />
@@ -145,6 +144,7 @@ const AppChrome = () => {
 function App() {
   return (
     <div className="App">
+      <LoadingScreen />
       <BrowserRouter>
         <ContentProvider>
           <ThemeProvider>
