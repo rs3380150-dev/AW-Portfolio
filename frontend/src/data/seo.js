@@ -128,7 +128,9 @@ export const buildStructuredData = (pathname = "/") => {
       name: meta.title,
       description: meta.description,
       isPartOf: { "@id": websiteId },
-      about: { "@id": artistId },
+      ...(meta.path === "/about"
+        ? { mainEntity: { "@id": artistId } }
+        : { about: { "@id": artistId } }),
       inLanguage: "en-IN",
     },
     {
