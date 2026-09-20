@@ -10,9 +10,21 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
+    { "source": "/about", "destination": "/" },
+    { "source": "/music", "destination": "/" },
+    { "source": "/music/neon-cathedral", "destination": "/" },
+    { "source": "/music/midnight-voltage", "destination": "/" },
+    { "source": "/music/solar-winds-wadhwa-remix", "destination": "/" },
+    { "source": "/music/afterlife-sequence", "destination": "/" },
+    { "source": "/music/tulum-sunrise-live-set", "destination": "/" },
+    { "source": "/music/electric-bloom", "destination": "/" },
+    { "source": "/events", "destination": "/" },
+    { "source": "/gallery", "destination": "/" },
+    { "source": "/videos", "destination": "/" },
+    { "source": "/services", "destination": "/" },
+    { "source": "/press", "destination": "/" },
+    { "source": "/contact", "destination": "/" },
+    { "source": "/admin", "destination": "/" },
+    { "source": "/admin/:path*", "destination": "/" }
   ]
 }

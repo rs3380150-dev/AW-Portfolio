@@ -76,6 +76,7 @@ export const toAbsoluteUrl = (path = "/") => {
 export const getSeoMeta = (pathname = "/") => {
   const cleanPath = pathname.replace(/\/$/, "") || "/";
   const track = tracks.find((item) => cleanPath === `/music/${item.slug}`);
+  const indexable = Boolean(track || seoRoutes[cleanPath]);
   const meta = (track && {
     title: `${track.title} | Achyut Wadhwa`,
     description: `${track.description} Listen to ${track.title} by Achyut Wadhwa.`,
@@ -91,6 +92,7 @@ export const getSeoMeta = (pathname = "/") => {
   return {
     ...meta,
     path: cleanPath,
+    indexable,
     image: meta.image || defaultSeoImage,
     url: toAbsoluteUrl(cleanPath),
   };

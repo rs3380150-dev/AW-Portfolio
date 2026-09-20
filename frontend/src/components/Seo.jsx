@@ -39,8 +39,11 @@ export const Seo = () => {
     setCanonical(meta.url);
 
     setMeta("name", "description", meta.description);
-    setMeta("name", "robots", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
-    setMeta("name", "googlebot", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
+    const robots = meta.indexable
+      ? "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+      : "noindex,nofollow";
+    setMeta("name", "robots", robots);
+    setMeta("name", "googlebot", robots);
     setMeta("name", "author", "Achyut Wadhwa");
     setMeta("name", "theme-color", "#050505");
 
