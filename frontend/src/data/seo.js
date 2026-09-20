@@ -1,7 +1,8 @@
 import { site } from "@/data/site";
+import { tracks } from "@/data/tracks";
 import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
 
-export const siteUrl = (import.meta.env.VITE_SITE_URL || site.siteUrl || "https://novapulse.in").replace(/\/$/, "");
+export const siteUrl = (import.meta.env.VITE_SITE_URL || site.siteUrl || "https://achyutwadhwa.in").replace(/\/$/, "");
 export const defaultSeoImage = cloudinaryMedia("/assets/images/site/social-share-og.png");
 
 export const seoRoutes = {
@@ -74,7 +75,14 @@ export const toAbsoluteUrl = (path = "/") => {
 
 export const getSeoMeta = (pathname = "/") => {
   const cleanPath = pathname.replace(/\/$/, "") || "/";
-  const meta = seoRoutes[cleanPath] || {
+  const track = tracks.find((item) => cleanPath === `/music/${item.slug}`);
+  const meta = (track && {
+    title: `${track.title} | Achyut Wadhwa`,
+    description: `${track.description} Listen to ${track.title} by Achyut Wadhwa.`,
+    priority: "0.7",
+    image: track.cover,
+    type: "music.song",
+  }) || seoRoutes[cleanPath] || {
     title: "Achyut Wadhwa",
     description: site.intro,
     priority: "0.5",
@@ -83,7 +91,7 @@ export const getSeoMeta = (pathname = "/") => {
   return {
     ...meta,
     path: cleanPath,
-    image: defaultSeoImage,
+    image: meta.image || defaultSeoImage,
     url: toAbsoluteUrl(cleanPath),
   };
 };
@@ -100,51 +108,68 @@ const realSameAs = [
 export const buildStructuredData = (pathname = "/") => {
   const meta = getSeoMeta(pathname);
   const artistId = `${siteUrl}/#artist`;
-  const musicProjectId = `${siteUrl}/#music-project`;
+  const websiteId = `${siteUrl}/#website`;
+  const track = tracks.find((item) => meta.path === `/music/${item.slug}`);
+  const graph = [
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      name: site.name,
+      url: siteUrl,
+      inLanguage: "en-IN",
+      publisher: { "@id": artistId },
+    },
+    {
+      "@type": meta.path === "/about" ? "ProfilePage" : "WebPage",
+      "@id": `${meta.url}#webpage`,
+      url: meta.url,
+      name: meta.title,
+      description: meta.description,
+      isPartOf: { "@id": websiteId },
+      about: { "@id": artistId },
+      inLanguage: "en-IN",
+    },
+    {
+      "@type": "Person",
+      "@id": artistId,
+      name: site.name,
+      alternateName: site.shortName,
+      jobTitle: site.role,
+      description: site.intro,
+      email: site.email,
+      telephone: site.phone,
+      image: toAbsoluteUrl(site.aboutImage),
+      url: siteUrl,
+      homeLocation: { "@type": "Country", name: "India" },
+      knowsAbout: ["Music production", "DJing", "Live performance", ...site.genres],
+      sameAs: realSameAs,
+    },
+  ];
 
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": `${siteUrl}/#website`,
-        name: site.name,
-        url: siteUrl,
-        inLanguage: "en",
-        publisher: { "@id": musicProjectId },
-      },
-      {
-        "@type": "WebPage",
-        "@id": `${meta.url}#webpage`,
-        url: meta.url,
-        name: meta.title,
-        description: meta.description,
-        isPartOf: { "@id": `${siteUrl}/#website` },
-        about: { "@id": musicProjectId },
-        inLanguage: "en",
-      },
-      {
-        "@type": "Person",
-        "@id": artistId,
-        name: site.name,
-        jobTitle: site.role,
-        email: site.email,
-        telephone: site.phone,
-        image: toAbsoluteUrl(site.aboutImage),
-        url: siteUrl,
-        sameAs: realSameAs,
-      },
-      {
-        "@type": "MusicGroup",
-        "@id": musicProjectId,
-        name: site.name,
-        description: site.intro,
-        genre: site.genres,
-        image: toAbsoluteUrl(site.aboutImage),
-        url: siteUrl,
-        member: { "@id": artistId },
-        sameAs: realSameAs,
-      },
-    ],
-  };
+  if (meta.path !== "/") {
+    graph.push({
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: track ? "Music" : meta.title.split(" | ")[0], item: track ? toAbsoluteUrl("/music") : meta.url },
+        ...(track ? [{ "@type": "ListItem", position: 3, name: track.title, item: meta.url }] : []),
+      ],
+    });
+  }
+
+  if (track) {
+    graph.push({
+      "@type": "MusicRecording",
+      "@id": `${meta.url}#recording`,
+      name: track.title,
+      url: meta.url,
+      image: toAbsoluteUrl(track.cover),
+      datePublished: new Date(track.releaseDate).toISOString().slice(0, 10),
+      genre: track.genre,
+      byArtist: { "@id": artistId },
+      description: track.description,
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
 };

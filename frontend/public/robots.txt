@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://novapulse.in/sitemap.xml
+Sitemap: https://achyutwadhwa.in/sitemap.xml
+Host: achyutwadhwa.in

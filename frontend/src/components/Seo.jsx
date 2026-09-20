@@ -39,12 +39,13 @@ export const Seo = () => {
     setCanonical(meta.url);
 
     setMeta("name", "description", meta.description);
-    setMeta("name", "robots", "index,follow,max-image-preview:large");
+    setMeta("name", "robots", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
+    setMeta("name", "googlebot", "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
     setMeta("name", "author", "Achyut Wadhwa");
     setMeta("name", "theme-color", "#050505");
 
     setMeta("property", "og:site_name", "Achyut Wadhwa");
-    setMeta("property", "og:type", "website");
+    setMeta("property", "og:type", meta.type || "website");
     setMeta("property", "og:title", meta.title);
     setMeta("property", "og:description", meta.description);
     setMeta("property", "og:url", meta.url);
@@ -57,6 +58,7 @@ export const Seo = () => {
     setMeta("name", "twitter:title", meta.title);
     setMeta("name", "twitter:description", meta.description);
     setMeta("name", "twitter:image", imageUrl);
+    setMeta("name", "twitter:image:alt", "Achyut Wadhwa");
 
     let script = document.getElementById("achyut-wadhwa-jsonld");
     if (!script) {

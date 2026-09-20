@@ -88,7 +88,7 @@ const getUploadDetails = (absolutePath) => {
   return {
     absolutePath,
     localPath: `/assets/${relativePath}`,
-    publicId: `nova-pulse/${withoutExtension}${videoSuffix}`,
+    publicId: `achyut-wadhwa/${withoutExtension}${videoSuffix}`,
     resourceType,
   };
 };
@@ -137,7 +137,7 @@ for (const [index, file] of files.entries()) {
     invalidate: true,
     unique_filename: false,
     use_filename: false,
-    tags: ["nova-pulse", "website-media"],
+    tags: ["achyut-wadhwa", "website-media"],
   });
 
   assets[file.localPath] = {

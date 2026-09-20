@@ -1,0 +1,15 @@
+{
+  "name": "Achyut Wadhwa | Music Producer, DJ & Performer",
+  "short_name": "Achyut Wadhwa",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "1024x558",
+      "type": "image/png"
+    }
+  ]
+}

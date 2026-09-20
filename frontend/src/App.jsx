@@ -3,6 +3,7 @@ import "@/App.css";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -136,6 +137,7 @@ const AppChrome = () => {
       <Footer />
       <MusicPlayer />
       <ScrollToTop />
+      <Analytics />
       <Toaster position="top-right" theme={theme} richColors closeButton />
     </>
   );

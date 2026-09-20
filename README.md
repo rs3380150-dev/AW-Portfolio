@@ -1,11 +1,11 @@
-# Nova Pulse
+# Achyut Wadhwa Portfolio
 
 Official artist website for Achyut Wadhwa, built with React, Vite, Tailwind CSS, Framer Motion and GSAP.
 
 ## Project structure
 
 ```text
-Nova Pulse/
+Achyut Wadhwa Portfolio/
 |-- design-assets/        Source exports and non-runtime creative deliverables
 |-- docs/                 Design guidance, media manifests and reference material
 |-- frontend/             Production web application

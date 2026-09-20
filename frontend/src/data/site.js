@@ -4,7 +4,8 @@ import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
 export const site = {
   name: "Achyut Wadhwa",
   shortName: "Achyut",
-  siteUrl: "https://novapulse.in",
+  // Single source of truth for canonical URLs, sitemaps and structured data.
+  siteUrl: "https://achyutwadhwa.in",
   fullName: "Achyut Wadhwa",
   tagline: "Feel the Beat. Live the Moment.",
   role: "Music Producer / DJ / Performer / Multi-Instrumentalist",

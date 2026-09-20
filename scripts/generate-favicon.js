@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const srcFile = 'C:/Users/sahib/.gemini/antigravity/brain/f99fb7af-1040-4a32-9b99-d542a903af41/.user_uploaded/media_1789318786293.png';
-const publicDir = 'd:/OLD WINDOW BACKUP/C drive data backup/window_user_lenovo_onedrive/OneDrive/Documents/Nova Pulse/frontend/public';
+const publicDir = path.resolve(__dirname, '..', 'frontend', 'public');
 
 const buffer = fs.readFileSync(srcFile);
 const base64 = buffer.toString('base64');

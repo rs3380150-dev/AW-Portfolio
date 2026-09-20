@@ -27,7 +27,7 @@ function Download-Asset {
     return
   }
 
-  Invoke-WebRequest -Uri $Uri -OutFile $Destination -Headers @{ "User-Agent" = "Mozilla/5.0 NovaPulseMediaSync/1.0" } -TimeoutSec 120
+  Invoke-WebRequest -Uri $Uri -OutFile $Destination -Headers @{ "User-Agent" = "Mozilla/5.0 AchyutWadhwaMediaSync/1.0" } -TimeoutSec 120
   if (-not (Test-Path -LiteralPath $Destination) -or (Get-Item -LiteralPath $Destination).Length -eq 0) {
     throw "Download produced an empty file: $Uri"
   }
