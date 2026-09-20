@@ -84,8 +84,6 @@ export const LoadingScreen = () => {
   const [shouldShow] = useState(() => {
     try {
       const hasSeenLoader = window.sessionStorage.getItem(LOADER_SESSION_KEY);
-      window.sessionStorage.setItem(LOADER_SESSION_KEY, "true");
-
       return window.location.pathname === "/" && !hasSeenLoader;
     } catch {
       return window.location.pathname === "/";
@@ -94,6 +92,14 @@ export const LoadingScreen = () => {
   const [done, setDone] = useState(false);
   const [phase, setPhase] = useState("letters");
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(LOADER_SESSION_KEY, "true");
+    } catch {
+      // Storage can be unavailable in restricted browser contexts.
+    }
+  }, []);
 
   useEffect(() => {
     if (!shouldShow) return undefined;
