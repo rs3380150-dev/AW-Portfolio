@@ -24,7 +24,7 @@ const GalleryFrame = ({ item, index, wide = false }) => (
   </figure>
 );
 
-export const HorizontalGallery = ({ items }) => {
+export const HorizontalGallery = ({ items, sectionIndex = "04" }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0, 1], ["4%", "-68%"]);
@@ -32,12 +32,12 @@ export const HorizontalGallery = ({ items }) => {
   return (
     <section id="gallery-showcase" ref={ref} className="relative bg-navy py-28 md:h-[300vh] md:py-0" data-testid="horizontal-gallery">
       <div className="px-6 pb-12 md:hidden">
-        <SectionHeading index="04" eyebrow="Gallery" title="Light, sweat, signal." />
+        <SectionHeading index={sectionIndex} eyebrow="Gallery" title="Light, sweat, signal." />
       </div>
 
       <div className="hidden h-screen overflow-hidden md:sticky md:top-0 md:block">
         <div className="absolute left-10 top-28 z-10 w-[34rem]">
-          <SectionHeading index="04" eyebrow="Gallery" title="Light, sweat, signal." />
+          <SectionHeading index={sectionIndex} eyebrow="Gallery" title="Light, sweat, signal." />
         </div>
         <motion.div style={{ x }} className="flex h-full items-center gap-6 pl-[6vw] pt-28">
           <div className="flex h-[62vh] w-[30vw] shrink-0 flex-col justify-end pb-5 pl-6">

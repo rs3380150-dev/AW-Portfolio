@@ -5,7 +5,6 @@ import { Hero } from "@/components/Hero";
 import { ConnectSection } from "@/components/ConnectSection";
 import { SectionHeading } from "@/components/SectionHeading";
 import { EventCard } from "@/components/EventCard";
-import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { ServiceCard } from "@/components/ServiceCard";
 import { StatCounter } from "@/components/StatCounter";
 import { Marquee, ScrollReveal } from "@/components/Motion";
@@ -49,6 +48,9 @@ const ManifestoCard = ({ item, index }) => {
 
 export const Home = () => {
   const upcoming = events.filter((event) => event.status !== "completed").slice(0, 3);
+  const hasUpcomingEvents = upcoming.length > 0;
+  const gallerySectionIndex = hasUpcomingEvents ? "04" : "03";
+  const servicesSectionIndex = hasUpcomingEvents ? "05" : "04";
 
   return (
     <>
@@ -88,41 +90,34 @@ export const Home = () => {
 
       <ScrollEditorialExperience />
 
-      <section className="bg-navy px-6 py-28 md:px-10 md:py-40">
-        <div className="mx-auto max-w-[1500px]">
-          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <SectionHeading
-              index="03"
-              eyebrow="Tour"
-              title="Next frequencies."
-              subtitle="Festival stages, club residencies, and private rooms across the map."
-            />
-            <SectionLink to="/events" testId="home-view-events">All Events</SectionLink>
-          </div>
-          <div className="grid gap-5">
-            {upcoming.length ? (
-              upcoming.map((event, index) => (
-                <EventCard key={event.id} event={event} index={index} />
-              ))
-            ) : (
-              <EmptyArchiveState
-                eyebrow="Upcoming Dates"
-                title="The next signal is coming."
-                description="No upcoming appearances are announced yet. New dates will be published here as soon as they are confirmed."
-                testId="home-events-empty"
+      {hasUpcomingEvents ? (
+        <section className="bg-navy px-6 py-28 md:px-10 md:py-40">
+          <div className="mx-auto max-w-[1500px]">
+            <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <SectionHeading
+                index="03"
+                eyebrow="Tour"
+                title="Next frequencies."
+                subtitle="Festival stages, club residencies, and private rooms across the map."
               />
-            )}
+              <SectionLink to="/events" testId="home-view-events">All Events</SectionLink>
+            </div>
+            <div className="grid gap-5">
+              {upcoming.map((event, index) => (
+                <EventCard key={event.id} event={event} index={index} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
-      <HorizontalGallery items={gallery} />
+      <HorizontalGallery items={gallery} sectionIndex={gallerySectionIndex} />
 
       <section className="border-y border-white/10 bg-navy px-6 py-24 md:px-10 md:py-32">
         <div className="mx-auto max-w-[1500px]">
           <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
-              index="05"
+              index={servicesSectionIndex}
               eyebrow="Services"
               title="From club peak time to live sonic worlds."
               subtitle="DJ sets, live performance, multi-instrumental arrangement, and production work built around the room, record, and brief."
