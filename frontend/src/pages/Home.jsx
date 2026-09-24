@@ -5,6 +5,7 @@ import { Hero } from "@/components/Hero";
 import { ConnectSection } from "@/components/ConnectSection";
 import { SectionHeading } from "@/components/SectionHeading";
 import { EventCard } from "@/components/EventCard";
+import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { ServiceCard } from "@/components/ServiceCard";
 import { StatCounter } from "@/components/StatCounter";
 import { Marquee, ScrollReveal } from "@/components/Motion";
@@ -99,9 +100,18 @@ export const Home = () => {
             <SectionLink to="/events" testId="home-view-events">All Events</SectionLink>
           </div>
           <div className="grid gap-5">
-            {upcoming.map((event, index) => (
-              <EventCard key={event.id} event={event} index={index} />
-            ))}
+            {upcoming.length ? (
+              upcoming.map((event, index) => (
+                <EventCard key={event.id} event={event} index={index} />
+              ))
+            ) : (
+              <EmptyArchiveState
+                eyebrow="Upcoming Dates"
+                title="The next signal is coming."
+                description="No upcoming appearances are announced yet. New dates will be published here as soon as they are confirmed."
+                testId="home-events-empty"
+              />
+            )}
           </div>
         </div>
       </section>

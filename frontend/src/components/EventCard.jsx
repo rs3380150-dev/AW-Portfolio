@@ -20,7 +20,7 @@ export const EventCard = ({ event, index = 0 }) => {
     <motion.article
       {...spotlightProps}
       data-testid={`event-card-${event.id}`}
-      initial={{ opacity: 0, y: 32 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.08 }}

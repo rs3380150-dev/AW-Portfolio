@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { CalendarDays } from "@/components/icons";
 import { EventCard } from "@/components/EventCard";
+import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ScrollReveal } from "@/components/Motion";
 import { events } from "@/data/events";
@@ -13,6 +14,34 @@ const filters = [
   { id: "club", label: "Club Nights" },
   { id: "completed", label: "Archive" },
 ];
+
+const emptyStateByFilter = {
+  all: {
+    eyebrow: "Tour Archive",
+    title: "New dates are being tuned.",
+    description: "No appearances are published right now. Check back soon, or use the booking page to discuss a private event or collaboration.",
+  },
+  upcoming: {
+    eyebrow: "Upcoming Dates",
+    title: "The next signal is coming.",
+    description: "No upcoming appearances are announced yet. New tour dates will appear here as soon as they are confirmed.",
+  },
+  festival: {
+    eyebrow: "Festival Dates",
+    title: "No festival dates announced.",
+    description: "Festival appearances are currently being scheduled. Check back for the next stage announcement.",
+  },
+  club: {
+    eyebrow: "Club Dates",
+    title: "No club nights announced.",
+    description: "The next club room is still under wraps. Confirmed dates will be published here.",
+  },
+  completed: {
+    eyebrow: "Tour Archive",
+    title: "The archive is still quiet.",
+    description: "Past appearances will collect here as the tour history grows.",
+  },
+};
 
 export const Events = () => {
   const [active, setActive] = useState("all");
@@ -64,9 +93,16 @@ export const Events = () => {
           </div>
 
           <div className="mt-10 grid gap-5">
-            {filtered.map((event, index) => (
-              <EventCard key={event.id} event={event} index={index} />
-            ))}
+            {filtered.length ? (
+              filtered.map((event, index) => (
+                <EventCard key={event.id} event={event} index={index} />
+              ))
+            ) : (
+              <EmptyArchiveState
+                {...emptyStateByFilter[active]}
+                testId={`events-empty-${active}`}
+              />
+            )}
           </div>
         </div>
       </section>
