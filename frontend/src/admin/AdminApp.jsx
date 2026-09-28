@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Activity,
@@ -31,10 +32,64 @@ import { toast } from "sonner";
 import { defaultContent } from "@/content/defaultContent";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { sectionDefinitionMap, sectionDefinitions } from "@/admin/contentSchemas";
+import { formatCategoryLabel, normalizeCategory } from "@/utils/contentCategories.mjs";
 import "@/admin/admin.css";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const uid = () => crypto.randomUUID();
+const imageFieldPattern = /(?:image|poster|thumbnail|cover|avatar|artwork|photo|^src$)/i;
+
+const ImageLightbox = ({ src, alt, onClose }) => {
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div className="admin-image-lightbox" role="dialog" aria-modal="true" aria-label={`Image preview: ${alt}`} onClick={onClose}>
+      <button type="button" className="admin-image-lightbox__close" onClick={onClose} aria-label="Close image preview" autoFocus><X size={22} /></button>
+      <img src={src} alt={alt} onClick={(event) => event.stopPropagation()} />
+    </div>,
+    document.body,
+  );
+};
+
+const ImagePreview = ({ src, alt }) => {
+  const [open, setOpen] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => setFailed(false), [src]);
+  if (!src) return null;
+
+  return (
+    <>
+      <button
+        type="button"
+        className={`admin-image-preview ${failed ? "has-error" : ""}`}
+        onClick={() => !failed && setOpen(true)}
+        disabled={failed}
+        aria-label={`View ${alt} larger`}
+      >
+        {failed ? (
+          <span><FileImage size={22} /> Preview unavailable</span>
+        ) : (
+          <img src={src} alt={alt} onError={() => setFailed(true)} />
+        )}
+        {!failed && <span className="admin-image-preview__hint">Click to enlarge</span>}
+      </button>
+      {open && <ImageLightbox src={src} alt={alt} onClose={() => setOpen(false)} />}
+    </>
+  );
+};
 
 const sidebarItems = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -142,20 +197,87 @@ const Dashboard = ({ published, drafts, messages, media }) => {
   );
 };
 
-const JsonField = ({ label, value, onChange }) => {
+const JsonField = ({ name, label, value, onChange }) => {
   const [text, setText] = useState(JSON.stringify(value, null, 2));
   useEffect(() => setText(JSON.stringify(value, null, 2)), [value]);
   const update = (next) => { setText(next); try { onChange(JSON.parse(next)); } catch { /* keep editing */ } };
-  return <label className="admin-field admin-field--wide"><span>{label}<small>JSON</small></span><textarea rows={Math.min(14, Math.max(5, text.split("\n").length))} value={text} onChange={(e) => update(e.target.value)} spellCheck="false" /></label>;
+  const imageValues = imageFieldPattern.test(name) && Array.isArray(value)
+    ? value.filter((item) => typeof item === "string" && item)
+    : [];
+  return <div className="admin-field admin-field--wide"><span>{label}<small>JSON</small></span><textarea aria-label={label} rows={Math.min(14, Math.max(5, text.split("\n").length))} value={text} onChange={(e) => update(e.target.value)} spellCheck="false" />{imageValues.length > 0 && <div className="admin-image-preview-list">{imageValues.map((src, index) => <ImagePreview key={`${src}-${index}`} src={src} alt={`${label} ${index + 1}`} />)}</div>}</div>;
 };
 
-const ValueField = ({ name, value, onChange }) => {
+const CategoryField = ({ value, options, onChange }) => {
+  const [adding, setAdding] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const normalizedValue = normalizeCategory(value || "");
+  const choices = [...new Set([...(options || []), normalizedValue].filter(Boolean))].sort();
+
+  const addCategory = () => {
+    const next = normalizeCategory(newCategory);
+    if (!next) return;
+    onChange(next);
+    setNewCategory("");
+    setAdding(false);
+  };
+
+  return (
+    <div className="admin-field admin-category-field">
+      <span>Category</span>
+      <select
+        aria-label="Category"
+        value={normalizedValue}
+        onChange={(event) => {
+          if (event.target.value === "__add_new__") {
+            setAdding(true);
+            return;
+          }
+          onChange(event.target.value);
+          setAdding(false);
+        }}
+      >
+        {!normalizedValue && <option value="">Select a category</option>}
+        {choices.map((category) => <option key={category} value={category}>{formatCategoryLabel(category)}</option>)}
+        <option value="__add_new__">+ Add new category</option>
+      </select>
+      {adding && (
+        <div className="admin-category-field__new">
+          <input
+            aria-label="New category name"
+            placeholder="New category name"
+            value={newCategory}
+            onChange={(event) => setNewCategory(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                addCategory();
+              }
+              if (event.key === "Escape") {
+                setAdding(false);
+                setNewCategory("");
+              }
+            }}
+            autoFocus
+          />
+          <button type="button" className="admin-button admin-button--primary" onClick={addCategory} disabled={!normalizeCategory(newCategory)}>Add</button>
+          <button type="button" className="admin-button" onClick={() => { setAdding(false); setNewCategory(""); }}>Cancel</button>
+        </div>
+      )}
+      <small>Choose an existing category or add a new one for this content section.</small>
+    </div>
+  );
+};
+
+const ValueField = ({ name, value, onChange, categoryOptions = [] }) => {
   const label = name.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase());
-  if (Array.isArray(value) || (value && typeof value === "object")) return <JsonField label={label} value={value} onChange={onChange} />;
+  if (Array.isArray(value) || (value && typeof value === "object")) return <JsonField name={name} label={label} value={value} onChange={onChange} />;
+  if (name === "category") return <CategoryField value={value} options={categoryOptions} onChange={onChange} />;
   if (name === "useBlackAndWhiteHero") return <label className="admin-toggle"><span><strong>Use black-and-white hero images</strong><small>On uses the black-and-white set. Off uses the colour set.</small></span><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></label>;
   if (typeof value === "boolean") return <label className="admin-toggle"><span><strong>{label}</strong><small>Enable or disable this option</small></span><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></label>;
   if (typeof value === "number") return <label className="admin-field"><span>{label}</span><input type="number" value={value} onChange={(e) => onChange(Number(e.target.value))} /></label>;
   const isLong = /description|story|intro|bio|body|quote/i.test(name);
+  const isImage = imageFieldPattern.test(name);
+  if (isImage) return <div className="admin-field admin-field--image"><span>{label}</span><input aria-label={label} value={value ?? ""} onChange={(e) => onChange(e.target.value)} /><ImagePreview src={value} alt={`${label} preview`} /></div>;
   return <label className={`admin-field ${isLong ? "admin-field--wide" : ""}`}><span>{label}</span>{isLong ? <textarea rows="4" value={value ?? ""} onChange={(e) => onChange(e.target.value)} /> : <input value={value ?? ""} onChange={(e) => onChange(e.target.value)} />}</label>;
 };
 
@@ -187,6 +309,9 @@ const ContentEditor = ({ published, drafts, onSaveDraft, onPublish }) => {
     updateItem(index, { ...working[index], [key]: nextValue });
   };
   const visibleItems = Array.isArray(working) ? working.map((item, index) => ({ item, index })).filter(({ item }) => JSON.stringify(item).toLowerCase().includes(query.toLowerCase())) : [];
+  const categoryOptions = Array.isArray(working)
+    ? [...new Set(working.map((item) => normalizeCategory(item?.category || "")).filter(Boolean))]
+    : [];
   const objectFields = definition.key === "site"
     ? { ...working, useBlackAndWhiteHero: working.useBlackAndWhiteHero ?? true }
     : working;
@@ -220,7 +345,7 @@ const ContentEditor = ({ published, drafts, onSaveDraft, onPublish }) => {
   return <div className="admin-page admin-content-page">
     <PageHeader eyebrow="Content studio" title={definition.label} description={definition.description} actions={<><span className={`admin-status ${draftDiffers || dirty ? "is-draft" : "is-live"}`}>{draftDiffers || dirty ? "Unpublished changes" : "Live"}</span><button className="admin-button" onClick={save} disabled={!dirty || saving}>{saving ? <Loader2 className="admin-spin" size={17} /> : <Save size={17} />} Save draft</button><button className="admin-button admin-button--primary" onClick={publish} disabled={saving || (!draftDiffers && !dirty)}><Check size={17} /> Publish</button></>} />
     <div className="admin-section-tabs">{sectionDefinitions.map((section) => <button key={section.key} className={section.key === definition.key ? "is-active" : ""} onClick={() => navigate(`/admin/content/${section.key}`)}>{section.label}</button>)}</div>
-    {definition.kind === "object" ? <section className="admin-panel admin-object-editor"><div className="admin-form-grid">{Object.entries(objectFields).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => setWorking({ ...working, [key]: next })} />)}</div></section> : <div className="admin-editor-layout"><section className="admin-panel admin-entry-list"><div className="admin-entry-list__tools"><label><Search size={16} /><input placeholder="Search entries" value={query} onChange={(e) => setQuery(e.target.value)} /></label><button className="admin-icon-button" onClick={addItem} title="Add item"><Plus size={18} /></button></div><div>{visibleItems.map(({ item, index }) => <button key={item?.id || `${definition.key}-${index}`} className={selected === index ? "is-active" : ""} onClick={() => setSelected(index)}><span><strong>{definition.primitive ? String(item) : item?.[definition.titleField] || item?.title || `Item ${index + 1}`}</strong><small>{definition.primitive ? `Item ${index + 1}` : item?.category || item?.year || item?.city || `Entry ${index + 1}`}</small></span><ChevronRight size={16} /></button>)}</div><button className="admin-add-row" onClick={addItem}><Plus size={17} /> Add {definition.label.replace(/s$/, "")}</button></section><section className="admin-panel admin-entry-editor">{working[selected] !== undefined ? <><div className="admin-entry-editor__head"><div><span>Entry {selected + 1} of {working.length}</span><h2>{definition.primitive ? String(working[selected]) : working[selected]?.[definition.titleField] || working[selected]?.title || "Untitled"}</h2></div><div><button className="admin-icon-button" onClick={() => moveItem(selected, -1)} disabled={selected === 0}><ArrowUp size={17} /></button><button className="admin-icon-button" onClick={() => moveItem(selected, 1)} disabled={selected === working.length - 1}><ArrowDown size={17} /></button><button className="admin-icon-button is-danger" onClick={() => removeItem(selected)}><Trash2 size={17} /></button></div></div>{definition.primitive ? <ValueField name="Value" value={working[selected]} onChange={(value) => updateItem(selected, value)} /> : <div className="admin-form-grid">{Object.entries(editableFields(working[selected])).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => updateField(selected, key, next)} />)}</div>}</> : <div className="admin-empty"><Settings2 size={32} /><h3>No entries yet</h3><p>Add the first item to this section.</p><button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add item</button></div>}</section></div>}
+    {definition.kind === "object" ? <section className="admin-panel admin-object-editor"><div className="admin-form-grid">{Object.entries(objectFields).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => setWorking({ ...working, [key]: next })} />)}</div></section> : <div className="admin-editor-layout"><section className="admin-panel admin-entry-list"><div className="admin-entry-list__tools"><label><Search size={16} /><input placeholder="Search entries" value={query} onChange={(e) => setQuery(e.target.value)} /></label><button className="admin-icon-button" onClick={addItem} title="Add item"><Plus size={18} /></button></div><div>{visibleItems.map(({ item, index }) => <button key={item?.id || `${definition.key}-${index}`} className={selected === index ? "is-active" : ""} onClick={() => setSelected(index)}><span><strong>{definition.primitive ? String(item) : item?.[definition.titleField] || item?.title || `Item ${index + 1}`}</strong><small>{definition.primitive ? `Item ${index + 1}` : item?.category || item?.year || item?.city || `Entry ${index + 1}`}</small></span><ChevronRight size={16} /></button>)}</div><button className="admin-add-row" onClick={addItem}><Plus size={17} /> Add {definition.label.replace(/s$/, "")}</button></section><section className="admin-panel admin-entry-editor">{working[selected] !== undefined ? <><div className="admin-entry-editor__head"><div><span>Entry {selected + 1} of {working.length}</span><h2>{definition.primitive ? String(working[selected]) : working[selected]?.[definition.titleField] || working[selected]?.title || "Untitled"}</h2></div><div><button className="admin-icon-button" onClick={() => moveItem(selected, -1)} disabled={selected === 0}><ArrowUp size={17} /></button><button className="admin-icon-button" onClick={() => moveItem(selected, 1)} disabled={selected === working.length - 1}><ArrowDown size={17} /></button><button className="admin-icon-button is-danger" onClick={() => removeItem(selected)}><Trash2 size={17} /></button></div></div>{definition.primitive ? <ValueField name="Value" value={working[selected]} onChange={(value) => updateItem(selected, value)} /> : <div className="admin-form-grid">{Object.entries(editableFields(working[selected])).map(([key, value]) => <ValueField key={key} name={key} value={value} categoryOptions={categoryOptions} onChange={(next) => updateField(selected, key, next)} />)}</div>}</> : <div className="admin-empty"><Settings2 size={32} /><h3>No entries yet</h3><p>Add the first item to this section.</p><button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add item</button></div>}</section></div>}
   </div>;
 };
 
@@ -229,7 +354,7 @@ const MediaLibrary = ({ media, refreshMedia }) => {
   const upload = async (event) => { const files = [...event.target.files]; if (!files.length) return; setUploading(true); for (const file of files) { const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-"); const path = `${new Date().toISOString().slice(0, 10)}/${uid()}-${safeName}`; const normalizedMime = /\.mpeg$/i.test(file.name) && file.type === "video/mpeg" ? "audio/mpeg" : file.type; const uploadBody = normalizedMime === file.type ? file : new Blob([file], { type: normalizedMime }); const { error } = await supabase.storage.from("media").upload(path, uploadBody, { cacheControl: "31536000", contentType: normalizedMime, upsert: false }); if (error) { toast.error(`${file.name}: ${error.message}`); continue; } const { data } = supabase.storage.from("media").getPublicUrl(path); await supabase.from("media_assets").insert({ name: file.name, storage_path: path, public_url: data.publicUrl, mime_type: normalizedMime, size_bytes: file.size, created_by: (await supabase.auth.getUser()).data.user.id }); } setUploading(false); event.target.value = ""; await refreshMedia(); toast.success("Media upload complete"); };
   const remove = async (asset) => { if (!window.confirm(`Permanently delete ${asset.name}? This cannot be undone.`)) return; const { error } = await supabase.storage.from("media").remove([asset.storage_path]); if (!error) await supabase.from("media_assets").delete().eq("id", asset.id); if (error) toast.error(error.message); else { toast.success("Media deleted"); refreshMedia(); } };
   const filtered = media.filter((asset) => asset.name.toLowerCase().includes(query.toLowerCase()));
-  return <div className="admin-page"><PageHeader eyebrow="Asset management" title="Media library" description="Upload optimized portfolio images, video and audio. New assets are served through Supabase CDN." actions={<><input ref={inputRef} type="file" multiple accept="image/*,video/mp4,video/webm,audio/*" hidden onChange={upload} /><button className="admin-button admin-button--primary" onClick={() => inputRef.current?.click()} disabled={uploading}>{uploading ? <Loader2 className="admin-spin" size={17} /> : <UploadCloud size={17} />} Upload media</button></>} /><div className="admin-toolbar"><label><Search size={17} /><input placeholder="Search media" value={query} onChange={(e) => setQuery(e.target.value)} /></label><span>{filtered.length} assets</span></div>{filtered.length ? <div className="admin-media-grid">{filtered.map((asset) => <article key={asset.id}>{asset.mime_type?.startsWith("image/") ? <img src={asset.public_url} alt={asset.alt_text || asset.name} /> : asset.mime_type?.startsWith("video/") ? <video src={asset.public_url} muted /> : <div className="admin-media-placeholder"><FileImage size={36} /></div>}<div><strong title={asset.name}>{asset.name}</strong><small>{asset.mime_type || "Media"} · {Math.round((asset.size_bytes || 0) / 1024)} KB</small><div><button onClick={() => navigator.clipboard.writeText(asset.public_url).then(() => toast.success("URL copied"))}>Copy URL</button><button className="is-danger" onClick={() => remove(asset)}>Delete</button></div></div></article>)}</div> : <div className="admin-empty admin-panel"><FileImage size={36} /><h3>No media uploaded yet</h3><p>Existing Cloudinary assets remain active. Upload new assets here when ready.</p></div>}</div>;
+  return <div className="admin-page"><PageHeader eyebrow="Asset management" title="Media library" description="Upload optimized portfolio images, video and audio. New assets are served through Supabase CDN." actions={<><input ref={inputRef} type="file" multiple accept="image/*,video/mp4,video/webm,audio/*" hidden onChange={upload} /><button className="admin-button admin-button--primary" onClick={() => inputRef.current?.click()} disabled={uploading}>{uploading ? <Loader2 className="admin-spin" size={17} /> : <UploadCloud size={17} />} Upload media</button></>} /><div className="admin-toolbar"><label><Search size={17} /><input placeholder="Search media" value={query} onChange={(e) => setQuery(e.target.value)} /></label><span>{filtered.length} assets</span></div>{filtered.length ? <div className="admin-media-grid">{filtered.map((asset) => <article key={asset.id}>{asset.mime_type?.startsWith("image/") ? <ImagePreview src={asset.public_url} alt={asset.alt_text || asset.name} /> : asset.mime_type?.startsWith("video/") ? <video src={asset.public_url} muted /> : <div className="admin-media-placeholder"><FileImage size={36} /></div>}<div><strong title={asset.name}>{asset.name}</strong><small>{asset.mime_type || "Media"} · {Math.round((asset.size_bytes || 0) / 1024)} KB</small><div><button onClick={() => navigator.clipboard.writeText(asset.public_url).then(() => toast.success("URL copied"))}>Copy URL</button><button className="is-danger" onClick={() => remove(asset)}>Delete</button></div></div></article>)}</div> : <div className="admin-empty admin-panel"><FileImage size={36} /><h3>No media uploaded yet</h3><p>Existing Cloudinary assets remain active. Upload new assets here when ready.</p></div>}</div>;
 };
 
 const Messages = ({ messages, refreshMessages }) => {

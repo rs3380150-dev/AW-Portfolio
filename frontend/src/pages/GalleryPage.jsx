@@ -1,16 +1,28 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { GalleryItem, Lightbox } from "@/components/Gallery";
 import { SectionHeading } from "@/components/SectionHeading";
 import { EmptyArchiveState } from "@/components/EmptyArchiveState";
-import { gallery, galleryCategories } from "@/data/gallery";
+import { galleryCategories } from "@/data/gallery";
+import { useContent } from "@/context/ContentContext";
+import { buildCategoryFilters } from "@/utils/contentCategories.mjs";
 
 export const GalleryPage = () => {
+  const { content } = useContent();
+  const gallery = content.gallery || [];
   const [active, setActive] = useState("all");
   const [openIndex, setOpenIndex] = useState(null);
+  const categories = useMemo(() => buildCategoryFilters(gallery, galleryCategories), [gallery]);
   const filtered = useMemo(
     () => (active === "all" ? gallery : gallery.filter((item) => item.category === active)),
-    [active],
+    [active, gallery],
   );
+
+  useEffect(() => {
+    if (!categories.some((category) => category.id === active)) {
+      setActive("all");
+      setOpenIndex(null);
+    }
+  }, [active, categories]);
 
   const close = () => setOpenIndex(null);
   const prev = () => setOpenIndex((index) => (index <= 0 ? filtered.length - 1 : index - 1));
@@ -28,7 +40,7 @@ export const GalleryPage = () => {
           />
 
           <div className="mt-12 flex flex-wrap gap-3">
-            {galleryCategories.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category.id}
                 type="button"

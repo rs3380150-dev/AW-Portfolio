@@ -6,7 +6,7 @@
     "start": "vite --host 0.0.0.0",
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "test": "node --test tests/formatEventDate.test.mjs tests/publicAssets.test.mjs",
+    "test": "node --test tests/contentCategories.test.mjs tests/formatEventDate.test.mjs tests/publicAssets.test.mjs",
     "check": "npm run test && npm run build",
     "media:sync": "powershell -ExecutionPolicy Bypass -File ../scripts/sync-remote-media.ps1",
     "media:upload": "node ../scripts/upload-cloudinary-media.mjs",

@@ -1,15 +1,24 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { VideoCard } from "@/components/VideoCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { EmptyArchiveState } from "@/components/EmptyArchiveState";
-import { videoCategories, videos } from "@/data/videos";
+import { videoCategories } from "@/data/videos";
+import { useContent } from "@/context/ContentContext";
+import { buildCategoryFilters } from "@/utils/contentCategories.mjs";
 
 export const Videos = () => {
+  const { content } = useContent();
+  const videos = content.videos || [];
   const [active, setActive] = useState("all");
+  const categories = useMemo(() => buildCategoryFilters(videos, videoCategories), [videos]);
   const filtered = useMemo(
     () => (active === "all" ? videos : videos.filter((video) => video.category === active)),
-    [active],
+    [active, videos],
   );
+
+  useEffect(() => {
+    if (!categories.some((category) => category.id === active)) setActive("all");
+  }, [active, categories]);
 
   return (
     <div className="page-shell" data-testid="videos-page">
@@ -23,7 +32,7 @@ export const Videos = () => {
           />
 
           <div className="mt-12 flex flex-wrap gap-3">
-            {videoCategories.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category.id}
                 type="button"

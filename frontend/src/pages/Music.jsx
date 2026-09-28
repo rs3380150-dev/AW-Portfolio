@@ -1,19 +1,28 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Download, Headphones } from "@/components/icons";
 import { ConnectSection } from "@/components/ConnectSection";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TrackCard } from "@/components/TrackCard";
 import { Marquee } from "@/components/Motion";
 import { EmptyArchiveState } from "@/components/EmptyArchiveState";
-import { musicFilters, tracks } from "@/data/tracks";
+import { musicFilters } from "@/data/tracks";
 import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
+import { buildCategoryFilters } from "@/utils/contentCategories.mjs";
 
 export const Music = () => {
+  const { content } = useContent();
+  const tracks = content.tracks || [];
   const [active, setActive] = useState("all");
+  const filters = useMemo(() => buildCategoryFilters(tracks, musicFilters), [tracks]);
   const filtered = useMemo(
     () => (active === "all" ? tracks : tracks.filter((track) => track.category === active)),
-    [active],
+    [active, tracks],
   );
+
+  useEffect(() => {
+    if (!filters.some((filter) => filter.id === active)) setActive("all");
+  }, [active, filters]);
 
   return (
     <div className="page-shell" data-testid="music-page">
@@ -43,7 +52,7 @@ export const Music = () => {
           </div>
 
           <div className="mt-12 flex flex-wrap gap-3">
-            {musicFilters.map((filter) => (
+            {filters.map((filter) => (
               <button
                 key={filter.id}
                 type="button"
