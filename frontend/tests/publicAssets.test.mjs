@@ -21,6 +21,12 @@ const cloudinaryManifest = JSON.parse(
   readFileSync(resolve(projectRoot, "src/data/cloudinary-media.json"), "utf8"),
 );
 
+const readPngSize = (file) => {
+  const bytes = readFileSync(resolve(projectRoot, "public", file));
+  assert.equal(bytes.toString("ascii", 1, 4), "PNG", `${file} must be a PNG`);
+  return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+};
+
 test("Cloudinary-backed media references exist in the upload manifest", () => {
   const references = referenceFiles.flatMap((file) => {
     const source = readFileSync(resolve(projectRoot, file), "utf8");
@@ -62,4 +68,22 @@ test("audio previews intentionally kept local still exist", () => {
       `Missing or empty asset ${reference.publicPath} referenced by ${reference.file}`,
     );
   }
+});
+
+test("favicon assets use valid square dimensions", () => {
+  const expectedSizes = {
+    "favicon-48x48.png": 48,
+    "favicon-96x96.png": 96,
+    "favicon-192x192.png": 192,
+    "favicon-512x512.png": 512,
+    "favicon.png": 512,
+    "apple-touch-icon.png": 180,
+  };
+
+  for (const [file, size] of Object.entries(expectedSizes)) {
+    assert.deepEqual(readPngSize(file), { width: size, height: size });
+  }
+
+  const icoPath = resolve(projectRoot, "public/favicon.ico");
+  assert.ok(existsSync(icoPath) && readFileSync(icoPath).length > 0, "Missing favicon.ico");
 });
