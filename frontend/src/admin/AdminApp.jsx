@@ -312,6 +312,23 @@ const ContentEditor = ({ published, drafts, onSaveDraft, onPublish }) => {
   const categoryOptions = Array.isArray(working)
     ? [...new Set(working.map((item) => normalizeCategory(item?.category || "")).filter(Boolean))]
     : [];
+  const entryNames = {
+    manifesto: "card",
+    tracks: "release",
+    events: "event",
+    gallery: "image",
+    videos: "video",
+    services: "service",
+    testimonials: "testimonial",
+    achievements: "achievement",
+    skills: "skill",
+    timeline: "milestone",
+    influences: "influence",
+    mediaFeatures: "platform",
+    brandLogos: "partner",
+  };
+  const entryName = entryNames[definition.key] || "item";
+  const entryCount = Array.isArray(working) ? working.length : 0;
   const objectFields = definition.key === "site"
     ? { ...working, useBlackAndWhiteHero: working.useBlackAndWhiteHero ?? true }
     : working;
@@ -343,9 +360,67 @@ const ContentEditor = ({ published, drafts, onSaveDraft, onPublish }) => {
   };
 
   return <div className="admin-page admin-content-page">
-    <PageHeader eyebrow="Content studio" title={definition.label} description={definition.description} actions={<><span className={`admin-status ${draftDiffers || dirty ? "is-draft" : "is-live"}`}>{draftDiffers || dirty ? "Unpublished changes" : "Live"}</span><button className="admin-button" onClick={save} disabled={!dirty || saving}>{saving ? <Loader2 className="admin-spin" size={17} /> : <Save size={17} />} Save draft</button><button className="admin-button admin-button--primary" onClick={publish} disabled={saving || (!draftDiffers && !dirty)}><Check size={17} /> Publish</button></>} />
-    <div className="admin-section-tabs">{sectionDefinitions.map((section) => <button key={section.key} className={section.key === definition.key ? "is-active" : ""} onClick={() => navigate(`/admin/content/${section.key}`)}>{section.label}</button>)}</div>
-    {definition.kind === "object" ? <section className="admin-panel admin-object-editor"><div className="admin-form-grid">{Object.entries(objectFields).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => setWorking({ ...working, [key]: next })} />)}</div></section> : <div className="admin-editor-layout"><section className="admin-panel admin-entry-list"><div className="admin-entry-list__tools"><label><Search size={16} /><input placeholder="Search entries" value={query} onChange={(e) => setQuery(e.target.value)} /></label><button className="admin-icon-button" onClick={addItem} title="Add item"><Plus size={18} /></button></div><div>{visibleItems.map(({ item, index }) => <button key={item?.id || `${definition.key}-${index}`} className={selected === index ? "is-active" : ""} onClick={() => setSelected(index)}><span><strong>{definition.primitive ? String(item) : item?.[definition.titleField] || item?.title || `Item ${index + 1}`}</strong><small>{definition.primitive ? `Item ${index + 1}` : item?.category || item?.year || item?.city || `Entry ${index + 1}`}</small></span><ChevronRight size={16} /></button>)}</div><button className="admin-add-row" onClick={addItem}><Plus size={17} /> Add {definition.label.replace(/s$/, "")}</button></section><section className="admin-panel admin-entry-editor">{working[selected] !== undefined ? <><div className="admin-entry-editor__head"><div><span>Entry {selected + 1} of {working.length}</span><h2>{definition.primitive ? String(working[selected]) : working[selected]?.[definition.titleField] || working[selected]?.title || "Untitled"}</h2></div><div><button className="admin-icon-button" onClick={() => moveItem(selected, -1)} disabled={selected === 0}><ArrowUp size={17} /></button><button className="admin-icon-button" onClick={() => moveItem(selected, 1)} disabled={selected === working.length - 1}><ArrowDown size={17} /></button><button className="admin-icon-button is-danger" onClick={() => removeItem(selected)}><Trash2 size={17} /></button></div></div>{definition.primitive ? <ValueField name="Value" value={working[selected]} onChange={(value) => updateItem(selected, value)} /> : <div className="admin-form-grid">{Object.entries(editableFields(working[selected])).map(([key, value]) => <ValueField key={key} name={key} value={value} categoryOptions={categoryOptions} onChange={(next) => updateField(selected, key, next)} />)}</div>}</> : <div className="admin-empty"><Settings2 size={32} /><h3>No entries yet</h3><p>Add the first item to this section.</p><button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add item</button></div>}</section></div>}
+    <PageHeader
+      eyebrow="Content studio"
+      title={definition.label}
+      description={definition.description}
+      actions={<>
+        <span className={`admin-status ${draftDiffers || dirty ? "is-draft" : "is-live"}`}>{draftDiffers || dirty ? "Unpublished changes" : "Everything is live"}</span>
+        <button className="admin-button" onClick={save} disabled={!dirty || saving}>{saving ? <Loader2 className="admin-spin" size={17} /> : <Save size={17} />} Save draft</button>
+        <button className="admin-button admin-button--primary" onClick={publish} disabled={saving || (!draftDiffers && !dirty)}><Check size={17} /> Publish changes</button>
+      </>}
+    />
+
+    <section className="admin-content-switcher" aria-label="Choose content section">
+      <div>
+        <span>Editing section</span>
+        <strong>{definition.label}</strong>
+        <small>Choose which part of the website you want to manage.</small>
+      </div>
+      <label>
+        <span className="sr-only">Content section</span>
+        <select value={definition.key} onChange={(event) => navigate(`/admin/content/${event.target.value}`)}>
+          {sectionDefinitions.map((section) => <option key={section.key} value={section.key}>{section.label}</option>)}
+        </select>
+      </label>
+    </section>
+
+    {definition.kind === "object" ? (
+      <section className="admin-panel admin-object-editor">
+        <div className="admin-editor-intro"><strong>Global website settings</strong><span>Edit the fields below, then save a draft or publish when you are ready.</span></div>
+        <div className="admin-form-grid">{Object.entries(objectFields).map(([key, value]) => <ValueField key={key} name={key} value={value} onChange={(next) => setWorking({ ...working, [key]: next })} />)}</div>
+      </section>
+    ) : (
+      <div className="admin-editor-layout">
+        <section className="admin-panel admin-entry-list">
+          <div className="admin-entry-list__header">
+            <div><span>{definition.label} library</span><small>{entryCount} {entryCount === 1 ? entryName : `${entryName}s`}</small></div>
+            <button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add new {entryName}</button>
+          </div>
+          <div className="admin-entry-list__tools">
+            <label><Search size={16} /><input aria-label={`Search ${definition.label}`} placeholder={`Search ${definition.label.toLowerCase()}...`} value={query} onChange={(e) => setQuery(e.target.value)} /></label>
+          </div>
+          <div className="admin-entry-list__items">
+            {visibleItems.map(({ item, index }) => <button key={item?.id || `${definition.key}-${index}`} className={selected === index ? "is-active" : ""} onClick={() => setSelected(index)}><span><strong>{definition.primitive ? String(item) : item?.[definition.titleField] || item?.title || `Untitled ${entryName}`}</strong><small>{definition.primitive ? `${entryName} ${index + 1}` : item?.category || item?.year || item?.city || `${entryName} ${index + 1}`}</small></span><ChevronRight size={16} /></button>)}
+            {query && visibleItems.length === 0 && <div className="admin-entry-list__empty"><Search size={20} /><span>No matching {entryName}s</span><button type="button" onClick={() => setQuery("")}>Clear search</button></div>}
+          </div>
+        </section>
+
+        <section className="admin-panel admin-entry-editor">
+          {working[selected] !== undefined ? <>
+            <div className="admin-entry-editor__head">
+              <div><span>Editing {entryName} {selected + 1} of {working.length}</span><h2>{definition.primitive ? String(working[selected]) : working[selected]?.[definition.titleField] || working[selected]?.title || `Untitled ${entryName}`}</h2><p>Update the details below. Your changes stay private until you publish them.</p></div>
+              <div className="admin-entry-editor__actions">
+                <button className="admin-icon-button" title="Move up" aria-label={`Move ${entryName} up`} onClick={() => moveItem(selected, -1)} disabled={selected === 0}><ArrowUp size={17} /></button>
+                <button className="admin-icon-button" title="Move down" aria-label={`Move ${entryName} down`} onClick={() => moveItem(selected, 1)} disabled={selected === working.length - 1}><ArrowDown size={17} /></button>
+                <button className="admin-icon-button is-danger" title={`Delete ${entryName}`} aria-label={`Delete ${entryName}`} onClick={() => removeItem(selected)}><Trash2 size={17} /></button>
+              </div>
+            </div>
+            {definition.primitive ? <ValueField name="Value" value={working[selected]} onChange={(value) => updateItem(selected, value)} /> : <div className="admin-form-grid">{Object.entries(editableFields(working[selected])).map(([key, value]) => <ValueField key={key} name={key} value={value} categoryOptions={categoryOptions} onChange={(next) => updateField(selected, key, next)} />)}</div>}
+          </> : <div className="admin-empty"><Settings2 size={32} /><h3>No {entryName}s yet</h3><p>Add your first {entryName} to start editing this section.</p><button className="admin-button admin-button--primary" onClick={addItem}><Plus size={17} /> Add new {entryName}</button></div>}
+        </section>
+      </div>
+    )}
   </div>;
 };
 
