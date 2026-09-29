@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Mail, MapPin, MessageCircle, Phone, Send } from "@/components/icons";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 import { SocialIcons } from "@/components/SocialIcons";
 import { toast } from "sonner";
 
@@ -15,12 +15,11 @@ const quickLinks = [
 ];
 
 const footerIconClass = "mt-0.5 h-4 w-4 shrink-0 text-cyan";
-const primaryPhone = site.phoneNumbers[0];
-const footerWhatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
-  "Hi Achyut Wadhwa, I want to discuss a booking or collaboration.",
-)}`;
-
 export const Footer = () => {
+  const { content } = useContent();
+  const site = content.site;
+  const primaryPhone = site.phoneNumbers?.[0] || { href: `tel:${site.phone}`, value: site.phone };
+  const footerWhatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Achyut Wadhwa, I want to discuss a booking or collaboration.")}`;
   const [email, setEmail] = useState("");
   const subscribe = (e) => {
     e.preventDefault();

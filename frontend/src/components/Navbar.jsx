@@ -1,21 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { gallery } from "@/data/gallery";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 import { prefetchRoute } from "@/routes/pageLoaders";
 
 const EASE = [0.22, 1, 0.36, 1];
 const EASE_OUT = [0, 0, 0.58, 1];
 const EASE_IN = [0.42, 0, 1, 1];
-
-const primaryLinks = [
-  { to: "/", label: "Home", description: "Latest signal", image: site.aboutImage },
-  { to: "/music", label: "Music", description: "Tracks & live sets", image: "/assets/images/menu-music-achyut.png" },
-  { to: "/events", label: "Events", description: "Upcoming shows", image: gallery[0].src },
-  { to: "/about", label: "About", description: "The artist", image: gallery[4].src },
-  { to: "/contact", label: "Contact", description: "Bookings & collabs", image: gallery[11].src },
-];
 
 const secondaryLinks = [
   { to: "/gallery", label: "Gallery" },
@@ -27,6 +18,16 @@ const secondaryLinks = [
 const roman = ["I", "II", "III", "IV", "V"];
 
 export const Navbar = () => {
+  const { content } = useContent();
+  const gallery = content.gallery || [];
+  const site = content.site;
+  const primaryLinks = useMemo(() => [
+    { to: "/", label: "Home", description: "Latest signal", image: site.aboutImage },
+    { to: "/music", label: "Music", description: "Tracks & live sets", image: "/assets/images/menu-music-achyut.png" },
+    { to: "/events", label: "Events", description: "Upcoming shows", image: gallery[0]?.src || site.heroImage },
+    { to: "/about", label: "About", description: "The artist", image: gallery[4]?.src || site.aboutImage },
+    { to: "/contact", label: "Contact", description: "Bookings & collabs", image: gallery[11]?.src || site.heroImage },
+  ], [gallery, site]);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -35,7 +36,7 @@ export const Navbar = () => {
   const activeIndex = useMemo(() => {
     const index = primaryLinks.findIndex(({ to }) => to === location.pathname);
     return index < 0 ? 0 : index;
-  }, [location.pathname]);
+  }, [location.pathname, primaryLinks]);
   const visualIndex = hoveredIndex ?? activeIndex;
 
   useEffect(() => {

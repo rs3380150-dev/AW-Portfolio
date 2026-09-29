@@ -22,3 +22,7 @@ test("rejects malformed dates", () => {
   assert.throws(() => formatEventDate("12-09-2026"), /Invalid event date/);
   assert.throws(() => formatEventDate("2026-13-12"), /Invalid event date/);
 });
+
+test("rejects impossible calendar dates", () => {
+  assert.throws(() => formatEventDate("2026-02-31"), /Invalid event date/);
+});

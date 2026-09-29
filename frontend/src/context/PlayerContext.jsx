@@ -1,15 +1,16 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { tracks as allTracks } from "@/data/tracks";
+import { useContent } from "@/context/ContentContext";
 
 const PlayerContext = createContext(null);
 
 export const usePlayer = () => useContext(PlayerContext);
 
 export const PlayerProvider = ({ children }) => {
+  const { content } = useContent();
   const audioRef = useRef(null);
   const currentIndexRef = useRef(0);
   const volumeRef = useRef(0.8);
-  const [queue] = useState(allTracks);
+  const queue = content.tracks || [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -54,6 +55,7 @@ export const PlayerProvider = ({ children }) => {
     const onTime = () => setProgress(audio.currentTime);
     const onMeta = () => setDuration(audio.duration || 0);
     const onEnd = () => {
+      if (!queue.length) return;
       const index = (currentIndexRef.current + 1) % queue.length;
       playIndex(index);
     };
@@ -110,11 +112,13 @@ export const PlayerProvider = ({ children }) => {
   }, [active, ensureAudio, isPlaying, playIndex]);
 
   const next = useCallback(() => {
+    if (!queue.length) return;
     const index = (currentIndexRef.current + 1) % queue.length;
     playIndex(index);
   }, [playIndex, queue.length]);
 
   const prev = useCallback(() => {
+    if (!queue.length) return;
     const index = (currentIndexRef.current - 1 + queue.length) % queue.length;
     playIndex(index);
   }, [playIndex, queue.length]);

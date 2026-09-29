@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { buildStructuredData, getSeoMeta, toAbsoluteUrl } from "@/data/seo";
+import { useContent } from "@/context/ContentContext";
 
 const ensureMeta = (attribute, key) => {
   const selector = `meta[${attribute}="${key}"]`;
@@ -29,17 +30,19 @@ const setCanonical = (href) => {
 };
 
 export const Seo = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const { content } = useContent();
+  const tracks = content.tracks || [];
 
   useEffect(() => {
-    const meta = getSeoMeta(pathname);
+    const meta = getSeoMeta(pathname, tracks);
     const imageUrl = toAbsoluteUrl(meta.image);
 
     document.title = meta.title;
     setCanonical(meta.url);
 
     setMeta("name", "description", meta.description);
-    const robots = meta.indexable
+    const robots = meta.indexable && !new URLSearchParams(search).has("preview")
       ? "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
       : "noindex,nofollow";
     setMeta("name", "robots", robots);
@@ -70,8 +73,8 @@ export const Seo = () => {
       script.type = "application/ld+json";
       document.head.appendChild(script);
     }
-    script.textContent = JSON.stringify(buildStructuredData(pathname));
-  }, [pathname]);
+    script.textContent = JSON.stringify(buildStructuredData(pathname, tracks));
+  }, [pathname, search, tracks]);
 
   return null;
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Instagram, Facebook, Youtube, Music2, Twitter } from "@/components/icons";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 
 const TikTok = (props) => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" {...props}>
@@ -18,7 +18,10 @@ const items = [
   { key: "x", Icon: Twitter, label: "X" },
 ];
 
-export const SocialIcons = ({ className = "", size = "h-10 w-10" }) => (
+export const SocialIcons = ({ className = "", size = "h-10 w-10" }) => {
+  const { content } = useContent();
+  const site = content.site;
+  return (
   <div className={`flex flex-wrap items-center gap-3 ${className}`}>
     {items.filter(({ key }) => site.social[key]).map(({ key, Icon, label }) => (
       <a
@@ -34,4 +37,5 @@ export const SocialIcons = ({ className = "", size = "h-10 w-10" }) => (
       </a>
     ))}
   </div>
-);
+  );
+};

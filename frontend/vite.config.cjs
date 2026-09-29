@@ -17,14 +17,16 @@ module.exports = defineConfig({
     port: 3000,
   },
   build: {
-    minify: "esbuild",
+    minify: "oxc",
     sourcemap: false,
     rollupOptions: {
       treeshake: true,
       output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router-dom"],
-          motion: ["framer-motion", "gsap"],
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/.test(id)) return "react";
+          if (/[\\/]node_modules[\\/](framer-motion|gsap|motion-dom|motion-utils)[\\/]/.test(id)) return "motion";
+          return undefined;
         },
       },
     },

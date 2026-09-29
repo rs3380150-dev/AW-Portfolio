@@ -6,13 +6,13 @@ import { TrackCard } from "@/components/TrackCard";
 import { Marquee } from "@/components/Motion";
 import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { musicFilters } from "@/data/tracks";
-import { site } from "@/data/site";
 import { useContent } from "@/context/ContentContext";
 import { buildCategoryFilters } from "@/utils/contentCategories.mjs";
 
 export const Music = () => {
   const { content } = useContent();
   const tracks = content.tracks || [];
+  const site = content.site;
   const [active, setActive] = useState("all");
   const filters = useMemo(() => buildCategoryFilters(tracks, musicFilters), [tracks]);
   const filtered = useMemo(
@@ -41,9 +41,9 @@ export const Music = () => {
                 Follow the artist channels for edits, releases, live recordings, and collaboration updates.
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <a data-testid="music-spotify" href={site.streaming.spotify} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-cyan px-5 py-2.5 text-sm font-semibold text-void hover:scale-[1.03] transition-transform duration-300">
+                {site.streaming.spotify && <a data-testid="music-spotify" href={site.streaming.spotify} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-cyan px-5 py-2.5 text-sm font-semibold text-void hover:scale-[1.03] transition-transform duration-300">
                   <Headphones className="h-4 w-4" /> Stream
-                </a>
+                </a>}
                 <a data-testid="music-press-kit" href={site.pressKitUrl} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-white/70 hover:border-cyan hover:text-cyan transition-colors duration-300">
                   <Download className="h-4 w-4" /> Press Kit
                 </a>

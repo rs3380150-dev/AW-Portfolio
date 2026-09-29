@@ -4,8 +4,7 @@ import { EventCard } from "@/components/EventCard";
 import { EmptyArchiveState } from "@/components/EmptyArchiveState";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ScrollReveal } from "@/components/Motion";
-import { events } from "@/data/events";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 
 const filters = [
   { id: "all", label: "All Dates" },
@@ -44,6 +43,9 @@ const emptyStateByFilter = {
 };
 
 export const Events = () => {
+  const { content } = useContent();
+  const events = content.events || [];
+  const site = content.site;
   const [active, setActive] = useState("all");
   const filtered = useMemo(() => {
     const list = active === "all"
@@ -51,7 +53,7 @@ export const Events = () => {
       : events.filter((event) => event.status === active || event.type === active);
 
     return [...list].sort((a, b) => new Date(a.date) - new Date(b.date));
-  }, [active]);
+  }, [active, events]);
 
   return (
     <div className="page-shell" data-testid="events-page">

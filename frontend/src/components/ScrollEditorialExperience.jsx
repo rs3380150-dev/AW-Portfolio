@@ -2,8 +2,8 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "@/components/icons";
-import { tracks } from "@/data/tracks";
 import { usePlayer } from "@/context/PlayerContext";
+import { useContent } from "@/context/ContentContext";
 
 const GlyphMark = ({ glyph }) => (
   <svg viewBox="0 0 100 100" role="presentation" focusable="false">
@@ -58,6 +58,8 @@ const ReleaseCard = ({ release, index, onPlay, playing }) => (
 );
 
 export const ScrollEditorialExperience = () => {
+  const { content } = useContent();
+  const tracks = content.tracks || [];
   const { current, isPlaying, playTrack } = usePlayer();
   const featuredTrack = tracks.find((track) => track.featuredOnHome) || tracks[0];
   const latestReleases = featuredTrack ? [{

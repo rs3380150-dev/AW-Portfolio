@@ -5,11 +5,13 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { ScrollReveal } from "@/components/Motion";
 import { StatCounter } from "@/components/StatCounter";
 import { BlobTextReveal } from "@/components/BlobTextReveal";
-import { site } from "@/data/site";
-import { influences, skills, timeline } from "@/data/about";
+import { useContent } from "@/context/ContentContext";
 
 
-export const About = () => (
+export const About = () => {
+  const { content } = useContent();
+  const { site, influences = [], skills = [], timeline = [] } = content;
+  return (
   <div className="page-shell" data-testid="about-page">
     <section className="px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -124,4 +126,5 @@ export const About = () => (
       </div>
     </section>
   </div>
-);
+  );
+};

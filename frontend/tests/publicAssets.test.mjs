@@ -41,8 +41,6 @@ test("Cloudinary-backed media references exist in the upload manifest", () => {
   );
 
   assert.equal(cloudinaryManifest.assetCount, 41);
-  assert.ok(remoteMedia.length >= 35, "Expected image and hero-video Cloudinary references");
-
   for (const reference of remoteMedia) {
     assert.ok(
       cloudinaryManifest.assets[reference.publicPath],
@@ -51,15 +49,13 @@ test("Cloudinary-backed media references exist in the upload manifest", () => {
   }
 });
 
-test("audio previews intentionally kept local still exist", () => {
+test("referenced local audio previews exist", () => {
   const references = referenceFiles.flatMap((file) => {
     const source = readFileSync(resolve(projectRoot, file), "utf8");
     return [...source.matchAll(/["'](\/assets\/audio\/[^"']+)["']/g)].map(
       (match) => ({ file, publicPath: match[1] }),
     );
   });
-
-  assert.ok(references.length >= 6, "Expected local demo audio references");
 
   for (const reference of references) {
     const diskPath = resolve(projectRoot, "public", reference.publicPath.slice(1));

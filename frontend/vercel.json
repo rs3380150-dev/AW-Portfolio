@@ -11,14 +11,10 @@
     }
   ],
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/about", "destination": "/" },
     { "source": "/music", "destination": "/" },
-    { "source": "/music/neon-cathedral", "destination": "/" },
-    { "source": "/music/midnight-voltage", "destination": "/" },
-    { "source": "/music/solar-winds-wadhwa-remix", "destination": "/" },
-    { "source": "/music/afterlife-sequence", "destination": "/" },
-    { "source": "/music/tulum-sunrise-live-set", "destination": "/" },
-    { "source": "/music/electric-bloom", "destination": "/" },
+    { "source": "/music/:path*", "destination": "/" },
     { "source": "/events", "destination": "/" },
     { "source": "/gallery", "destination": "/" },
     { "source": "/videos", "destination": "/" },

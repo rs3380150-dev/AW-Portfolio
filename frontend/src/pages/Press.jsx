@@ -4,8 +4,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { TestimonialCard } from "@/components/ServiceCard";
 import { ScrollReveal } from "@/components/Motion";
 import { useSpotlightProps } from "@/components/Spotlight";
-import { achievements, brandLogos, mediaFeatures, testimonials } from "@/data/press";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 
 const AchievementCard = ({ achievement, index }) => {
   const spotlightProps = useSpotlightProps();
@@ -49,7 +48,7 @@ const PartnerTile = ({ name }) => {
   );
 };
 
-const PressKitCard = () => {
+const PressKitCard = ({ site }) => {
   const spotlightProps = useSpotlightProps();
 
   return (
@@ -70,7 +69,7 @@ const PressKitCard = () => {
   );
 };
 
-const TestimonialCarousel = () => {
+const TestimonialCarousel = ({ testimonials }) => {
   return (
     <div className="testimonial-carousel mt-12 overflow-hidden focus:outline-none" tabIndex={0} aria-label="Booker reviews carousel">
       <div className="testimonial-carousel-track flex w-max">
@@ -94,7 +93,10 @@ const TestimonialCarousel = () => {
   );
 };
 
-export const Press = () => (
+export const Press = () => {
+  const { content } = useContent();
+  const { site, achievements = [], brandLogos = [], mediaFeatures = [], testimonials = [] } = content;
+  return (
   <div className="page-shell" data-testid="press-page">
     <section className="px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-end">
@@ -104,11 +106,11 @@ export const Press = () => (
           title="Artist details, media, and booking context."
           subtitle="A compact press room for promoters, journalists, artists, and brand partners."
         />
-        <PressKitCard />
+        <PressKitCard site={site} />
       </div>
     </section>
 
-    <section className="bg-tinted px-6 py-24 md:px-10 md:py-32">
+    {achievements.length > 0 && <section className="bg-tinted px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1500px]">
         <SectionHeading
           index="02"
@@ -122,38 +124,39 @@ export const Press = () => (
           ))}
         </div>
       </div>
-    </section>
+    </section>}
 
-    <section className="px-6 py-24 md:px-10 md:py-32">
+    {(mediaFeatures.length > 0 || brandLogos.length > 0) && <section className="px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-2">
-        <div>
+        {mediaFeatures.length > 0 && <div>
           <SectionHeading index="03" eyebrow="Presence" title="Platforms & presence." />
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {mediaFeatures.map((name) => (
               <PresenceTile key={name} name={name} />
             ))}
           </div>
-        </div>
-        <div>
+        </div>}
+        {brandLogos.length > 0 && <div>
           <SectionHeading index="04" eyebrow="Stages" title="Signals carried by partners." />
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {brandLogos.map((name) => (
               <PartnerTile key={name} name={name} />
             ))}
           </div>
-        </div>
+        </div>}
       </div>
-    </section>
+    </section>}
 
-    <section className="connect-section border-y border-white/10 bg-navy px-6 py-24 md:px-10 md:py-32">
+    {testimonials.length > 0 && <section className="connect-section border-y border-white/10 bg-navy px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1500px]">
         <SectionHeading
           index="05"
           eyebrow="Quotes"
           title="What bookers say after the lights come up."
         />
-        <TestimonialCarousel />
+        <TestimonialCarousel testimonials={testimonials} />
       </div>
-    </section>
+    </section>}
   </div>
-);
+  );
+};

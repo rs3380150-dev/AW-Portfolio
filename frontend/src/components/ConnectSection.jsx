@@ -1,11 +1,14 @@
 import React from "react";
 import { ArrowUpRight } from "@/components/icons";
 import { ScrollReveal } from "@/components/Motion";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 
 const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-export const ConnectSection = ({ className = "" }) => (
+export const ConnectSection = ({ className = "" }) => {
+  const { content } = useContent();
+  const site = content.site;
+  return (
   <section className={`connect-section border-y border-white/10 bg-navy px-6 py-24 md:px-10 ${className}`} data-testid="connect-section">
     <div className="mx-auto max-w-[1500px] text-center">
       <ScrollReveal y={24}>
@@ -39,4 +42,5 @@ export const ConnectSection = ({ className = "" }) => (
       </ScrollReveal>
     </div>
   </section>
-);
+  );
+};

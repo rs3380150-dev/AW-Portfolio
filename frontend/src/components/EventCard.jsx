@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Ticket, ArrowUpRight } from "@/components/icons";
 import { useSpotlightProps } from "@/components/Spotlight";
@@ -8,13 +8,15 @@ const statusStyle = {
   upcoming: "text-cyan border-cyan/40 bg-cyan/10",
   "sold-out": "text-magenta border-magenta/40 bg-magenta/10",
   completed: "text-white/50 border-white/15 bg-white/5",
+  cancelled: "text-white/50 border-white/15 bg-white/5",
 };
-const statusLabel = { upcoming: "Upcoming", "sold-out": "Sold Out", completed: "Completed" };
+const statusLabel = { upcoming: "Upcoming", "sold-out": "Sold Out", completed: "Completed", cancelled: "Cancelled" };
 
 export const EventCard = ({ event, index = 0 }) => {
-  const d = formatEventDate(event.date);
-  const soldOrDone = event.status === "sold-out" || event.status === "completed";
+  const d = useMemo(() => { try { return formatEventDate(event.date); } catch { return null; } }, [event.date]);
+  const soldOrDone = ["sold-out", "completed", "cancelled"].includes(event.status);
   const spotlightProps = useSpotlightProps();
+  if (!d) return null;
 
   return (
     <motion.article

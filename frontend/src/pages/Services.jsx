@@ -2,10 +2,12 @@ import React from "react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ServiceCard, TestimonialCard } from "@/components/ServiceCard";
 import { Marquee } from "@/components/Motion";
-import { services } from "@/data/services";
-import { testimonials } from "@/data/press";
+import { useContent } from "@/context/ContentContext";
 
-export const Services = () => (
+export const Services = () => {
+  const { content } = useContent();
+  const { services = [], testimonials = [] } = content;
+  return (
   <div className="page-shell" data-testid="services-page">
     <section className="px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1500px]">
@@ -25,7 +27,7 @@ export const Services = () => (
 
     <Marquee text="DJ SETS - LIVE PERFORMANCE - PRODUCTION - COLLABORATIONS -" stroke className="py-8" />
 
-    <section className="connect-section border-y border-white/10 bg-navy px-6 py-24 md:px-10 md:py-32">
+    {testimonials.length > 0 && <section className="connect-section border-y border-white/10 bg-navy px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1500px]">
         <SectionHeading
           index="02"
@@ -39,6 +41,7 @@ export const Services = () => (
           ))}
         </div>
       </div>
-    </section>
+    </section>}
   </div>
-);
+  );
+};

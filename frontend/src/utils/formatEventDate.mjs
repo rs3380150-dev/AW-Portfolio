@@ -9,6 +9,10 @@ export const formatEventDate = (isoDate) => {
   if (monthIndex < 0 || monthIndex >= monthNames.length) {
     throw new TypeError(`Invalid event date: ${isoDate}`);
   }
+  const calendarDate = new Date(Date.UTC(Number(year), monthIndex, Number(day)));
+  if (calendarDate.getUTCFullYear() !== Number(year) || calendarDate.getUTCMonth() !== monthIndex || calendarDate.getUTCDate() !== Number(day)) {
+    throw new TypeError(`Invalid event date: ${isoDate}`);
+  }
 
   return { day, mon: monthNames[monthIndex], year: Number(year) };
 };

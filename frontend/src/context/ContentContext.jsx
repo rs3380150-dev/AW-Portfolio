@@ -1,19 +1,23 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { defaultContent } from "@/content/defaultContent";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { sanitizeContent } from "@/content/sanitizeContent.mjs";
+
+const fallbackContent = sanitizeContent(defaultContent);
 
 const ContentContext = createContext({
-  content: defaultContent,
+  content: fallbackContent,
   loading: false,
   connected: false,
+  error: null,
   refresh: async () => {},
 });
 
 export const ContentProvider = ({ children }) => {
-  const [content, setContent] = useState(defaultContent);
+  const [content, setContent] = useState(fallbackContent);
   const [loading, setLoading] = useState(isSupabaseConfigured);
   const [connected, setConnected] = useState(false);
-  const [revision, setRevision] = useState(0);
+  const [error, setError] = useState(null);
 
   const refresh = async () => {
     if (!supabase) {
@@ -26,19 +30,22 @@ export const ContentProvider = ({ children }) => {
       .select("section_key, content");
 
     if (!error && data) {
-      const remote = Object.fromEntries(data.map((row) => [row.section_key, row.content]));
-      Object.entries(remote).forEach(([key, value]) => {
-        const target = defaultContent[key];
-        if (Array.isArray(target) && Array.isArray(value)) {
-          target.splice(0, target.length, ...value);
-        } else if (target && typeof target === "object" && value && typeof value === "object") {
-          Object.keys(target).forEach((field) => delete target[field]);
-          Object.assign(target, value);
+      let remote = Object.fromEntries(data.map((row) => [row.section_key, row.content]));
+      if (new URLSearchParams(window.location.search).get("preview") === "draft") {
+        const { data: draftRows, error: draftError } = await supabase.from("content_drafts").select("section_key, content");
+        if (draftError) {
+          setError(draftError);
+          setLoading(false);
+          return;
         }
-      });
-      setContent({ ...defaultContent, ...remote });
+        remote = { ...remote, ...Object.fromEntries(draftRows.map((row) => [row.section_key, row.content])) };
+      }
+      setContent(sanitizeContent({ ...defaultContent, ...remote }));
       setConnected(true);
-      setRevision((current) => current + 1);
+      setError(null);
+    } else if (error) {
+      setConnected(false);
+      setError(error);
     }
 
     setLoading(false);
@@ -49,14 +56,12 @@ export const ContentProvider = ({ children }) => {
   }, []);
 
   const value = useMemo(
-    () => ({ content, loading, connected, refresh }),
-    [content, loading, connected],
+    () => ({ content, loading, connected, error, refresh }),
+    [content, loading, connected, error],
   );
 
   return (
-    <ContentContext.Provider value={value}>
-      <React.Fragment key={revision}>{children}</React.Fragment>
-    </ContentContext.Provider>
+    <ContentContext.Provider value={value}>{children}</ContentContext.Provider>
   );
 };
 

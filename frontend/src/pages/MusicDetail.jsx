@@ -2,7 +2,6 @@ import React from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, Headphones, Play } from "@/components/icons";
-import { tracks } from "@/data/tracks";
 import { usePlayer } from "@/context/PlayerContext";
 import { useContent } from "@/context/ContentContext";
 
@@ -17,9 +16,9 @@ const services = [
 
 export const MusicDetail = () => {
   const { slug } = useParams();
-  const track = tracks.find((item) => item.slug === slug);
+  const { content, loading } = useContent();
+  const track = (content.tracks || []).find((item) => item.slug === slug);
   const { current, isPlaying, playTrack } = usePlayer();
-  const { loading } = useContent();
 
   if (loading) return <div className="min-h-screen bg-[#f2f0ea]" aria-busy="true" />;
   if (!track) return <Navigate to="/music" replace />;

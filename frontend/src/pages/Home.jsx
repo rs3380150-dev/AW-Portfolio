@@ -12,10 +12,7 @@ import { HorizontalGallery } from "@/components/HorizontalGallery";
 import { SoundWaveform } from "@/components/SoundWaveform";
 import { ScrollEditorialExperience } from "@/components/ScrollEditorialExperience";
 import { useSpotlightProps } from "@/components/Spotlight";
-import { site, manifesto } from "@/data/site";
-import { events } from "@/data/events";
-import { gallery } from "@/data/gallery";
-import { services } from "@/data/services";
+import { useContent } from "@/context/ContentContext";
 
 const SectionLink = ({ to, children, testId }) => (
   <Link
@@ -47,6 +44,8 @@ const ManifestoCard = ({ item, index }) => {
 };
 
 export const Home = () => {
+  const { content } = useContent();
+  const { site, manifesto = [], events = [], gallery = [], services = [] } = content;
   const upcoming = events.filter((event) => event.status !== "completed").slice(0, 3);
   const hasUpcomingEvents = upcoming.length > 0;
   const gallerySectionIndex = hasUpcomingEvents ? "04" : "03";

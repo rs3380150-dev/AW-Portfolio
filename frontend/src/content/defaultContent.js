@@ -10,18 +10,19 @@ import { videos } from "@/data/videos";
 export const defaultContent = {
   site,
   manifesto,
-  tracks,
-  events,
+  // Never show demo catalogue claims if the CMS is temporarily unavailable.
+  tracks: [],
+  events: [],
   gallery,
-  videos,
+  videos: [],
   services,
-  testimonials,
-  achievements,
+  testimonials: [],
+  achievements: [],
   skills,
   timeline,
   influences,
   mediaFeatures,
-  brandLogos,
+  brandLogos: [],
 };
 
 export const contentSectionKeys = Object.keys(defaultContent);

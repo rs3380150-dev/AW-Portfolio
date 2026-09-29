@@ -1,5 +1,4 @@
 import { site } from "@/data/site";
-import { tracks } from "@/data/tracks";
 import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
 
 export const siteUrl = (import.meta.env.VITE_SITE_URL || site.siteUrl || "https://achyutwadhwa.in").replace(/\/$/, "");
@@ -73,7 +72,7 @@ export const toAbsoluteUrl = (path = "/") => {
   return `${siteUrl}${normalizedPath}`;
 };
 
-export const getSeoMeta = (pathname = "/") => {
+export const getSeoMeta = (pathname = "/", tracks = []) => {
   const cleanPath = pathname.replace(/\/$/, "") || "/";
   const track = tracks.find((item) => cleanPath === `/music/${item.slug}`);
   const indexable = Boolean(track || seoRoutes[cleanPath]);
@@ -107,8 +106,8 @@ const realSameAs = [
   site.social.x,
 ].filter(Boolean);
 
-export const buildStructuredData = (pathname = "/") => {
-  const meta = getSeoMeta(pathname);
+export const buildStructuredData = (pathname = "/", tracks = []) => {
+  const meta = getSeoMeta(pathname, tracks);
   const artistId = `${siteUrl}/#artist`;
   const websiteId = `${siteUrl}/#website`;
   const track = tracks.find((item) => meta.path === `/music/${item.slug}`);
@@ -162,13 +161,14 @@ export const buildStructuredData = (pathname = "/") => {
   }
 
   if (track) {
+    const releaseDate = new Date(track.releaseDate);
     graph.push({
       "@type": "MusicRecording",
       "@id": `${meta.url}#recording`,
       name: track.title,
       url: meta.url,
       image: toAbsoluteUrl(track.cover),
-      datePublished: new Date(track.releaseDate).toISOString().slice(0, 10),
+      ...(Number.isNaN(releaseDate.getTime()) ? {} : { datePublished: releaseDate.toISOString().slice(0, 10) }),
       genre: track.genre,
       byArtist: { "@id": artistId },
       description: track.description,

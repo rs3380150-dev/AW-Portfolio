@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Instagram, Mail, MapPin, MessageCircle, Phone, Send } from "@/components/icons";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -6,8 +6,7 @@ import { ConnectSection } from "@/components/ConnectSection";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SocialIcons } from "@/components/SocialIcons";
 import { ScrollReveal } from "@/components/Motion";
-import { services } from "@/data/services";
-import { site } from "@/data/site";
+import { useContent } from "@/context/ContentContext";
 import { supabase } from "@/lib/supabase";
 
 const initialForm = {
@@ -40,7 +39,7 @@ const buildMessage = (form) =>
     form.message,
   ].join("\n");
 
-const buildFallbackLinks = (form) => {
+const buildFallbackLinks = (form, site) => {
   const subject = `Achyut Wadhwa booking request - ${form.eventType || "Collab"}`;
   const message = buildMessage(form);
   const phone = site.whatsapp.replace(/\D/g, "");
@@ -51,17 +50,17 @@ const buildFallbackLinks = (form) => {
   };
 };
 
-const whatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
-  "Hi Achyut Wadhwa, I want to discuss a booking or collaboration.",
-)}`;
-
 export const Contact = () => {
+  const { content } = useContent();
+  const { site, services = [] } = content;
+  const whatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Achyut Wadhwa, I want to discuss a booking or collaboration.")}`;
   const [params] = useSearchParams();
   const requestedService = params.get("service") || "";
   const defaults = useMemo(() => ({ ...initialForm, eventType: requestedService }), [requestedService]);
   const [form, setForm] = useState(defaults);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fallbackLinks, setFallbackLinks] = useState(null);
+  const formStartedAt = useRef(Date.now());
 
   useEffect(() => {
     setForm((current) => ({ ...current, eventType: requestedService }));
@@ -77,6 +76,12 @@ export const Contact = () => {
     }
 
     if (form.website) return;
+    if (Date.now() - formStartedAt.current < 2500) return;
+    const lastSubmission = Number(window.localStorage.getItem("aw-contact-last-submit") || 0);
+    if (Date.now() - lastSubmission < 60_000) {
+      toast.error("Please wait a minute before sending another request.");
+      return;
+    }
 
     setIsSubmitting(true);
     setFallbackLinks(null);
@@ -96,6 +101,8 @@ export const Contact = () => {
       if (!web3FormsAccessKey) {
         if (!savedToInbox) throw new Error("Missing Web3Forms access key");
         toast.success("Booking request sent. Management will follow up.");
+        window.localStorage.setItem("aw-contact-last-submit", String(Date.now()));
+        formStartedAt.current = Date.now();
         setForm(defaults);
         return;
       }
@@ -129,10 +136,12 @@ export const Contact = () => {
       }
 
       toast.success("Booking request sent. Management will follow up.");
+      window.localStorage.setItem("aw-contact-last-submit", String(Date.now()));
+      formStartedAt.current = Date.now();
       setForm(defaults);
       setFallbackLinks(null);
     } catch (error) {
-      setFallbackLinks(buildFallbackLinks(form));
+      setFallbackLinks(buildFallbackLinks(form, site));
       toast.error("Form service unavailable. WhatsApp/email fallback is ready.");
     } finally {
       setIsSubmitting(false);

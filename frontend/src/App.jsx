@@ -13,6 +13,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { Seo } from "@/components/Seo";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { ContentProvider } from "@/context/ContentContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
@@ -147,15 +148,17 @@ function App() {
   return (
     <div className="App">
       <LoadingScreen />
-      <BrowserRouter>
-        <ContentProvider>
-          <ThemeProvider>
-            <PlayerProvider>
-              <AppChrome />
-            </PlayerProvider>
-          </ThemeProvider>
-        </ContentProvider>
-      </BrowserRouter>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <ContentProvider>
+            <ThemeProvider>
+              <PlayerProvider>
+                <AppChrome />
+              </PlayerProvider>
+            </ThemeProvider>
+          </ContentProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
     </div>
   );
 }
