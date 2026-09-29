@@ -268,17 +268,100 @@ const CategoryField = ({ value, options, onChange }) => {
   );
 };
 
+const fieldGuidance = {
+  featuredOnHome: {
+    label: "Feature this release on the homepage",
+    help: "Shows this release in the homepage featured-music section. Only one release can be featured at a time.",
+    on: "Featured",
+    off: "Not featured",
+  },
+  heroImage: {
+    label: "Release page hero image",
+    help: "Large background image at the top of this release's detail page. If empty, the cover artwork is used.",
+  },
+  artistName: {
+    label: "Artist name on release page",
+    help: "Name displayed below the release title in the top hero section.",
+  },
+  releaseLabel: {
+    label: "Release badge text",
+    help: "Short text displayed above the release title, for example “New release”.",
+  },
+  showReleaseLabel: {
+    label: "Show release badge and date",
+    help: "Displays the release badge text and release date above the title in the page hero.",
+  },
+  showArtist: {
+    label: "Show artist name in the hero",
+    help: "Displays the artist name directly below the large release title at the top of the page.",
+  },
+  showReleaseNote: {
+    label: "Show the release note section",
+    help: "Displays the main story section containing the description, story, closing paragraph and credits.",
+  },
+  showReleaseLead: {
+    label: "Show short description in release note",
+    help: "Displays the Description field as the larger opening paragraph of the release note.",
+  },
+  showReleaseStory: {
+    label: "Show full story in release note",
+    help: "Displays the Story field as the main body copy inside the release note section.",
+  },
+  releaseNoteOutro: {
+    label: "Release note closing paragraph",
+    help: "Final paragraph shown after the release story.",
+  },
+  showReleaseNoteOutro: {
+    label: "Show release note closing paragraph",
+    help: "Displays the closing paragraph underneath the release story.",
+  },
+  showCredits: {
+    label: "Show production credits",
+    help: "Displays written/produced by, release year and music format inside the release note.",
+  },
+  writtenBy: {
+    label: "Written and produced by",
+    help: "Credit name displayed in the production credits block.",
+  },
+  showListenPanel: {
+    label: "Show the “Listen on” panel",
+    help: "Displays cover artwork and Spotify, SoundCloud, Apple Music or YouTube links beside the release note.",
+  },
+  showImmersiveSection: {
+    label: "Show immersive sound section",
+    help: "Displays the large visual and play button section below the release note.",
+  },
+  immersiveEyebrow: {
+    label: "Immersive section small heading",
+    help: "Small uppercase label shown above the immersive section title.",
+  },
+  immersiveTitle: {
+    label: "Immersive section title",
+    help: "Large heading used in the immersive sound section.",
+  },
+  immersiveDescription: {
+    label: "Immersive section description",
+    help: "Supporting paragraph shown under the immersive section title.",
+  },
+  showStreamSection: {
+    label: "Show bottom streaming links",
+    help: "Displays the final “Stream this release on” bar at the bottom of the release page.",
+  },
+};
+
 const ValueField = ({ name, value, onChange, categoryOptions = [] }) => {
-  const label = name.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase());
+  const guidance = fieldGuidance[name] || {};
+  const label = guidance.label || name.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase());
+  const help = guidance.help;
   if (Array.isArray(value) || (value && typeof value === "object")) return <JsonField name={name} label={label} value={value} onChange={onChange} />;
   if (name === "category") return <CategoryField value={value} options={categoryOptions} onChange={onChange} />;
   if (name === "useBlackAndWhiteHero") return <label className="admin-toggle"><span><strong>Use black-and-white hero images</strong><small>On uses the black-and-white set. Off uses the colour set.</small></span><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></label>;
-  if (typeof value === "boolean") return <label className="admin-toggle"><span><strong>{label}</strong><small>Enable or disable this option</small></span><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></label>;
+  if (typeof value === "boolean") return <label className="admin-toggle"><span><strong>{label}</strong><small>{help || "Controls whether this content is visible on the website."}</small></span><span className="admin-toggle__control"><em>{value ? guidance.on || "Shown" : guidance.off || "Hidden"}</em><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></span></label>;
   if (typeof value === "number") return <label className="admin-field"><span>{label}</span><input type="number" value={value} onChange={(e) => onChange(Number(e.target.value))} /></label>;
   const isLong = /description|story|intro|bio|body|quote/i.test(name);
   const isImage = imageFieldPattern.test(name);
-  if (isImage) return <div className="admin-field admin-field--image"><span>{label}</span><input aria-label={label} value={value ?? ""} onChange={(e) => onChange(e.target.value)} /><ImagePreview src={value} alt={`${label} preview`} /></div>;
-  return <label className={`admin-field ${isLong ? "admin-field--wide" : ""}`}><span>{label}</span>{isLong ? <textarea rows="4" value={value ?? ""} onChange={(e) => onChange(e.target.value)} /> : <input value={value ?? ""} onChange={(e) => onChange(e.target.value)} />}</label>;
+  if (isImage) return <div className="admin-field admin-field--image"><span>{label}</span>{help && <small className="admin-field__help">{help}</small>}<input aria-label={label} value={value ?? ""} onChange={(e) => onChange(e.target.value)} /><ImagePreview src={value} alt={`${label} preview`} /></div>;
+  return <label className={`admin-field ${isLong ? "admin-field--wide" : ""}`}><span>{label}</span>{help && <small className="admin-field__help">{help}</small>}{isLong ? <textarea rows="4" value={value ?? ""} onChange={(e) => onChange(e.target.value)} /> : <input value={value ?? ""} onChange={(e) => onChange(e.target.value)} />}</label>;
 };
 
 const ContentEditor = ({ published, drafts, onSaveDraft, onPublish }) => {

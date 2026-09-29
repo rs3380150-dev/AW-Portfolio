@@ -72,3 +72,13 @@
 @media(max-width:1150px){.admin-editor-layout{grid-template-columns:1fr}.admin-entry-list{position:relative;top:auto;max-height:460px}.admin-content-switcher{align-items:flex-start}}
 @media(max-width:800px){.admin-content-switcher{flex-direction:column}.admin-content-switcher label{width:100%;flex-basis:auto}.admin-entry-list__header{align-items:flex-start}.admin-entry-editor{padding:20px}.admin-editor-intro{align-items:flex-start;flex-direction:column}.admin-editor-intro span{text-align:left}}
 @media(max-width:520px){.admin-entry-list__header{flex-direction:column}.admin-entry-list>.admin-entry-list__header>.admin-button{width:100%}.admin-entry-editor__head{gap:14px}.admin-entry-editor__actions{width:100%}.admin-entry-editor__actions .admin-icon-button{flex:1}.admin-content-switcher>div{display:flex;align-items:flex-start;flex-direction:column}.admin-content-switcher>div>small{line-height:1.5}}
+
+.admin-field__help{order:1;color:var(--admin-muted);font-size:11px;line-height:1.5}
+.admin-field__help+input,.admin-field__help+textarea{order:2}
+.admin-field--image .admin-image-preview{order:3}
+.admin-toggle>span:first-child{min-width:0}
+.admin-toggle>span:first-child small{max-width:760px;line-height:1.5}
+.admin-toggle>.admin-toggle__control{display:flex;align-items:center;flex:0 0 auto;flex-direction:row;gap:11px}
+.admin-toggle__control em{min-width:72px;color:var(--admin-muted);font-size:10px;font-style:normal;font-weight:750;letter-spacing:.08em;text-align:right;text-transform:uppercase}
+.admin-toggle__control input{flex:0 0 auto}
+@media(max-width:520px){.admin-toggle{align-items:flex-start;gap:12px}.admin-toggle>.admin-toggle__control{align-items:flex-end;flex-direction:column-reverse;gap:6px}.admin-toggle__control em{min-width:0}}
