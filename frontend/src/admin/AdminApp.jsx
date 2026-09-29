@@ -10,6 +10,7 @@ import {
   Check,
   ChevronRight,
   Clock3,
+  Eye,
   ExternalLink,
   FileImage,
   History,
@@ -274,6 +275,7 @@ const fieldGuidance = {
     help: "Shows this release in the homepage featured-music section. Only one release can be featured at a time.",
     on: "Featured",
     off: "Not featured",
+    preview: "home-feature",
   },
   heroImage: {
     label: "Release page hero image",
@@ -290,22 +292,27 @@ const fieldGuidance = {
   showReleaseLabel: {
     label: "Show release badge and date",
     help: "Displays the release badge text and release date above the title in the page hero.",
+    preview: "hero-badge",
   },
   showArtist: {
     label: "Show artist name in the hero",
     help: "Displays the artist name directly below the large release title at the top of the page.",
+    preview: "hero-artist",
   },
   showReleaseNote: {
     label: "Show the release note section",
     help: "Displays the main story section containing the description, story, closing paragraph and credits.",
+    preview: "release-note",
   },
   showReleaseLead: {
     label: "Show short description in release note",
     help: "Displays the Description field as the larger opening paragraph of the release note.",
+    preview: "release-lead",
   },
   showReleaseStory: {
     label: "Show full story in release note",
     help: "Displays the Story field as the main body copy inside the release note section.",
+    preview: "release-story",
   },
   releaseNoteOutro: {
     label: "Release note closing paragraph",
@@ -314,10 +321,12 @@ const fieldGuidance = {
   showReleaseNoteOutro: {
     label: "Show release note closing paragraph",
     help: "Displays the closing paragraph underneath the release story.",
+    preview: "release-outro",
   },
   showCredits: {
     label: "Show production credits",
     help: "Displays written/produced by, release year and music format inside the release note.",
+    preview: "release-credits",
   },
   writtenBy: {
     label: "Written and produced by",
@@ -326,10 +335,12 @@ const fieldGuidance = {
   showListenPanel: {
     label: "Show the “Listen on” panel",
     help: "Displays cover artwork and Spotify, SoundCloud, Apple Music or YouTube links beside the release note.",
+    preview: "listen-panel",
   },
   showImmersiveSection: {
     label: "Show immersive sound section",
     help: "Displays the large visual and play button section below the release note.",
+    preview: "immersive-section",
   },
   immersiveEyebrow: {
     label: "Immersive section small heading",
@@ -346,7 +357,86 @@ const fieldGuidance = {
   showStreamSection: {
     label: "Show bottom streaming links",
     help: "Displays the final “Stream this release on” bar at the bottom of the release page.",
+    preview: "stream-section",
   },
+};
+
+const previewCaptions = {
+  "home-feature": "Featured music block on the homepage",
+  "hero-badge": "Badge and release date above the main title",
+  "hero-artist": "Artist name below the main title",
+  "release-note": "Complete release note column",
+  "release-lead": "Large opening description in the release note",
+  "release-story": "Main story paragraph in the release note",
+  "release-outro": "Closing paragraph in the release note",
+  "release-credits": "Credits grid at the bottom of the release note",
+  "listen-panel": "Streaming-services panel beside the release note",
+  "immersive-section": "Large immersive visual section",
+  "stream-section": "Streaming-links bar at the bottom of the page",
+};
+
+const FieldLocationPreview = ({ preview, label }) => {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const closeOnOutsideClick = (event) => {
+      if (!rootRef.current?.contains(event.target)) setOpen(false);
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  if (!preview) return null;
+  const isHomepage = preview === "home-feature";
+
+  return (
+    <span ref={rootRef} className={`admin-location-preview ${open ? "is-open" : ""}`}>
+      <button type="button" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
+        <Eye size={13} /> Preview location
+      </button>
+      <span className="admin-location-preview__popover" role="tooltip">
+        <span className="admin-location-preview__top"><strong>Where this appears</strong><small>Highlighted in lime</small></span>
+        {isHomepage ? (
+          <span className="admin-location-preview__canvas admin-location-preview__home">
+            <span className="admin-location-preview__nav">AW <i /> MUSIC &nbsp; EVENTS &nbsp; GALLERY</span>
+            <span className="admin-location-preview__home-hero">ACHYUT<br />WADHWA</span>
+            <span className="admin-location-preview__featured"><small>FEATURED RELEASE</small><b>OBSCURA</b><i>LISTEN NOW →</i></span>
+          </span>
+        ) : (
+          <span className="admin-location-preview__canvas" data-preview={preview}>
+            <span className="admin-location-preview__hero">
+              <span data-zone="hero-badge">NEW RELEASE · OCT 17</span>
+              <b>OBSCURA</b>
+              <i data-zone="hero-artist">— ACHYUT WADHWA</i>
+            </span>
+            <span className="admin-location-preview__body">
+              <span className="admin-location-preview__note" data-zone="release-note">
+                <i>01 / RELEASE NOTE</i>
+                <b>OBSCURA</b>
+                <span data-zone="release-lead">A slow-burning electronic release shaped for late nights.</span>
+                <span data-zone="release-story">The record moves through texture, rhythm and open space.</span>
+                <span data-zone="release-outro">Built to leave an afterimage after the final note.</span>
+                <span data-zone="release-credits">WRITTEN BY &nbsp; • &nbsp; 2026 &nbsp; • &nbsp; ELECTRONIC</span>
+              </span>
+              <span className="admin-location-preview__listen" data-zone="listen-panel"><i>ARTWORK</i><b>LISTEN ON</b><small>SPOTIFY<br />APPLE MUSIC<br />YOUTUBE</small></span>
+            </span>
+            <span className="admin-location-preview__immersive" data-zone="immersive-section"><i>VISUAL + PLAY</i><b>IMMERSIVE SOUND</b></span>
+            <span className="admin-location-preview__stream" data-zone="stream-section">STREAM “OBSCURA” ON &nbsp; SPOTIFY · APPLE MUSIC · YOUTUBE</span>
+          </span>
+        )}
+        <span className="admin-location-preview__caption"><strong>{previewCaptions[preview]}</strong><small>This is the exact website area controlled by “{label}”.</small></span>
+      </span>
+    </span>
+  );
 };
 
 const ValueField = ({ name, value, onChange, categoryOptions = [] }) => {
@@ -356,7 +446,7 @@ const ValueField = ({ name, value, onChange, categoryOptions = [] }) => {
   if (Array.isArray(value) || (value && typeof value === "object")) return <JsonField name={name} label={label} value={value} onChange={onChange} />;
   if (name === "category") return <CategoryField value={value} options={categoryOptions} onChange={onChange} />;
   if (name === "useBlackAndWhiteHero") return <label className="admin-toggle"><span><strong>Use black-and-white hero images</strong><small>On uses the black-and-white set. Off uses the colour set.</small></span><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></label>;
-  if (typeof value === "boolean") return <label className="admin-toggle"><span><strong>{label}</strong><small>{help || "Controls whether this content is visible on the website."}</small></span><span className="admin-toggle__control"><em>{value ? guidance.on || "Shown" : guidance.off || "Hidden"}</em><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /></span></label>;
+  if (typeof value === "boolean") return <div className={`admin-toggle ${guidance.preview ? "has-location-preview" : ""}`}><span><span className="admin-toggle__title"><strong>{label}</strong><FieldLocationPreview preview={guidance.preview} label={label} /></span><small>{help || "Controls whether this content is visible on the website."}</small></span><label className="admin-toggle__control"><em>{value ? guidance.on || "Shown" : guidance.off || "Hidden"}</em><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /><span className="sr-only">{label}</span></label></div>;
   if (typeof value === "number") return <label className="admin-field"><span>{label}</span><input type="number" value={value} onChange={(e) => onChange(Number(e.target.value))} /></label>;
   const isLong = /description|story|intro|bio|body|quote/i.test(name);
   const isImage = imageFieldPattern.test(name);
