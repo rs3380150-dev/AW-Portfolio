@@ -61,6 +61,23 @@ const toDateInputValue = (value) => {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "" : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
+const optimizeImageFile = async (file) => {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 1_500_000) return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 2560 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext("2d", { alpha: true }).drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, file.type, file.type === "image/png" ? undefined : 0.86));
+    if (!blob || blob.size >= file.size) return file;
+    return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
+  } catch {
+    return file;
+  }
+};
 
 const ImageLightbox = ({ src, alt, onClose }) => {
   useEffect(() => {
@@ -564,7 +581,19 @@ const ContentEditor = ({ published, drafts, media, onSaveDraft, onPublish }) => 
       event.returnValue = "";
     };
     window.addEventListener("beforeunload", warnUnsaved);
-    return () => window.removeEventListener("beforeunload", warnUnsaved);
+    const guardAdminLinks = (event) => {
+      if (!dirty) return;
+      const link = event.target.closest?.("a[href]");
+      if (!link) return;
+      const target = new URL(link.href, window.location.href);
+      if (target.origin !== window.location.origin || !target.pathname.startsWith("/admin")) return;
+      if (!window.confirm("You have unsaved changes. Leave this page and discard them?")) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+    document.addEventListener("click", guardAdminLinks, true);
+    return () => { window.removeEventListener("beforeunload", warnUnsaved); document.removeEventListener("click", guardAdminLinks, true); };
   }, [dirty]);
 
   const save = async () => { setSaving(true); try { return await onSaveDraft(definition.key, working); } finally { setSaving(false); } };
@@ -736,26 +765,42 @@ const ContentEditor = ({ published, drafts, media, onSaveDraft, onPublish }) => 
 };
 
 const MediaLibrary = ({ media, refreshMedia, published, drafts }) => {
-  const inputRef = useRef(null); const [uploading, setUploading] = useState(false); const [uploadProgress, setUploadProgress] = useState(""); const [query, setQuery] = useState("");
-  const upload = async (event) => {
-    const files = [...event.target.files]; if (!files.length) return;
+  const inputRef = useRef(null);
+  const cancelUploadRef = useRef(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
+  const [failedFiles, setFailedFiles] = useState([]);
+  const [optimizeImages, setOptimizeImages] = useState(true);
+  const [query, setQuery] = useState("");
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "audio/mpeg", "audio/wav"]);
+
+  const uploadFiles = async (files) => {
+    if (!files.length) return;
     setUploading(true);
+    setFailedFiles([]);
+    cancelUploadRef.current = false;
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData.user) { setUploading(false); return toast.error("Your session could not be verified. Please sign in again."); }
     let uploaded = 0;
+    const failed = [];
     for (const [index, file] of files.entries()) {
+      if (cancelUploadRef.current) break;
       setUploadProgress(`${index + 1} / ${files.length}`);
-      const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-"); const path = `${new Date().toISOString().slice(0, 10)}/${uid()}-${safeName}`; const normalizedMime = /\.mpeg$/i.test(file.name) && file.type === "video/mpeg" ? "audio/mpeg" : file.type; const uploadBody = normalizedMime === file.type ? file : new Blob([file], { type: normalizedMime });
+      const preparedFile = optimizeImages ? await optimizeImageFile(file) : file;
+      const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-"); const path = `${new Date().toISOString().slice(0, 10)}/${uid()}-${safeName}`; const normalizedMime = /\.mpeg$/i.test(file.name) && file.type === "video/mpeg" ? "audio/mpeg" : preparedFile.type; const uploadBody = normalizedMime === preparedFile.type ? preparedFile : new Blob([preparedFile], { type: normalizedMime });
+      if (!allowedTypes.has(normalizedMime) || file.size > 50 * 1024 * 1024) { failed.push(file); toast.error(`${file.name}: Unsupported format or larger than 50 MB`); continue; }
       const { error } = await supabase.storage.from("media").upload(path, uploadBody, { cacheControl: "31536000", contentType: normalizedMime, upsert: false });
-      if (error) { toast.error(`${file.name}: ${error.message}`); continue; }
+      if (error) { failed.push(file); toast.error(`${file.name}: ${error.message}`); continue; }
       const { data } = supabase.storage.from("media").getPublicUrl(path);
-      const { error: metadataError } = await supabase.from("media_assets").insert({ name: file.name, storage_path: path, public_url: data.publicUrl, mime_type: normalizedMime, size_bytes: file.size, alt_text: file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "), created_by: userData.user.id });
-      if (metadataError) { await supabase.storage.from("media").remove([path]); toast.error(`${file.name}: ${metadataError.message}`); continue; }
+      const { error: metadataError } = await supabase.from("media_assets").insert({ name: file.name, storage_path: path, public_url: data.publicUrl, mime_type: normalizedMime, size_bytes: preparedFile.size, alt_text: file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "), created_by: userData.user.id });
+      if (metadataError) { failed.push(file); await supabase.storage.from("media").remove([path]); toast.error(`${file.name}: ${metadataError.message}`); continue; }
       uploaded += 1;
     }
-    setUploading(false); setUploadProgress(""); event.target.value = ""; await refreshMedia();
+    setUploading(false); setUploadProgress(""); setFailedFiles(failed); await refreshMedia();
     if (uploaded) toast.success(`${uploaded} media file${uploaded === 1 ? "" : "s"} uploaded`);
+    if (cancelUploadRef.current) toast.info("Remaining uploads cancelled");
   };
+  const upload = (event) => { const files = [...event.target.files]; event.target.value = ""; uploadFiles(files); };
   const updateAlt = async (asset, altText) => { const { error } = await supabase.from("media_assets").update({ alt_text: altText.trim() }).eq("id", asset.id); if (error) toast.error(error.message); else { await refreshMedia(); toast.success("Alt text updated"); } };
   const remove = async (asset) => {
     const contentSnapshot = JSON.stringify({ published, drafts });
@@ -768,7 +813,17 @@ const MediaLibrary = ({ media, refreshMedia, published, drafts }) => {
     toast.success("Media deleted"); refreshMedia();
   };
   const filtered = media.filter((asset) => asset.name.toLowerCase().includes(query.toLowerCase()));
-  return <div className="admin-page"><PageHeader eyebrow="Asset management" title="Media library" description="Upload optimized portfolio images, video and audio. New assets are served through Supabase CDN." actions={<><input ref={inputRef} type="file" multiple accept="image/*,video/mp4,video/webm,audio/*" hidden onChange={upload} /><button className="admin-button admin-button--primary" onClick={() => inputRef.current?.click()} disabled={uploading}>{uploading ? <Loader2 className="admin-spin" size={17} /> : <UploadCloud size={17} />} Upload media</button></>} /><div className="admin-toolbar"><label><Search size={17} /><input placeholder="Search media" value={query} onChange={(e) => setQuery(e.target.value)} /></label><span>{filtered.length} assets</span></div>{filtered.length ? <div className="admin-media-grid">{filtered.map((asset) => <article key={asset.id}>{asset.mime_type?.startsWith("image/") ? <ImagePreview src={asset.public_url} alt={asset.alt_text || asset.name} /> : asset.mime_type?.startsWith("video/") ? <video src={asset.public_url} muted controls /> : <div className="admin-media-placeholder"><FileImage size={36} /></div>}<div><strong title={asset.name}>{asset.name}</strong><small>{asset.mime_type || "Media"} · {Math.round((asset.size_bytes || 0) / 1024)} KB</small>{asset.mime_type?.startsWith("image/") && <label className="admin-media-alt"><span>Alt text</span><input defaultValue={asset.alt_text || ""} onBlur={(event) => { if (event.target.value.trim() !== (asset.alt_text || "")) updateAlt(asset, event.target.value); }} /></label>}<div><button onClick={() => navigator.clipboard.writeText(asset.public_url).then(() => toast.success("URL copied"))}>Copy URL</button><button className="is-danger" onClick={() => remove(asset)}>Delete</button></div></div></article>)}</div> : <div className="admin-empty admin-panel"><FileImage size={36} /><h3>No media uploaded yet</h3><p>Existing Cloudinary assets remain active. Upload new assets here when ready.</p></div>}</div>;
+  return <div className="admin-page">
+    <PageHeader eyebrow="Asset management" title="Media library" description="Upload portfolio images, video and audio. Files are validated before being served through Supabase CDN." actions={<>
+      <input ref={inputRef} type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,audio/mpeg,audio/wav" hidden onChange={upload} />
+      <label className="admin-upload-optimize"><input type="checkbox" checked={optimizeImages} onChange={(event) => setOptimizeImages(event.target.checked)} disabled={uploading} /><span>Optimize large images</span></label>
+      {failedFiles.length > 0 && !uploading && <button className="admin-button" onClick={() => uploadFiles(failedFiles)}><RefreshCw size={17} /> Retry {failedFiles.length}</button>}
+      {uploading ? <button className="admin-button is-danger" onClick={() => { cancelUploadRef.current = true; }}><X size={17} /> Cancel after current</button> : <button className="admin-button admin-button--primary" onClick={() => inputRef.current?.click()}><UploadCloud size={17} /> Upload media</button>}
+    </>} />
+    {uploading && <div className="admin-upload-progress" role="status"><Loader2 className="admin-spin" size={17} /><span>Uploading file {uploadProgress}</span></div>}
+    <div className="admin-toolbar"><label><Search size={17} /><input placeholder="Search media" value={query} onChange={(e) => setQuery(e.target.value)} /></label><span>{filtered.length} assets</span></div>
+    {filtered.length ? <div className="admin-media-grid">{filtered.map((asset) => <article key={asset.id}>{asset.mime_type?.startsWith("image/") ? <ImagePreview src={asset.public_url} alt={asset.alt_text || asset.name} /> : asset.mime_type?.startsWith("video/") ? <video src={asset.public_url} muted controls /> : <div className="admin-media-placeholder"><FileImage size={36} /></div>}<div><strong title={asset.name}>{asset.name}</strong><small>{asset.mime_type || "Media"} · {Math.round((asset.size_bytes || 0) / 1024)} KB</small>{asset.mime_type?.startsWith("image/") && <label className="admin-media-alt"><span>Alt text</span><input defaultValue={asset.alt_text || ""} onBlur={(event) => { if (event.target.value.trim() !== (asset.alt_text || "")) updateAlt(asset, event.target.value); }} /></label>}<div><button onClick={() => navigator.clipboard.writeText(asset.public_url).then(() => toast.success("URL copied"))}>Copy URL</button><button className="is-danger" onClick={() => remove(asset)}>Delete</button></div></div></article>)}</div> : <div className="admin-empty admin-panel"><FileImage size={36} /><h3>No media uploaded yet</h3><p>Upload a supported image, MP4/WebM video, MP3 or WAV file to begin.</p></div>}
+  </div>;
 };
 
 const Messages = ({ messages, refreshMessages }) => {
@@ -784,9 +839,9 @@ const Messages = ({ messages, refreshMessages }) => {
   return <div className="admin-page"><PageHeader eyebrow="Lead inbox" title="Messages" description="Booking, collaboration and contact submissions." actions={<button className="admin-button" onClick={refreshMessages}><RefreshCw size={17} /> Refresh</button>} /><div className="admin-toolbar admin-message-toolbar"><label><Search size={17} /><input placeholder="Search name, email or message" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} /></label><select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); }}><option value="all">All statuses</option><option value="unread">Unread</option><option value="read">Read</option><option value="replied">Replied</option><option value="archived">Archived</option></select><span>{filtered.length} messages</span></div>{visible.length ? <><div className="admin-message-list">{visible.map((message) => <article className={`admin-panel ${message.status === "unread" ? "is-unread" : ""}`} key={message.id}><div className="admin-message-head"><div><span>{message.service || "General enquiry"}</span><h2>{message.name}</h2><a href={`mailto:${message.email}`}>{message.email}</a></div><time>{new Date(message.created_at).toLocaleString()}</time></div><p>{message.message}</p><div className="admin-message-actions"><select value={message.status} onChange={(e) => updateStatus(message.id, e.target.value)}><option value="unread">Unread</option><option value="read">Read</option><option value="replied">Replied</option><option value="archived">Archived</option></select><a className="admin-button" href={`mailto:${message.email}?subject=Re: ${encodeURIComponent(message.service || "Your enquiry")}`}>Reply</a><button className="admin-icon-button is-danger" aria-label={`Delete message from ${message.name}`} onClick={() => remove(message.id)}><Trash2 size={17} /></button></div></article>)}</div>{totalPages > 1 && <nav className="admin-pagination" aria-label="Message pages"><button className="admin-button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}>Previous</button><span>Page {Math.min(page, totalPages)} of {totalPages}</span><button className="admin-button" disabled={page >= totalPages} onClick={() => setPage((current) => current + 1)}>Next</button></nav>}</> : <div className="admin-empty admin-panel"><Inbox size={36} /><h3>No matching messages</h3><p>Try another search or status filter.</p></div>}</div>;
 };
 
-const VersionHistory = ({ versions, onRestore }) => {
+const VersionHistory = ({ versions, published, onRestore }) => {
   const [preview, setPreview] = useState(null);
-  return <div className="admin-page"><PageHeader eyebrow="Publishing safety" title="Version history" description="Preview any saved revision or restore it safely as a draft. Restoring never changes the live site until you publish." />{versions.length ? <div className="admin-history-list">{versions.map((version) => <article className="admin-panel" key={version.id}><Clock3 size={18} /><div><strong>{sectionDefinitionMap[version.section_key]?.label || version.section_key}</strong><small>Revision {version.revision} · {new Date(version.created_at).toLocaleString()}</small></div><code>{Array.isArray(version.content) ? `${version.content.length} entries` : "Settings snapshot"}</code><button className="admin-button" onClick={() => setPreview(version)}><Eye size={16} /> Preview</button><button className="admin-button" onClick={() => onRestore(version)}><History size={16} /> Restore draft</button></article>)}</div> : <div className="admin-empty admin-panel"><History size={36} /><h3>No publishing history yet</h3><p>Your first publish will create the first version snapshot.</p></div>}{preview && createPortal(<div className="admin-history-modal" role="dialog" aria-modal="true" aria-label="Revision preview" onClick={() => setPreview(null)}><div className="admin-history-modal__card" onClick={(event) => event.stopPropagation()}><div><span>Revision {preview.revision}</span><h2>{sectionDefinitionMap[preview.section_key]?.label || preview.section_key}</h2><button className="admin-icon-button" aria-label="Close preview" onClick={() => setPreview(null)}><X size={18} /></button></div><pre>{JSON.stringify(preview.content, null, 2)}</pre><button className="admin-button admin-button--primary" onClick={() => { onRestore(preview); setPreview(null); }}><History size={16} /> Restore as draft</button></div></div>, document.body)}</div>;
+  return <div className="admin-page"><PageHeader eyebrow="Publishing safety" title="Version history" description="Compare any saved revision with the current live content, or restore it safely as a draft. Restoring never changes the live site until you publish." />{versions.length ? <div className="admin-history-list">{versions.map((version) => <article className="admin-panel" key={version.id}><Clock3 size={18} /><div><strong>{sectionDefinitionMap[version.section_key]?.label || version.section_key}</strong><small>Revision {version.revision} · {new Date(version.created_at).toLocaleString()}</small></div><code>{Array.isArray(version.content) ? `${version.content.length} entries` : "Settings snapshot"}</code><button className="admin-button" onClick={() => setPreview(version)}><Eye size={16} /> Compare</button><button className="admin-button" onClick={() => onRestore(version)}><History size={16} /> Restore draft</button></article>)}</div> : <div className="admin-empty admin-panel"><History size={36} /><h3>No publishing history yet</h3><p>Your first publish will create the first version snapshot.</p></div>}{preview && createPortal(<div className="admin-history-modal" role="dialog" aria-modal="true" aria-label="Revision comparison" onClick={() => setPreview(null)}><div className="admin-history-modal__card" onClick={(event) => event.stopPropagation()}><div><span>Revision {preview.revision}</span><h2>{sectionDefinitionMap[preview.section_key]?.label || preview.section_key}</h2><button className="admin-icon-button" aria-label="Close comparison" onClick={() => setPreview(null)}><X size={18} /></button></div><div className="admin-history-compare"><section><h3>Saved revision</h3><pre>{JSON.stringify(preview.content, null, 2)}</pre></section><section><h3>Current live</h3><pre>{JSON.stringify(published[preview.section_key] ?? null, null, 2)}</pre></section></div><button className="admin-button admin-button--primary" onClick={() => { onRestore(preview); setPreview(null); }}><History size={16} /> Restore as draft</button></div></div>, document.body)}</div>;
 };
 
 export const AdminApp = ({ route }) => {
@@ -840,6 +895,6 @@ export const AdminApp = ({ route }) => {
   if (route === "content") page = <ContentEditor {...contentProps} />;
   if (route === "media") page = <MediaLibrary media={media} refreshMedia={loadAll} published={published} drafts={drafts} />;
   if (route === "messages") page = <Messages messages={messages} refreshMessages={loadAll} />;
-  if (route === "history") page = <VersionHistory versions={versions} onRestore={restoreVersion} />;
+  if (route === "history") page = <VersionHistory versions={versions} published={published} onRestore={restoreVersion} />;
   return <AdminShell session={session} onLogout={() => supabase.auth.signOut()}>{page}</AdminShell>;
 };
