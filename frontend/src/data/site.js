@@ -20,6 +20,10 @@ export const site = {
   location: "India - Worldwide",
   email: "wadhwaachyut@gmail.com",
   managementEmail: "wadhwaachyut@gmail.com",
+  managementName: "Sunny K. Sehgal",
+  managementRole: "Business Manager",
+  managementPhone: "+91 98146 78352",
+  managementWhatsapp: "+919814678352",
   phone: "+91 70098 20546",
   phoneNumbers: [
     { label: "Primary", value: "+91 70098 20546", href: "tel:+917009820546" },

@@ -558,7 +558,12 @@ const ContentEditor = ({ published, drafts, media, onSaveDraft, onPublish }) => 
   const { sectionKey = "tracks" } = useParams();
   const navigate = useNavigate();
   const definition = sectionDefinitionMap[sectionKey] || sectionDefinitions[0];
-  const source = drafts[definition.key] ?? published[definition.key] ?? clone(defaultContent[definition.key]);
+  const resolveSource = () => {
+    const stored = drafts[definition.key] ?? published[definition.key];
+    if (definition.key === "site") return { ...defaultContent.site, ...(stored || {}) };
+    return stored ?? clone(defaultContent[definition.key]);
+  };
+  const source = resolveSource();
   const [working, setWorking] = useState(() => clone(source));
   const [selected, setSelected] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -566,7 +571,7 @@ const ContentEditor = ({ published, drafts, media, onSaveDraft, onPublish }) => 
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  useEffect(() => { setWorking(clone(drafts[definition.key] ?? published[definition.key] ?? defaultContent[definition.key])); setSelected(0); setQuery(""); setFieldErrors({}); }, [definition.key, drafts, published]);
+  useEffect(() => { setWorking(clone(resolveSource())); setSelected(0); setQuery(""); setFieldErrors({}); }, [definition.key, drafts, published]);
   const dirty = JSON.stringify(working) !== JSON.stringify(source);
   const draftDiffers = JSON.stringify(drafts[definition.key]) !== JSON.stringify(published[definition.key]);
   const validationErrors = useMemo(() => validateSection(definition.key, working), [definition.key, working]);

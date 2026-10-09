@@ -20,6 +20,7 @@ export const Footer = () => {
   const site = content.site;
   const primaryPhone = site.phoneNumbers?.[0] || { href: `tel:${site.phone}`, value: site.phone };
   const footerWhatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Achyut Wadhwa, I want to discuss a booking or collaboration.")}`;
+  const managementPhoneDigits = site.managementPhone.replace(/\D/g, "");
   const [email, setEmail] = useState("");
   const subscribe = (e) => {
     e.preventDefault();
@@ -66,6 +67,14 @@ export const Footer = () => {
         <div>
           <h4 className="mb-5 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan">Booking</h4>
           <ul className="space-y-3.5 text-sm text-white/68">
+            <li className="mb-5 border-b border-white/10 pb-5">
+              <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Management enquiries</span>
+              <strong className="mt-2 block font-semibold text-white/85">{site.managementName}</strong>
+              <span className="mt-0.5 block text-xs text-white/45">{site.managementRole}</span>
+              <a href={`tel:+${managementPhoneDigits}`} className="mt-2 inline-flex items-center gap-2 transition-colors hover:text-cyan">
+                <Phone className={footerIconClass} /> {site.managementPhone}
+              </a>
+            </li>
             <li className="flex items-start gap-3">
               <Mail className={footerIconClass} />
               <a href={`mailto:${site.email}`} className="transition-colors hover:text-cyan">{site.email}</a>

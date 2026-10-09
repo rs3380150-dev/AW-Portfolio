@@ -40,6 +40,9 @@ export const ContentProvider = ({ children }) => {
         }
         remote = { ...remote, ...Object.fromEntries(draftRows.map((row) => [row.section_key, row.content])) };
       }
+      if (remote.site) {
+        remote.site = { ...defaultContent.site, ...remote.site };
+      }
       setContent(sanitizeContent({ ...defaultContent, ...remote }));
       setConnected(true);
       setError(null);

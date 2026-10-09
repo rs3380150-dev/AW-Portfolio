@@ -54,6 +54,9 @@ export const Contact = () => {
   const { content } = useContent();
   const { site, services = [] } = content;
   const whatsappHref = `https://wa.me/${site.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Achyut Wadhwa, I want to discuss a booking or collaboration.")}`;
+  const managementPhoneDigits = site.managementPhone.replace(/\D/g, "");
+  const managementWhatsappDigits = (site.managementWhatsapp || site.managementPhone).replace(/\D/g, "");
+  const managementWhatsappHref = `https://wa.me/${managementWhatsappDigits}?text=${encodeURIComponent("Hi Sunny, I would like to discuss a booking or professional enquiry for Achyut Wadhwa.")}`;
   const [params] = useSearchParams();
   const requestedService = params.get("service") || "";
   const defaults = useMemo(() => ({ ...initialForm, eventType: requestedService }), [requestedService]);
@@ -159,6 +162,36 @@ export const Contact = () => {
               title="Tell us about the room, record, or idea."
               subtitle="Share the format, location, date, and creative needs. Achyut Wadhwa is open for DJ sets, live performances, production work, and collaborations."
             />
+
+            <ScrollReveal className="mt-10 overflow-hidden rounded-md border border-cyan/25 bg-gradient-to-br from-cyan/[0.09] via-white/[0.035] to-transparent p-6 md:p-7">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-cyan">Management &amp; Bookings</p>
+              <h2 className="mt-4 text-2xl font-semibold text-white">{site.managementName}</h2>
+              <p className="mt-1 text-sm text-white/50">{site.managementRole}</p>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-white/65">
+                For bookings, meetings, collaborations, and professional enquiries, please contact Achyut Wadhwa&apos;s management.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href={`tel:+${managementPhoneDigits}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-cyan px-5 py-3 text-sm font-semibold text-void transition-transform duration-300 hover:scale-[1.03]"
+                  aria-label={`Call ${site.managementName} at ${site.managementPhone}`}
+                >
+                  <Phone className="h-4 w-4" /> Call Manager
+                </a>
+                <a
+                  href={managementWhatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white/75 transition-colors duration-300 hover:border-cyan/55 hover:text-cyan"
+                  aria-label={`Message ${site.managementName} on WhatsApp`}
+                >
+                  <MessageCircle className="h-4 w-4" /> WhatsApp Manager
+                </a>
+              </div>
+              <a href={`tel:+${managementPhoneDigits}`} className="mt-5 inline-block text-sm text-white/55 transition-colors hover:text-cyan">
+                {site.managementPhone}
+              </a>
+            </ScrollReveal>
 
             <div className="mt-10 grid gap-4">
               <ScrollReveal className="flex gap-4 border-t border-white/10 pt-5">
