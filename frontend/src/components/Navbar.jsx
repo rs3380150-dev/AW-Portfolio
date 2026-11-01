@@ -26,7 +26,7 @@ export const Navbar = () => {
     { to: "/music", label: "Music", description: "Tracks & live sets", image: "/assets/images/menu-music-achyut.png" },
     { to: "/events", label: "Events", description: "Upcoming shows", image: gallery[0]?.src || site.heroImage },
     { to: "/about", label: "About", description: "The artist", image: gallery[4]?.src || site.aboutImage },
-    { to: "/contact", label: "Contact", description: "Bookings & collabs", image: gallery[11]?.src || site.heroImage },
+    { to: "/contact", label: "Contact", description: "Bookings & collabs", image: site.artistImages?.[0] || site.aboutImage },
   ], [gallery, site]);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
