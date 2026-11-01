@@ -23,6 +23,7 @@ const uploadDirectories = [
   "images/gallery",
   "images/hero",
   "images/music-covers",
+  "images/music",
   "images/site",
   "images/testimonials",
   "images/video-thumbnails",

@@ -1,5 +1,13 @@
-// Published releases are loaded from the CMS. Keep the offline fallback truthful.
-export const tracks = [];
+import { cloudinaryMedia } from "@/utils/cloudinaryMedia";
+import { verifiedTracks } from "@/data/verifiedTracks.mjs";
+
+// Verified releases kept in source are merged with the CMS catalogue. This gives
+// new releases a safe production fallback until their first CMS publish.
+export const tracks = verifiedTracks.map((track) => ({
+  ...track,
+  cover: cloudinaryMedia(track.cover),
+  heroImage: cloudinaryMedia(track.heroImage),
+}));
 
 export const musicFilters = [
   { id: "all", label: "All" },

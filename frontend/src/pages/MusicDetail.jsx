@@ -27,6 +27,10 @@ export const MusicDetail = () => {
   const heroImage = track.heroImage || track.cover;
   const artistName = track.artistName || "Achyut Wadhwa";
   const availableServices = services.filter((service) => track.links?.[service.key]);
+  const canPreview = Boolean(track.audio);
+  const primaryListenUrl = track.links?.soundcloud || (
+    availableServices[0]?.key ? track.links?.[availableServices[0].key] : ""
+  );
   const showStorySection = track.showReleaseNote !== false || track.showListenPanel !== false;
 
   return (
@@ -55,9 +59,11 @@ export const MusicDetail = () => {
 
         <motion.div initial={{ opacity: 0, y: 48 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.26, ease: EASE }} className="music-detail-artwork">
           <img src={track.cover} alt={`${track.title} cover artwork`} />
-          <button type="button" onClick={() => playTrack(track.id)} aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`} className="music-detail-artwork-play">
+          {canPreview ? <button type="button" onClick={() => playTrack(track.id)} aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`} className="music-detail-artwork-play">
             <Play className="h-5 w-5 fill-current" /> {playing ? "Playing" : "Play preview"}
-          </button>
+          </button> : primaryListenUrl ? <a href={primaryListenUrl} target="_blank" rel="noreferrer" className="music-detail-artwork-play">
+            <Headphones className="h-5 w-5" /> Listen on SoundCloud
+          </a> : null}
         </motion.div>
       </section>
 
@@ -94,7 +100,7 @@ export const MusicDetail = () => {
 
       {track.showImmersiveSection !== false && <section className="music-detail-video">
         <div className="music-detail-video-media" style={{ backgroundImage: `url(${heroImage})` }}>
-          <button type="button" onClick={() => playTrack(track.id)} aria-label={`Play ${track.title}`} className="music-detail-video-play"><Play className="h-7 w-7 fill-current" /></button>
+          {canPreview ? <button type="button" onClick={() => playTrack(track.id)} aria-label={`Play ${track.title}`} className="music-detail-video-play"><Play className="h-7 w-7 fill-current" /></button> : primaryListenUrl ? <a href={primaryListenUrl} target="_blank" rel="noreferrer" aria-label={`Listen to ${track.title} on SoundCloud`} className="music-detail-video-play"><Headphones className="h-7 w-7" /></a> : null}
         </div>
         <div className="music-detail-video-copy">
           <span>{track.immersiveEyebrow || "02 / IMMERSIVE SOUND"}</span>

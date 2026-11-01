@@ -10,8 +10,8 @@ import { videos } from "@/data/videos";
 export const defaultContent = {
   site,
   manifesto,
-  // Never show demo catalogue claims if the CMS is temporarily unavailable.
-  tracks: [],
+  // Only verified releases belong in this production fallback.
+  tracks,
   events: [],
   gallery,
   videos: [],

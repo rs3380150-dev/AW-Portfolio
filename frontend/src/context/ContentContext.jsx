@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import { defaultContent } from "@/content/defaultContent";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { sanitizeContent } from "@/content/sanitizeContent.mjs";
+import { mergeTracks } from "@/content/mergeTracks.mjs";
 
 const fallbackContent = sanitizeContent(defaultContent);
 
@@ -42,6 +43,9 @@ export const ContentProvider = ({ children }) => {
       }
       if (remote.site) {
         remote.site = { ...defaultContent.site, ...remote.site };
+      }
+      if (remote.tracks) {
+        remote.tracks = mergeTracks(defaultContent.tracks, remote.tracks);
       }
       setContent(sanitizeContent({ ...defaultContent, ...remote }));
       setConnected(true);

@@ -1,7 +1,7 @@
 {
   "cloudName": "fqji5ezh",
-  "generatedAt": "2026-09-14T20:48:46.114Z",
-  "assetCount": 41,
+  "generatedAt": "2026-11-01T19:35:00.137Z",
+  "assetCount": 43,
   "assets": {
     "/assets/images/events/01-awakenings-festival.jpg": {
       "resourceType": "image",
@@ -289,6 +289,20 @@
       "format": "png",
       "version": 1789418925,
       "bytes": 1559599
+    },
+    "/assets/images/music/kinesis-cover.jpeg": {
+      "resourceType": "image",
+      "publicId": "achyut-wadhwa/images/music/kinesis-cover",
+      "format": "jpg",
+      "version": 1793561697,
+      "bytes": 95807
+    },
+    "/assets/images/music/kinesis-hero.png": {
+      "resourceType": "image",
+      "publicId": "achyut-wadhwa/images/music/kinesis-hero",
+      "format": "png",
+      "version": 1793561699,
+      "bytes": 1716066
     }
   }
 }

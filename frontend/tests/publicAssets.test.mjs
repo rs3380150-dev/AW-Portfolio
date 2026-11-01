@@ -13,6 +13,7 @@ const referenceFiles = [
   "src/data/seo.js",
   "src/data/site.js",
   "src/data/tracks.js",
+  "src/data/verifiedTracks.mjs",
   "src/data/videos.js",
   "src/components/Hero.jsx",
 ];
@@ -40,7 +41,7 @@ test("Cloudinary-backed media references exist in the upload manifest", () => {
     /^\/assets\/(images|videos)\//.test(publicPath),
   );
 
-  assert.equal(cloudinaryManifest.assetCount, 41);
+  assert.equal(cloudinaryManifest.assetCount, Object.keys(cloudinaryManifest.assets).length);
   for (const reference of remoteMedia) {
     assert.ok(
       cloudinaryManifest.assets[reference.publicPath],

@@ -1,3 +1,6 @@
+import { verifiedTracks } from "../src/data/verifiedTracks.mjs";
+import { mergeTracks } from "../src/content/mergeTracks.mjs";
+
 const siteUrl = (process.env.VITE_SITE_URL || "https://achyutwadhwa.in").replace(/\/$/, "");
 
 const staticRoutes = [
@@ -78,6 +81,8 @@ export default async function handler(_request, response) {
       // A valid static-route sitemap is safer than returning an error to crawlers.
     }
   }
+
+  tracks = mergeTracks(verifiedTracks, tracks);
 
   response.setHeader("Content-Type", "application/xml; charset=utf-8");
   response.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=86400");

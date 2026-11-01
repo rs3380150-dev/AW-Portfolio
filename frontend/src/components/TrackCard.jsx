@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Play, Pause } from "@/components/icons";
+import { ArrowUpRight, Headphones, Play, Pause } from "@/components/icons";
 import { usePlayer } from "@/context/PlayerContext";
 
 const platforms = [
@@ -15,6 +15,7 @@ export const TrackCard = ({ track, index = 0 }) => {
   const { current, isPlaying, playTrack } = usePlayer();
   const isActive = current?.id === track.id && isPlaying;
   const [hovered, setHovered] = useState(false);
+  const availablePlatforms = platforms.filter((platform) => track.links?.[platform.key]);
 
   return (
     <motion.article
@@ -99,7 +100,7 @@ export const TrackCard = ({ track, index = 0 }) => {
 
         {/* Play button — bottom right */}
         <div className="absolute bottom-4 right-4 z-10">
-          <motion.button
+          {track.audio ? <motion.button
             onClick={() => playTrack(track.id)}
             data-testid={`play-track-${track.id}`}
             aria-label={isActive ? `Pause ${track.title}` : `Play ${track.title}`}
@@ -119,10 +120,20 @@ export const TrackCard = ({ track, index = 0 }) => {
             {isActive
               ? <Pause className="h-5 w-5 text-white" />
               : <Play  className="h-5 w-5 text-void ml-0.5" />}
-          </motion.button>
+          </motion.button> : track.links?.soundcloud ? <motion.a
+            href={track.links.soundcloud}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Listen to ${track.title} on SoundCloud`}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.96 }}
+            className="grid h-12 w-12 place-items-center bg-[#f2f0ea] text-void shadow-[0_4px_20px_rgba(0,0,0,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-void"
+          >
+            <Headphones className="h-5 w-5" />
+          </motion.a> : null}
 
           {/* Active pulsing ring */}
-          {isActive && (
+          {track.audio && isActive && (
             <motion.span
               className="pointer-events-none absolute inset-0"
               style={{ border: "1px solid rgb(var(--color-accent-secondary))" }}
@@ -167,7 +178,7 @@ export const TrackCard = ({ track, index = 0 }) => {
 
         {/* Platform links */}
         <div className="flex flex-wrap gap-2">
-          {platforms.map((p) => (
+          {availablePlatforms.map((p) => (
             <a
               key={p.key}
               href={track.links[p.key]}

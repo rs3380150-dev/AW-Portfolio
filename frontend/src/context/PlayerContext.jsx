@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useContent } from "@/context/ContentContext";
 
 const PlayerContext = createContext(null);
@@ -10,7 +10,10 @@ export const PlayerProvider = ({ children }) => {
   const audioRef = useRef(null);
   const currentIndexRef = useRef(0);
   const volumeRef = useRef(0.8);
-  const queue = content.tracks || [];
+  const queue = useMemo(
+    () => (content.tracks || []).filter((track) => Boolean(track.audio)),
+    [content.tracks],
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);

@@ -47,6 +47,7 @@ import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { sectionDefinitionMap, sectionDefinitions } from "@/admin/contentSchemas";
 import { createSectionItem } from "@/admin/contentTemplates.mjs";
 import { describeValidationPath, validateSection } from "@/admin/contentValidation.mjs";
+import { mergeTracks } from "@/content/mergeTracks.mjs";
 import { formatCategoryLabel, normalizeCategory } from "@/utils/contentCategories.mjs";
 import "@/admin/admin.css";
 
@@ -561,6 +562,7 @@ const ContentEditor = ({ published, drafts, media, onSaveDraft, onPublish }) => 
   const resolveSource = () => {
     const stored = drafts[definition.key] ?? published[definition.key];
     if (definition.key === "site") return { ...defaultContent.site, ...(stored || {}) };
+    if (definition.key === "tracks") return mergeTracks(defaultContent.tracks, stored || []);
     return stored ?? clone(defaultContent[definition.key]);
   };
   const source = resolveSource();
